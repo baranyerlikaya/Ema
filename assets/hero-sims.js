@@ -109,8 +109,8 @@
       var vx = v0 * Math.cos(a), vy = v0 * Math.sin(a);
       var T = 2 * vy / g, range = vx * T, top = vy * vy / (2 * g);
       var pause = 0.8, cycle = T + pause;
-      var s = Math.min((w - 40) / range, (h - 44) / top);
-      var ox = (w - range * s) / 2, oy = h - 22;
+      var s = Math.min((w - 32) / range, (h - 34) / top);
+      var ox = (w - range * s) / 2, oy = h - 16;
       var tt = Math.min(t % cycle, T);
 
       line(c, 12, oy, w - 12, oy, FAINT, 1);
@@ -130,10 +130,10 @@
       var settle = Math.log(20) / gamma;            // amplitude down to 5%
       var tt = t % (settle + 0.6);
       var x = Math.exp(-gamma * tt) * Math.cos(wd * tt);
-      var oy = h / 2 + 4, wallX = 14, rest = w * 0.58, amp = w * 0.2, box = 18;
+      var oy = h / 2 + 4, wallX = 14, rest = w * 0.58, amp = w * 0.2, box = 14;
       var bx = rest + x * amp;
 
-      line(c, wallX, oy - 22, wallX, oy + box / 2 + 6, INK, 1.5);
+      line(c, wallX, oy - 16, wallX, oy + box / 2 + 6, INK, 1.5);
       line(c, wallX, oy + box / 2 + 6, w - 12, oy + box / 2 + 6, FAINT, 1);
       line(c, rest, oy - box / 2 - 8, rest, oy + box / 2 + 2, MUTED, 1, [3, 3]);
 
@@ -164,7 +164,7 @@
       dot(c, cx, cy, 2.5, MUTED);
       line(c, cx, cy, px, py, MUTED, 1, [3, 3]);
       // v is tangent (|v| = ωR), a points to the centre (|a| = ω²R)
-      var vl = 20, al = 13;
+      var vl = 16, al = 10;
       arrow(c, px, py, px - vl * Math.sin(th), py - vl * Math.cos(th), INK);
       arrow(c, px, py, px - al * Math.cos(th), py + al * Math.sin(th), MUTED);
       dot(c, px, py, 3.5, INK);
@@ -185,7 +185,7 @@
         p.om += dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
         p.t += dt;
       }
-      var Lp = h * 0.66, ax = w * 0.4, ay = 12;
+      var Lp = h * 0.68, ax = w * 0.4, ay = 10;
       var bx = ax + Lp * Math.sin(p.th), by = ay + Lp * Math.cos(p.th);
 
       line(c, ax - 14, ay, ax + 14, ay, INK, 1.5);
@@ -197,20 +197,20 @@
       c.stroke();
       c.setLineDash([]);
       line(c, ax, ay, bx, by, INK, 1.5);
-      dot(c, bx, by, 4.5, INK);
+      dot(c, bx, by, 3.5, INK);
 
       // energies per unit mass, normalised to the total
       var U = g * L * (1 - Math.cos(p.th)), K = 0.5 * (L * p.om) * (L * p.om);
       var E = g * L * (1 - Math.cos(th0));
-      var bw = 6, bh = h - 44, base = h - 22, x0 = w - 36;
+      var bw = 5, bh = h - 34, base = h - 16, x0 = w - 30;
       [[K, 'K'], [U, 'U']].forEach(function (b, i) {
-        var bxp = x0 + i * 14;
+        var bxp = x0 + i * 11;
         c.fillStyle = FAINT;
         c.fillRect(bxp, base - bh, bw, bh);
         c.fillStyle = i === 0 ? INK : MUTED;
         var hh = bh * Math.max(0, Math.min(1, b[0] / E));
         c.fillRect(bxp, base - hh, bw, hh);
-        label(c, b[1], bxp + bw / 2, base + 10);
+        label(c, b[1], bxp + bw / 2, base + 8);
       });
     }
   };

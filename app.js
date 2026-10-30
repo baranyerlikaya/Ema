@@ -346,7 +346,7 @@
       var fit = function () {
         var scale = win.clientWidth / 1440;
         win.style.setProperty('--preview-scale', scale);
-        win.style.setProperty('--preview-h', Math.round(Math.min(900, 640) * scale) + 'px');
+        win.style.setProperty('--preview-h', Math.round(560 * scale) + 'px');
       };
       fit();
       if (window.ResizeObserver) new ResizeObserver(fit).observe(win);

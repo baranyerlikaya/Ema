@@ -62,7 +62,7 @@
   --r-sm: 8px;    /* controls, rows */
   --r-pill: 999px;
 
-  --topbar-h: 64px;
+  --topbar-h: 56px;
   --sidebar-w: 320px;
   --doc-w: 720px;
 
@@ -157,11 +157,11 @@ button { font: inherit; color: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 16px;
+  height: 36px;
+  padding: 0 14px;
   border: 0;
   border-radius: var(--r-pill);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
@@ -228,7 +228,7 @@ button { font: inherit; color: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 652;
   letter-spacing: -0.2px;
   text-decoration: none;
@@ -237,9 +237,9 @@ button { font: inherit; color: inherit; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
   background: var(--ink);
   color: var(--white);
   font-size: 13px;
@@ -252,7 +252,7 @@ button { font: inherit; color: inherit; }
 .topbar-links a,
 .topbar-link {
   color: var(--ink);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   transition: color var(--t-fast) var(--ease);
@@ -511,15 +511,15 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   justify-content: center;
   max-width: 880px;
   margin: 0 auto;
-  padding: 120px 24px 64px;
+  padding: 96px 24px 48px;
   text-align: center;
 }
 .hero-title {
   margin: 0;
-  font-size: clamp(44px, 8vw, 72px);
+  font-size: clamp(40px, 6vw, 56px);
   font-weight: 652;
   line-height: 1;
-  letter-spacing: -0.8px;
+  letter-spacing: -0.6px;
 }
 .hero-intro {
   max-width: 560px;
@@ -533,7 +533,7 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
-  margin-top: 40px;
+  margin-top: 28px;
 }
 
 /* Live simulations, one per section */
@@ -541,8 +541,8 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
-  max-width: 920px;
-  margin: 0 auto 96px;
+  max-width: 720px;
+  margin: 0 auto 80px;
   padding: 0 24px;
 }
 .sim-card {
@@ -562,7 +562,7 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   overflow: hidden;
   padding: 0 8px;
   color: var(--ink-2);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-align: center;
   text-overflow: ellipsis;
@@ -571,21 +571,21 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
 .sim-canvas {
   display: block;
   width: 100%;
-  height: 104px;
+  height: 80px;
   border-radius: 20px;
   background: var(--white);
 }
 
 /* Live preview of a topic page, like Mobbin's product shot under the hero */
 .preview {
-  max-width: 1280px;
+  max-width: 1008px;
   margin: 0 auto;
   padding: 0 24px;
 }
 .preview-frame {
   position: relative;
   display: block;
-  padding: 40px 40px 0;
+  padding: 24px 24px 0;
   border-radius: var(--r-lg);
   background: var(--grey-1);
   overflow: hidden;
@@ -1150,7 +1150,7 @@ a.pn-card:hover { background: var(--grey-2); }
   .sims {
     grid-template-columns: none;
     grid-auto-flow: column;
-    grid-auto-columns: 168px;
+    grid-auto-columns: 136px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 24px;
