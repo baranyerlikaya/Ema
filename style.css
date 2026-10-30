@@ -1,5 +1,5 @@
 /* =========================================================================
-   PhysRef — monochrome docs theme
+   Ema — monochrome docs theme
    Black, white and greys only. State is shown with weight, borders,
    inversion or grey shades.
    ========================================================================= */
@@ -510,9 +510,8 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   align-items: center;
   justify-content: center;
   max-width: 880px;
-  min-height: min(560px, 64vh);
   margin: 0 auto;
-  padding: 128px 24px 80px;
+  padding: 120px 24px 64px;
   text-align: center;
 }
 .hero-title {
@@ -535,6 +534,44 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   justify-content: center;
   gap: 12px;
   margin-top: 40px;
+}
+
+/* Live simulations, one per section */
+.sims {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 1280px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+.sim-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px 8px 8px;
+  border-radius: var(--r-lg);
+  background: var(--grey-1);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color var(--t-slow) var(--ease);
+}
+.sim-card:hover { background: var(--grey-2); }
+.sim-label {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sim-canvas {
+  display: block;
+  width: 100%;
+  height: 176px;
+  border-radius: var(--r-md);
+  background: var(--white);
 }
 
 /* Live preview of a topic page, like Mobbin's product shot under the hero */
@@ -1107,6 +1144,19 @@ a.pn-card:hover { background: var(--grey-2); }
 }
 
 @media (max-width: 1023px) {
+  /* Simulations become a swipeable row */
+  .sims {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 260px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 24px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .sims::-webkit-scrollbar { display: none; }
+  .sim-card { scroll-snap-align: start; }
   .section-grid { grid-template-columns: 1fr 1fr; }
   .section-card,
   .section-card:nth-child(4),
@@ -1119,8 +1169,9 @@ a.pn-card:hover { background: var(--grey-2); }
 @media (max-width: 640px) {
   .topbar-inner { gap: 16px; padding: 0 16px; }
   .topbar-links { display: none; }
-  .hero { min-height: 0; padding: 96px 16px 64px; }
+  .hero { padding: 88px 16px 48px; }
   .preview { padding: 0 16px; }
+  .sims { padding: 0 16px 4px; scroll-padding-inline: 16px; margin-bottom: 56px; }
   .preview-frame { padding: 20px 20px 0; }
   .band { margin-top: 96px; padding: 80px 16px 96px; }
   .home-block { padding: 96px 16px 128px; }

@@ -1,5 +1,5 @@
 /*
- * PhysRef topic tree. Single source of truth for the sidebar, the home grid,
+ * Ema topic tree. Single source of truth for the sidebar, the home grid,
  * breadcrumbs and prev/next links.
  *
  * Each topic: id (unique), title, file (path from the site root), status.

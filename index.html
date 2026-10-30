@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PhysRef</title>
+  <title>Ema</title>
   <link rel="stylesheet" href="lib/katex.min.css">
   <link rel="stylesheet" href="style.css">
   <script defer src="lib/katex.min.js"></script>
@@ -11,6 +11,7 @@
   <script defer src="lib/render-math.js"></script>
   <script defer src="nav.js"></script>
   <script defer src="app.js"></script>
+  <script defer src="assets/hero-sims.js"></script>
 </head>
 <body class="layout-home" data-root="./">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -19,7 +20,7 @@
 
   <main id="main">
     <section class="hero">
-      <h1 class="hero-title">PhysRef</h1>
+      <h1 class="hero-title">Ema</h1>
       <!-- Intro: one or two sentences about the site -->
       <div class="hero-intro"><span class="slot" data-slot="intro">[Intro]</span></div>
       <div class="hero-actions">
@@ -27,6 +28,9 @@
         <a class="btn btn-secondary" href="#sections">All sections <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </section>
+
+    <!-- One live simulation per section (assets/hero-sims.js) -->
+    <div class="sims" id="sims"></div>
 
     <!-- Live, scaled-down preview of the first ready topic page -->
     <div class="preview" aria-hidden="true">

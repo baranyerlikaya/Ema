@@ -1,5 +1,5 @@
 /*
- * PhysRef site shell. Builds the header, sidebar, footer, breadcrumb and
+ * Ema site shell. Builds the header, sidebar, footer, breadcrumb and
  * prev/next links from nav.js, and wires up collapse, search and the mobile drawer.
  */
 (function () {
@@ -70,7 +70,7 @@
     var header = el('header', { class: 'topbar' }, [
       el('div', { class: 'topbar-inner' }, [
         menuBtn,
-        el('a', { class: 'logo', href: ROOT + 'index.html', html: '<span class="logo-mark" aria-hidden="true">P</span><span>PhysRef</span>' }),
+        el('a', { class: 'logo', href: ROOT + 'index.html', html: '<span class="logo-mark" aria-hidden="true">E</span><span>Ema</span>' }),
         el('nav', { class: 'topbar-links', 'aria-label': 'Site' }, [
           el('a', { href: ROOT + 'index.html#sections', text: 'Mechanics' }),
           el('a', { href: ROOT + 'index.html#sources', text: 'Sources' })
@@ -399,7 +399,7 @@
     var footer = el('footer', { class: 'footer' }, [
       el('div', { class: 'footer-inner' }, [
         el('div', { class: 'footer-brand' }, [
-          el('a', { class: 'logo logo-invert', href: ROOT + 'index.html', html: '<span class="logo-mark" aria-hidden="true">P</span><span>PhysRef</span>' })
+          el('a', { class: 'logo logo-invert', href: ROOT + 'index.html', html: '<span class="logo-mark" aria-hidden="true">E</span><span>Ema</span>' })
         ]),
         el('div', { class: 'footer-col' }, [el('p', { class: 'footer-label', text: 'Mechanics' }), sections]),
         el('div', { class: 'footer-col' }, [

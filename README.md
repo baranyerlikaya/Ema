@@ -1,4 +1,4 @@
-# PhysRef
+# Ema
 
 A free reference for university-level classical mechanics, laid out like programming-language docs. The first version follows the Mechanics (02MECH) midterm syllabus at FJFI, CTU Prague.
 
@@ -48,6 +48,7 @@ style.css                   all styles
 app.js                      header, sidebar, search, drawer, breadcrumb, prev/next, footer
 nav.js                      topic tree (single source of truth)
 lib/                        KaTeX 0.16.22 + render-math.js (auto-render setup)
+assets/hero-sims.js         live physics simulations on the home page
 assets/fonts/               Instrument Sans and Geist Mono (SIL OFL 1.1)
 topics/mechanics/           one page per topic; _template.html is the template
 tools/new-pages.mjs         optional helper that creates missing pages from the template
