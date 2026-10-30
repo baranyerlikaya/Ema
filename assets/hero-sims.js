@@ -61,7 +61,7 @@
   }
 
   function label(c, text, x, y, align) {
-    c.font = '500 11px "Geist Mono", ui-monospace, monospace';
+    c.font = '500 9px "Geist Mono", ui-monospace, monospace';
     c.fillStyle = MUTED;
     c.textAlign = align || 'center';
     c.textBaseline = 'middle';
@@ -76,7 +76,7 @@
     math: function (c, w, h, t) {
       var omega = 1.4;
       var R = Math.min(h * 0.3, w * 0.17);
-      var cx = R + 20, cy = h / 2;
+      var cx = R + 14, cy = h / 2;
       var th = omega * t;
       var px = cx + R * Math.cos(th), py = cy - R * Math.sin(th);
 
@@ -85,7 +85,7 @@
       ring(c, cx, cy, R, FAINT, 1);
 
       // wave: y = sin(θ - k·x), drawn from the circle's right edge
-      var x0 = cx + R + 16, k = 0.045;
+      var x0 = cx + R + 10, k = 0.07;
       c.beginPath();
       for (var x = x0; x <= w - 12; x += 2) {
         var y = cy - R * Math.sin(th - k * (x - x0));
@@ -100,7 +100,7 @@
       line(c, cx, cy, px, py, INK, 1.5);
       dot(c, px, cy, 2.5, MUTED);
       dot(c, x0, py, 3, INK);
-      dot(c, px, py, 4, INK);
+      dot(c, px, py, 3, INK);
     },
 
     // Projectile: v0 = 10 m/s at 55°, g = 9.81 m/s², with the velocity vector.
@@ -109,8 +109,8 @@
       var vx = v0 * Math.cos(a), vy = v0 * Math.sin(a);
       var T = 2 * vy / g, range = vx * T, top = vy * vy / (2 * g);
       var pause = 0.8, cycle = T + pause;
-      var s = Math.min((w - 64) / range, (h - 84) / top);
-      var ox = (w - range * s) / 2, oy = h - 44;      // room below the ground for the final velocity arrow
+      var s = Math.min((w - 40) / range, (h - 44) / top);
+      var ox = (w - range * s) / 2, oy = h - 22;
       var tt = Math.min(t % cycle, T);
 
       line(c, 12, oy, w - 12, oy, FAINT, 1);
@@ -119,9 +119,9 @@
         dot(c, ox + vx * k * s, oy - (vy * k - g * k * k / 2) * s, 1.5, MUTED);
       }
       var x = ox + vx * tt * s, y = oy - (vy * tt - g * tt * tt / 2) * s;
-      var vyt = vy - g * tt, vs = 3.2;
+      var vyt = vy - g * tt, vs = 1.6;
       arrow(c, x, y, x + vx * vs, y - vyt * vs, INK);
-      dot(c, x, y, 5, INK);
+      dot(c, x, y, 3.5, INK);
     },
 
     // Damped harmonic oscillator: x(t) = A e^{-γt} cos(ω_d t), restarts once it settles.
@@ -130,19 +130,18 @@
       var settle = Math.log(20) / gamma;            // amplitude down to 5%
       var tt = t % (settle + 0.6);
       var x = Math.exp(-gamma * tt) * Math.cos(wd * tt);
-      var oy = h / 2 + 18, wallX = 20, rest = w * 0.56, amp = w * 0.2, box = 28;
+      var oy = h / 2 + 4, wallX = 14, rest = w * 0.58, amp = w * 0.2, box = 18;
       var bx = rest + x * amp;
 
-      line(c, wallX, oy - 40, wallX, oy + box / 2 + 6, INK, 1.5);
-      for (var i = 0; i < 5; i++) line(c, wallX, oy - 36 + i * 12, wallX - 6, oy - 30 + i * 12, FAINT, 1);
+      line(c, wallX, oy - 22, wallX, oy + box / 2 + 6, INK, 1.5);
       line(c, wallX, oy + box / 2 + 6, w - 12, oy + box / 2 + 6, FAINT, 1);
-      line(c, rest, oy - box / 2 - 14, rest, oy + box / 2 + 2, MUTED, 1, [3, 3]);
+      line(c, rest, oy - box / 2 - 8, rest, oy + box / 2 + 2, MUTED, 1, [3, 3]);
 
       // spring zigzag from the wall to the block
-      var coils = 12, x1 = wallX, x2 = bx - box / 2, step = (x2 - x1) / (coils * 2);
+      var coils = 9, x1 = wallX, x2 = bx - box / 2, step = (x2 - x1) / (coils * 2);
       c.beginPath();
       c.moveTo(x1, oy);
-      for (var j = 1; j < coils * 2; j++) c.lineTo(x1 + j * step, oy + (j % 2 ? -7 : 7));
+      for (var j = 1; j < coils * 2; j++) c.lineTo(x1 + j * step, oy + (j % 2 ? -4 : 4));
       c.lineTo(x2, oy);
       c.strokeStyle = INK;
       c.lineWidth = 1.5;
@@ -165,10 +164,10 @@
       dot(c, cx, cy, 2.5, MUTED);
       line(c, cx, cy, px, py, MUTED, 1, [3, 3]);
       // v is tangent (|v| = ωR), a points to the centre (|a| = ω²R)
-      var vl = 30, al = 20;
+      var vl = 20, al = 13;
       arrow(c, px, py, px - vl * Math.sin(th), py - vl * Math.cos(th), INK);
       arrow(c, px, py, px - al * Math.cos(th), py + al * Math.sin(th), MUTED);
-      dot(c, px, py, 5, INK);
+      dot(c, px, py, 3.5, INK);
     },
 
     // Nonlinear pendulum (RK4) with kinetic and potential energy bars.
@@ -186,10 +185,10 @@
         p.om += dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
         p.t += dt;
       }
-      var Lp = h * 0.62, ax = w * 0.38, ay = 18;
+      var Lp = h * 0.66, ax = w * 0.4, ay = 12;
       var bx = ax + Lp * Math.sin(p.th), by = ay + Lp * Math.cos(p.th);
 
-      line(c, ax - 24, ay, ax + 24, ay, INK, 1.5);
+      line(c, ax - 14, ay, ax + 14, ay, INK, 1.5);
       c.beginPath();
       c.setLineDash([2, 4]);
       c.arc(ax, ay, Lp, Math.PI / 2 - th0, Math.PI / 2 + th0);
@@ -198,25 +197,27 @@
       c.stroke();
       c.setLineDash([]);
       line(c, ax, ay, bx, by, INK, 1.5);
-      dot(c, bx, by, 7, INK);
+      dot(c, bx, by, 4.5, INK);
 
       // energies per unit mass, normalised to the total
       var U = g * L * (1 - Math.cos(p.th)), K = 0.5 * (L * p.om) * (L * p.om);
       var E = g * L * (1 - Math.cos(th0));
-      var bw = 10, bh = h - 64, base = h - 28, x0 = w - 56;
+      var bw = 6, bh = h - 44, base = h - 22, x0 = w - 36;
       [[K, 'K'], [U, 'U']].forEach(function (b, i) {
-        var bxp = x0 + i * 22;
+        var bxp = x0 + i * 14;
         c.fillStyle = FAINT;
         c.fillRect(bxp, base - bh, bw, bh);
         c.fillStyle = i === 0 ? INK : MUTED;
         var hh = bh * Math.max(0, Math.min(1, b[0] / E));
         c.fillRect(bxp, base - hh, bw, hh);
-        label(c, b[1], bxp + bw / 2, base + 12);
+        label(c, b[1], bxp + bw / 2, base + 10);
       });
     }
   };
 
   // ---------- build cards ----------
+
+  var SHORT = { math: 'Mathematics', conservation: 'Conservation' };
 
   var root = document.body.getAttribute('data-root') || './';
   var items = [];
@@ -228,7 +229,7 @@
     a.href = root + 'index.html#section-' + section.id;
     var name = document.createElement('span');
     name.className = 'sim-label';
-    name.textContent = section.title;
+    name.textContent = SHORT[section.id] || section.title;
     var canvas = document.createElement('canvas');
     canvas.className = 'sim-canvas';
     canvas.setAttribute('aria-hidden', 'true');
