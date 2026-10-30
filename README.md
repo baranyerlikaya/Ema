@@ -36,6 +36,7 @@ Each empty slot is an element with `class="slot"` and a label like `[Theory]` or
 
 - Inline math: `$...$`. Display math: `$$...$$`. Write a literal dollar sign as `\$`.
 - Add more theory subsections, formula boxes, example steps or references by copying the existing block.
+- Subsections (1.1, 1.2…), formulas (1), (2)… and examples are numbered automatically by CSS, so copied blocks renumber themselves.
 - The example's **Check** block is optional; delete it if you don't need it.
 - Breadcrumb, prev/next links, sidebar, header and footer are generated from `nav.js` by `app.js`. You don't edit them per page.
 

@@ -63,7 +63,7 @@
   --r-pill: 999px;
 
   --topbar-h: 64px;
-  --sidebar-w: 288px;
+  --sidebar-w: 304px;
   --doc-w: 720px;
 
   --ease: cubic-bezier(0.2, 0, 0, 1);
@@ -188,14 +188,10 @@ button { font: inherit; color: inherit; }
   display: inline-flex;
   align-items: center;
   flex: none;
-  height: 20px;
-  padding: 0 8px;
-  border: 1px solid var(--grey-3);
-  border-radius: var(--r-pill);
-  background: var(--white);
   color: var(--ink-3);
+  font-family: var(--mono);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
 }
 
@@ -206,9 +202,7 @@ button { font: inherit; color: inherit; }
   top: 0;
   z-index: 40;
   height: var(--topbar-h);
-  background: rgba(255, 255, 255, 0.92);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
-  backdrop-filter: saturate(180%) blur(12px);
+  background: var(--white);
   border-bottom: 1px solid var(--line);
 }
 .topbar-inner {
@@ -347,7 +341,7 @@ button { font: inherit; color: inherit; }
   background: transparent;
   color: var(--ink);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
   text-align: left;
   cursor: pointer;
@@ -366,7 +360,7 @@ button { font: inherit; color: inherit; }
   flex-direction: column;
   gap: 2px;
   margin: 2px 0 8px;
-  padding: 0 0 0 16px;
+  padding: 0 0 0 8px;
   list-style: none;
 }
 .tree-link {
@@ -375,7 +369,7 @@ button { font: inherit; color: inherit; }
   justify-content: space-between;
   gap: 8px;
   min-height: 34px;
-  padding: 6px 8px 6px 16px;
+  padding: 6px 8px 6px 12px;
   border-radius: var(--r-sm);
   color: var(--ink-2);
   font-size: 14px;
@@ -623,13 +617,13 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   text-wrap: balance;
 }
 .doc-lede {
-  margin: 16px 0 0;
+  margin: 20px 0 0;
   color: var(--ink-2);
   font-size: 18px;
   line-height: 1.55;
 }
 
-.doc-section { margin-top: 72px; }
+.doc-section { margin-top: 64px; }
 .doc-section > h2 {
   margin: 0 0 24px;
   font-size: 28px;
@@ -642,7 +636,7 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
 .doc p,
 .doc li { font-size: 17px; line-height: 1.7; }
 .doc p { margin: 0 0 16px; }
-.doc strong { font-weight: 600; }
+.doc strong { font-weight: 500; }
 .doc code {
   padding: 1px 6px;
   border-radius: 6px;
@@ -658,10 +652,13 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   gap: 12px;
   margin: 0 0 12px;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
   letter-spacing: -0.015em;
 }
+.doc { counter-reset: sub formula example; }
+.subsection { counter-increment: sub; }
+.subsection h3 .num::before { content: '1.' counter(sub); }
 .subsection h3 .num {
   color: var(--ink-3);
   font-family: var(--mono);
@@ -682,7 +679,7 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
 .callout-label {
   margin: 0 0 8px !important;
   font-size: 13px !important;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.4 !important;
 }
 .callout-warning .callout-label::before { content: '! '; }
@@ -696,11 +693,23 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   border-radius: var(--r-lg);
   background: var(--grey-1);
 }
+.formula { counter-increment: formula; }
 .formula-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 8px 12px 12px;
   color: var(--ink-2);
   font-size: 13px;
   font-weight: 500;
+}
+.formula-label::after {
+  content: '(' counter(formula) ')';
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
 }
 .formula-body {
   display: flex;
@@ -722,6 +731,13 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   background: var(--grey-1);
 }
 .example + .example { margin-top: 24px; }
+.example { counter-increment: example; }
+.example-label::after {
+  content: counter(example);
+  margin-left: 6px;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
 .example-label {
   display: inline-flex;
   align-items: center;
@@ -732,7 +748,7 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   background: var(--ink);
   color: var(--white);
   font-size: 13px !important;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1 !important;
 }
 .example-problem {
@@ -773,7 +789,7 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   border-radius: var(--r-pill);
   font-family: var(--mono);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -783,12 +799,13 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   margin-top: 16px;
   padding: 16px 20px;
   border-radius: var(--r-md);
-  border: 1.5px dashed var(--grey-4);
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--grey-3);
 }
 .example-check-label {
   margin: 0 0 8px !important;
   font-size: 13px !important;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.4 !important;
 }
 .example-check .slot-block { min-height: 48px; }
@@ -856,7 +873,7 @@ a.pn-card:hover { background: var(--grey-2); }
 .pn-label { color: var(--ink-3); font-size: 13px; }
 .pn-prev .pn-label::before { content: '← '; }
 .pn-next .pn-label::after { content: ' →'; }
-.pn-title { font-size: 16px; font-weight: 600; line-height: 1.35; letter-spacing: -0.01em; }
+.pn-title { font-size: 16px; font-weight: 500; line-height: 1.35; letter-spacing: -0.01em; }
 .pn-section { color: var(--ink-3); font-size: 13px; }
 
 /* On this page */
@@ -888,7 +905,7 @@ a.pn-card:hover { background: var(--grey-2); }
 }
 .footer-inner {
   display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 40px;
   max-width: 1280px;
   margin: 0 auto;
