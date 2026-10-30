@@ -396,7 +396,7 @@
           el('p', { class: 'footer-label', text: 'Built with' }),
           el('ul', {}, [
             el('li', {}, [el('a', { href: 'https://katex.org', text: 'KaTeX' })]),
-            el('li', {}, [el('a', { href: 'https://vercel.com/font', text: 'Geist' })])
+            el('li', {}, [el('a', { href: 'https://github.com/Instrument/instrument-sans', text: 'Instrument Sans' })])
           ])
         ])
       ])

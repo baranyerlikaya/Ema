@@ -2,7 +2,7 @@
 
 A free reference for university-level classical mechanics, laid out like programming-language docs. The first version follows the Mechanics (02MECH) midterm syllabus at FJFI, CTU Prague.
 
-Static site: plain HTML, CSS and vanilla JS. No build step, no backend, no CDNs. KaTeX and the Geist font are bundled locally, so every page works offline.
+Static site: plain HTML, CSS and vanilla JS. No build step, no backend, no CDNs. KaTeX and the fonts are bundled locally, so every page works offline.
 
 ## Run locally
 
@@ -48,7 +48,7 @@ style.css                   all styles
 app.js                      header, sidebar, search, drawer, breadcrumb, prev/next, footer
 nav.js                      topic tree (single source of truth)
 lib/                        KaTeX 0.16.22 + render-math.js (auto-render setup)
-assets/fonts/               Geist and Geist Mono (SIL OFL 1.1)
+assets/fonts/               Instrument Sans and Geist Mono (SIL OFL 1.1)
 topics/mechanics/           one page per topic; _template.html is the template
 tools/new-pages.mjs         optional helper that creates missing pages from the template
 ```
@@ -62,5 +62,6 @@ All paths are relative, so the site works under `https://<user>.github.io/<repo>
 ## Credits
 
 - [KaTeX](https://katex.org), MIT License (`lib/KATEX-LICENSE`)
-- [Geist](https://vercel.com/font), SIL Open Font License 1.1 (`assets/fonts/GEIST-LICENSE`)
+- [Instrument Sans](https://github.com/Instrument/instrument-sans), SIL Open Font License 1.1 (`assets/fonts/INSTRUMENT-SANS-LICENSE`)
+- [Geist Mono](https://vercel.com/font), SIL Open Font License 1.1 (`assets/fonts/GEIST-LICENSE`)
 - Design pass with [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky, CC BY 4.0
