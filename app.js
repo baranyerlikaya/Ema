@@ -331,11 +331,28 @@
     });
 
     var count = document.getElementById('topic-count');
-    if (count) count.textContent = NAV.length + ' sections · ' + total + ' topics · ' + ready + ' ready';
+    if (count) count.textContent = total + ' topics in ' + NAV.length + ' sections';
 
     var start = document.getElementById('start-link');
     var firstReady = allTopics().filter(function (e) { return e.topic.status === 'ready'; })[0];
     if (start && firstReady) start.setAttribute('href', href(firstReady.topic.file));
+
+    // Live preview: the first ready topic page, scaled to fit the frame.
+    var frame = document.getElementById('preview');
+    if (frame && firstReady) {
+      document.getElementById('preview-link').setAttribute('href', href(firstReady.topic.file));
+      frame.src = href(firstReady.topic.file);
+      var win = frame.parentNode;
+      var fit = function () {
+        var scale = win.clientWidth / 1440;
+        win.style.setProperty('--preview-scale', scale);
+        win.style.setProperty('--preview-h', Math.round(Math.min(900, 640) * scale) + 'px');
+      };
+      fit();
+      if (window.ResizeObserver) new ResizeObserver(fit).observe(win);
+    } else if (frame) {
+      frame.closest('.preview').hidden = true;
+    }
 
     NAV.forEach(function (section, i) {
       var list = el('ul', { class: 'card-list' });
@@ -401,7 +418,18 @@
         ])
       ])
     ]);
+    // The page above the footer gets rounded bottom corners over the black footer.
+    var above = mount.previousElementSibling;
+    if (above) above.classList.add('page-end');
     mount.replaceWith(footer);
+  }
+
+  // ---------- header shadow on scroll ----------
+
+  function watchScroll() {
+    var update = function () { body.classList.toggle('is-scrolled', window.scrollY > 4); };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
   }
 
   // ---------- init ----------
@@ -412,4 +440,5 @@
   buildPrevNext();
   buildHome();
   buildFooter();
+  watchScroll();
 })();

@@ -26,17 +26,23 @@
         <a class="btn btn-primary" id="start-link" href="#sections">Start reading</a>
         <a class="btn btn-secondary" href="#sections">All sections <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-      <p class="hero-meta" id="topic-count"></p>
     </section>
+
+    <!-- Live, scaled-down preview of the first ready topic page -->
+    <div class="preview" aria-hidden="true">
+      <a class="preview-frame" id="preview-link" href="#sections" tabindex="-1">
+        <div class="preview-window"><iframe id="preview" title="Topic page preview" tabindex="-1" loading="lazy"></iframe></div>
+      </a>
+    </div>
 
     <section class="band" id="sections" aria-labelledby="sections-h">
       <div class="band-inner">
-        <div class="band-head">
-          <h2 id="sections-h" class="band-title">Mechanics</h2>
+        <div class="section-head">
+          <h2 id="sections-h" class="band-title">Mechanics <span class="band-sub" id="topic-count"></span></h2>
           <div class="tabs" role="tablist" aria-label="Filter topics">
-            <button class="tab" role="tab" type="button" data-filter="all" aria-selected="true">All</button>
-            <button class="tab" role="tab" type="button" data-filter="ready" aria-selected="false">Ready</button>
-            <button class="tab" role="tab" type="button" data-filter="soon" aria-selected="false">Soon</button>
+            <button class="tab" role="tab" type="button" data-filter="all" data-label="All" aria-selected="true">All</button>
+            <button class="tab" role="tab" type="button" data-filter="ready" data-label="Ready" aria-selected="false">Ready</button>
+            <button class="tab" role="tab" type="button" data-filter="soon" data-label="Soon" aria-selected="false">Soon</button>
           </div>
         </div>
         <div class="section-grid" id="section-grid"></div>
@@ -44,7 +50,9 @@
     </section>
 
     <section class="home-block" id="sources" aria-labelledby="sources-h">
-      <h2 id="sources-h" class="block-title">Sources</h2>
+      <div class="section-head">
+        <h2 id="sources-h" class="block-title">Sources</h2>
+      </div>
       <div class="grey-card">
         <div class="slot slot-block" data-slot="sources">[Sources]</div>
       </div>
