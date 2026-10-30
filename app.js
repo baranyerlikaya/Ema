@@ -86,141 +86,184 @@
 
   // ---------- sidebar ----------
 
-  var sidebarEl, overlayEl, searchInput, emptyMsg;
+  var sidebarEl, scrollEl, overlayEl, searchInput, clearBtn, emptyMsg;
+  var SCROLL_KEY = 'physref.sidebar-scroll';
+
+  function setSectionOpen(sec, open) {
+    sec.classList.toggle('is-open', open);
+    sec.querySelector('.tree-toggle').setAttribute('aria-expanded', String(open));
+    // Closed panels stay in the DOM for the collapse animation, but out of tab order.
+    var panel = sec.querySelector('.tree-panel');
+    if (open) panel.removeAttribute('inert'); else panel.setAttribute('inert', '');
+  }
+
+  function isRemembered(sectionId) {
+    var current = findCurrent();
+    return loadOpen().indexOf(sectionId) !== -1 || !!(current && current.section.id === sectionId);
+  }
 
   function buildSidebar() {
     var mount = document.getElementById('site-sidebar');
     if (!mount) return;
-
-    var current = findCurrent();
-    var open = loadOpen();
-    if (current && open.indexOf(current.section.id) === -1) open.push(current.section.id);
 
     searchInput = el('input', {
       type: 'search', id: 'sidebar-search', class: 'search-input',
       placeholder: 'Search', autocomplete: 'off', spellcheck: 'false',
       'aria-label': 'Search topics'
     });
+    clearBtn = el('button', { class: 'search-clear', type: 'button', 'aria-label': 'Clear search', hidden: '', html: ICON_CLOSE });
 
     var tree = el('div', { class: 'tree' });
-    NAV.forEach(function (section, si) {
-      var isOpen = open.indexOf(section.id) !== -1;
+    NAV.forEach(function (section) {
       var listId = 'tree-' + section.id;
-      var toggle = el('button', {
-        class: 'tree-toggle', type: 'button',
-        'aria-expanded': String(isOpen), 'aria-controls': listId
-      }, [
+      var ready = section.topics.filter(function (t) { return t.status === 'ready'; }).length;
+      var toggle = el('button', { class: 'tree-toggle', type: 'button', 'aria-controls': listId }, [
         el('span', { class: 'tree-chevron', html: ICON_CHEVRON }),
-        el('span', { class: 'tree-title', text: section.title })
+        el('span', { class: 'tree-title', text: section.title }),
+        el('span', { class: 'tree-count', 'aria-label': ready + ' of ' + section.topics.length + ' ready', text: ready + '/' + section.topics.length })
       ]);
       var list = el('ul', { class: 'tree-list', id: listId });
-      if (!isOpen) list.hidden = true;
 
       section.topics.forEach(function (t) {
+        var label = el('span', { class: 'tree-link-text', text: t.title });
         var item;
         if (t.status === 'ready') {
-          item = el('a', { class: 'tree-link', href: href(t.file) }, [el('span', { class: 'tree-link-text', text: t.title })]);
+          item = el('a', { class: 'tree-link', href: href(t.file) }, [label]);
           if (t.id === CURRENT) { item.classList.add('is-active'); item.setAttribute('aria-current', 'page'); }
         } else {
-          item = el('span', { class: 'tree-link is-soon', 'aria-disabled': 'true' }, [
-            el('span', { class: 'tree-link-text', text: t.title }),
-            el('span', { class: 'badge', text: 'soon' })
-          ]);
+          item = el('span', { class: 'tree-link is-soon', 'aria-disabled': 'true' }, [label, el('span', { class: 'badge', text: 'soon' })]);
         }
-        list.appendChild(el('li', { 'data-title': t.title.toLowerCase() }, [item]));
+        list.appendChild(el('li', { 'data-title': t.title }, [item]));
       });
 
+      var sec = el('div', { class: 'tree-section', 'data-section': section.id }, [
+        toggle,
+        el('div', { class: 'tree-panel' }, [el('div', { class: 'tree-panel-inner' }, [list])])
+      ]);
+      setSectionOpen(sec, isRemembered(section.id));
+
       toggle.addEventListener('click', function () {
-        var nowOpen = toggle.getAttribute('aria-expanded') !== 'true';
-        toggle.setAttribute('aria-expanded', String(nowOpen));
-        list.hidden = !nowOpen;
+        var nowOpen = !sec.classList.contains('is-open');
+        setSectionOpen(sec, nowOpen);
+        if (searchInput.value) return; // don't remember choices made while filtering
         var ids = loadOpen().filter(function (id) { return id !== section.id; });
         if (nowOpen) ids.push(section.id);
         saveOpen(ids);
       });
 
-      tree.appendChild(el('div', { class: 'tree-section', 'data-section': section.id }, [toggle, list]));
+      tree.appendChild(sec);
     });
 
     emptyMsg = el('p', { class: 'tree-empty', hidden: '', text: 'No matching topics' });
 
+    scrollEl = el('div', { class: 'sidebar-scroll' }, [tree, emptyMsg]);
     sidebarEl = el('aside', { class: 'sidebar', id: 'sidebar', 'aria-label': 'Topics' }, [
       el('div', { class: 'sidebar-inner' }, [
         el('div', { class: 'sidebar-head' }, [
           el('p', { class: 'sidebar-label', text: 'Mechanics' }),
           el('button', { class: 'icon-btn drawer-close', type: 'button', 'aria-label': 'Close topics', html: ICON_CLOSE })
         ]),
-        el('label', { class: 'search' }, [
+        el('div', { class: 'search' }, [
           el('span', { class: 'search-icon', html: ICON_SEARCH }),
           searchInput,
-          el('kbd', { class: 'search-key', text: '/' })
+          el('kbd', { class: 'search-key', text: '/' }),
+          clearBtn
         ]),
-        tree,
-        emptyMsg
+        scrollEl
       ])
     ]);
-    overlayEl = el('div', { class: 'drawer-overlay', hidden: '' });
+    overlayEl = el('div', { class: 'drawer-overlay', 'aria-hidden': 'true' });
 
     mount.replaceWith(sidebarEl);
     sidebarEl.after(overlayEl);
 
     searchInput.addEventListener('input', function () { filterTree(searchInput.value); });
     searchInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && searchInput.value) { e.stopPropagation(); searchInput.value = ''; filterTree(''); }
+      if (e.key === 'Escape' && searchInput.value) { e.stopPropagation(); clearSearch(); }
+      if (e.key === 'Enter') {
+        // Enter opens the first matching ready topic.
+        var first = scrollEl.querySelector('li:not([hidden]) a.tree-link');
+        if (first) first.click();
+      }
     });
+    clearBtn.addEventListener('click', function () { clearSearch(); searchInput.focus(); });
     sidebarEl.querySelector('.drawer-close').addEventListener('click', function () { setDrawer(false); });
     overlayEl.addEventListener('click', function () { setDrawer(false); });
 
-    // Keep the active link in view inside a long sidebar.
-    var active = sidebarEl.querySelector('.is-active');
-    if (active) active.scrollIntoView({ block: 'center' });
+    // Keep the sidebar where it was when moving between pages; otherwise centre the active link.
+    var saved = null;
+    try { saved = sessionStorage.getItem(SCROLL_KEY); } catch (e) { /* storage unavailable */ }
+    var active = scrollEl.querySelector('.is-active');
+    if (saved !== null) scrollEl.scrollTop = +saved;
+    if (active) {
+      var a = active.getBoundingClientRect(), s = scrollEl.getBoundingClientRect();
+      if (saved === null || a.top < s.top || a.bottom > s.bottom) {
+        scrollEl.scrollTop += a.top - s.top - (s.height - a.height) / 2;
+      }
+    }
+    window.addEventListener('pagehide', function () {
+      try { sessionStorage.setItem(SCROLL_KEY, String(scrollEl.scrollTop)); } catch (e) { /* storage unavailable */ }
+    });
+
+    // Enable transitions only after the first paint, so nothing animates on load.
+    requestAnimationFrame(function () { requestAnimationFrame(function () { sidebarEl.classList.add('is-ready'); }); });
+  }
+
+  function clearSearch() {
+    searchInput.value = '';
+    filterTree('');
+  }
+
+  function highlight(span, text, q) {
+    var i = q ? text.toLowerCase().indexOf(q) : -1;
+    if (i === -1) { span.textContent = text; return; }
+    span.textContent = '';
+    span.appendChild(document.createTextNode(text.slice(0, i)));
+    span.appendChild(el('mark', { text: text.slice(i, i + q.length) }));
+    span.appendChild(document.createTextNode(text.slice(i + q.length)));
   }
 
   function filterTree(query) {
     var q = query.trim().toLowerCase();
     var anyVisible = false;
+    clearBtn.hidden = !query;
+    sidebarEl.classList.toggle('is-searching', !!q);
     sidebarEl.querySelectorAll('.tree-section').forEach(function (sec) {
-      var toggle = sec.querySelector('.tree-toggle');
-      var list = sec.querySelector('.tree-list');
-      var sectionMatch = q && toggle.textContent.toLowerCase().indexOf(q) !== -1;
+      var title = sec.querySelector('.tree-title');
+      var sectionMatch = !!q && title.textContent.toLowerCase().indexOf(q) !== -1;
       var hits = 0;
-      list.querySelectorAll('li').forEach(function (li) {
-        var match = !q || sectionMatch || li.getAttribute('data-title').indexOf(q) !== -1;
+      highlight(title, title.textContent, sectionMatch ? q : '');
+      sec.querySelectorAll('li').forEach(function (li) {
+        var text = li.getAttribute('data-title');
+        var own = !!q && text.toLowerCase().indexOf(q) !== -1;
+        var match = !q || sectionMatch || own;
         li.hidden = !match;
+        highlight(li.querySelector('.tree-link-text'), text, own ? q : '');
         if (match) hits++;
       });
-      if (q) {
-        sec.hidden = hits === 0;
-        list.hidden = hits === 0;
-        toggle.setAttribute('aria-expanded', String(hits > 0));
-      } else {
-        // Restore the remembered open state.
-        sec.hidden = false;
-        var isOpen = loadOpen().indexOf(sec.getAttribute('data-section')) !== -1 ||
-          (findCurrent() && findCurrent().section.id === sec.getAttribute('data-section'));
-        list.hidden = !isOpen;
-        toggle.setAttribute('aria-expanded', String(!!isOpen));
-      }
+      sec.hidden = !!q && hits === 0;
+      setSectionOpen(sec, q ? hits > 0 : isRemembered(sec.getAttribute('data-section')));
       if (hits) anyVisible = true;
     });
     emptyMsg.hidden = anyVisible;
+    if (q) scrollEl.scrollTop = 0;
   }
 
   // ---------- drawer ----------
 
   var lastFocus = null;
 
-  function setDrawer(open) {
+  function setDrawer(open, focusSearch) {
     if (!sidebarEl) return;
     var btn = document.querySelector('.menu-btn');
     body.classList.toggle('drawer-open', open);
-    overlayEl.hidden = !open;
     if (btn) btn.setAttribute('aria-expanded', String(open));
     if (open) {
       lastFocus = document.activeElement;
-      searchInput.focus();
+      // Only jump into search from the keyboard; on phones it would pop up the keyboard.
+      (focusSearch ? searchInput : sidebarEl.querySelector('.drawer-close')).focus({ preventScroll: true });
     } else if (lastFocus) {
-      lastFocus.focus();
+      lastFocus.focus({ preventScroll: true });
     }
   }
 
@@ -229,7 +272,7 @@
     if (e.key === '/' && searchInput && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
       e.preventDefault();
       var hidden = getComputedStyle(sidebarEl).visibility === 'hidden';
-      if (hidden) setDrawer(true); else searchInput.focus();
+      if (hidden) setDrawer(true, true); else searchInput.focus();
     }
   });
 

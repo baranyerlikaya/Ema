@@ -63,12 +63,16 @@
   --r-pill: 999px;
 
   --topbar-h: 64px;
-  --sidebar-w: 304px;
+  --sidebar-w: 320px;
   --doc-w: 720px;
 
-  --ease: cubic-bezier(0.2, 0, 0, 1);
-  --t-fast: 120ms;
-  --t-med: 220ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);        /* ease-out, for things entering */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* for things leaving */
+  --t-fast: 150ms;
+  --t-med: 240ms;
+  --t-slow: 320ms;
+  --t-drawer: 420ms;
+  --t-drawer-out: 280ms;
 }
 
 /* ---------- Base ---------- */
@@ -257,20 +261,15 @@ button { font: inherit; color: inherit; }
 .sidebar-inner {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   height: 100%;
-  padding: 16px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--grey-3) transparent;
+  min-height: 0;
 }
 .sidebar-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 36px;
-  padding: 0 4px 0 8px;
+  padding: 16px 16px 0 24px;
 }
 .sidebar-label {
   margin: 0;
@@ -283,13 +282,17 @@ button { font: inherit; color: inherit; }
   position: relative;
   display: flex;
   align-items: center;
+  flex: none;
+  margin: 16px 16px 8px;
 }
 .search-icon {
   position: absolute;
   left: 12px;
   color: var(--ink-3);
   pointer-events: none;
+  transition: color var(--t-fast) var(--ease);
 }
+.search:focus-within .search-icon { color: var(--ink); }
 .search-input {
   width: 100%;
   height: 40px;
@@ -301,12 +304,13 @@ button { font: inherit; color: inherit; }
   font: inherit;
   font-size: 14px;
   outline: none;
-  transition: border-color var(--t-fast) var(--ease);
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
   -webkit-appearance: none;
   appearance: none;
 }
 .search-input::placeholder { color: var(--ink-3); }
-.search-input:focus { border-color: var(--ink); }
+.search-input:hover { border-color: var(--grey-3); }
+.search-input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06); }
 .search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 .search-key {
   position: absolute;
@@ -323,11 +327,41 @@ button { font: inherit; color: inherit; }
   font-family: var(--mono);
   font-size: 11px;
   pointer-events: none;
+  transition: opacity var(--t-fast) var(--ease);
 }
-.search-input:focus + .search-key { display: none; }
+.search-input:focus ~ .search-key,
+.search-clear:not([hidden]) ~ .search-key { opacity: 0; }
+.search-clear {
+  position: absolute;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--grey-1);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.search-clear svg { width: 12px; height: 12px; }
+.search-clear:hover { background: var(--grey-3); color: var(--ink); }
+
+/* Scrolling list under the pinned search */
+.sidebar-scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 16px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey-3) transparent;
+}
 
 .tree { display: flex; flex-direction: column; gap: 4px; }
-.tree-section + .tree-section { margin-top: 4px; }
 
 .tree-toggle {
   display: flex;
@@ -348,19 +382,42 @@ button { font: inherit; color: inherit; }
   transition: background-color var(--t-fast) var(--ease);
 }
 .tree-toggle:hover { background: var(--grey-2); }
+.tree-title { flex: 1; min-width: 0; }
 .tree-chevron {
   flex: none;
   color: var(--ink-3);
-  transition: transform var(--t-med) var(--ease);
+  transition: transform var(--t-med) var(--ease), color var(--t-fast) var(--ease);
 }
-.tree-toggle[aria-expanded='true'] .tree-chevron { transform: rotate(90deg); }
+.tree-toggle:hover .tree-chevron { color: var(--ink); }
+.is-open > .tree-toggle .tree-chevron { transform: rotate(90deg); }
+.tree-count {
+  flex: none;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Collapse: grid rows 0fr -> 1fr animates to the panel's natural height */
+.tree-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+.tree-panel-inner { min-height: 0; overflow: hidden; }
+.is-open > .tree-panel { grid-template-rows: 1fr; opacity: 1; }
+.sidebar.is-ready .tree-panel {
+  transition: grid-template-rows var(--t-slow) var(--ease), opacity var(--t-med) var(--ease);
+}
+.sidebar.is-searching .tree-panel { transition: none; }
 
 .tree-list {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 2px 0 8px;
+  margin: 4px 0 8px 16px;
   padding: 0 0 0 8px;
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
   list-style: none;
 }
 .tree-link {
@@ -368,7 +425,7 @@ button { font: inherit; color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 34px;
+  min-height: 32px;
   padding: 6px 8px 6px 12px;
   border-radius: var(--r-sm);
   color: var(--ink-2);
@@ -378,6 +435,7 @@ button { font: inherit; color: inherit; }
   transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
 a.tree-link:hover { background: var(--grey-2); color: var(--ink); }
+a.tree-link:active { background: var(--grey-3); }
 .tree-link.is-active {
   background: var(--ink);
   color: var(--white);
@@ -385,6 +443,13 @@ a.tree-link:hover { background: var(--grey-2); color: var(--ink); }
 }
 a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
 .tree-link.is-soon { color: var(--ink-3); cursor: default; }
+
+.tree mark {
+  background: none;
+  color: var(--ink);
+  font-weight: 700;
+}
+.is-active mark { color: var(--white); }
 
 .tree-empty {
   margin: 0;
@@ -406,23 +471,29 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   border-radius: 0 var(--r-xl) var(--r-xl) 0;
   transform: translateX(-104%);
   visibility: hidden;
-  transition: transform var(--t-med) var(--ease), visibility 0s linear var(--t-med);
+  transition: transform var(--t-drawer-out) var(--ease-in-out), visibility 0s linear var(--t-drawer-out);
+  will-change: transform;
 }
 .drawer-open .sidebar {
   transform: none;
   visibility: visible;
-  transition: transform var(--t-med) var(--ease), visibility 0s;
+  transition: transform var(--t-drawer) var(--ease), visibility 0s;
 }
 .drawer-overlay {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(0, 0, 0, 0.4);
-  animation: fade-in var(--t-med) var(--ease);
+  background: rgba(0, 0, 0, 0.32);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--t-drawer-out) var(--ease-in-out), visibility 0s linear var(--t-drawer-out);
+}
+.drawer-open .drawer-overlay {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--t-drawer) var(--ease), visibility 0s;
 }
 .drawer-open { overflow: hidden; }
-
-@keyframes fade-in { from { opacity: 0; } }
 
 /* ---------- Home ---------- */
 
@@ -949,6 +1020,8 @@ a.pn-card:hover { background: var(--grey-2); }
     transform: none;
     visibility: visible;
     transition: none;
+    will-change: auto;
+    view-transition-name: sidebar;
   }
   .layout-doc .menu-btn,
   .layout-doc .drawer-close,
@@ -995,7 +1068,21 @@ a.pn-card:hover { background: var(--grey-2); }
   .footer-inner { padding: 56px 16px 72px; gap: 32px; }
 }
 
+/* ---------- Page transitions ----------
+   Same-site navigations cross-fade (Chrome, Edge, Safari 18.2+; other browsers
+   just load normally). The top bar and desktop sidebar stay still. */
+
+@view-transition { navigation: auto; }
+.topbar { view-transition-name: topbar; }
+::view-transition-group(topbar),
+::view-transition-group(sidebar) { animation: none; }
+::view-transition-old(root) { animation: vt-out 160ms var(--ease-in-out) both; }
+::view-transition-new(root) { animation: vt-in var(--t-slow) var(--ease) both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+
 @media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
   *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
 }
 
