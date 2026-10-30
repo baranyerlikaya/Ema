@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhysRef</title>
+  <link rel="stylesheet" href="lib/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="lib/katex.min.js"></script>
+  <script defer src="lib/auto-render.min.js"></script>
+  <script defer src="lib/render-math.js"></script>
+  <script defer src="nav.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body class="layout-home" data-root="./">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <div id="site-sidebar"></div>
+
+  <main id="main">
+    <section class="hero">
+      <h1 class="hero-title">PhysRef</h1>
+      <!-- Intro: one or two sentences about the site -->
+      <div class="hero-intro"><span class="slot" data-slot="intro">[Intro]</span></div>
+      <div class="hero-actions">
+        <a class="btn btn-primary" id="start-link" href="#sections">Start reading</a>
+        <a class="btn btn-secondary" href="#sections">All sections <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <p class="hero-meta" id="topic-count"></p>
+    </section>
+
+    <section class="band" id="sections" aria-labelledby="sections-h">
+      <div class="band-inner">
+        <div class="band-head">
+          <h2 id="sections-h" class="band-title">Mechanics</h2>
+          <div class="tabs" role="tablist" aria-label="Filter topics">
+            <button class="tab" role="tab" type="button" data-filter="all" aria-selected="true">All</button>
+            <button class="tab" role="tab" type="button" data-filter="ready" aria-selected="false">Ready</button>
+            <button class="tab" role="tab" type="button" data-filter="soon" aria-selected="false">Soon</button>
+          </div>
+        </div>
+        <div class="section-grid" id="section-grid"></div>
+      </div>
+    </section>
+
+    <section class="home-block" id="sources" aria-labelledby="sources-h">
+      <h2 id="sources-h" class="block-title">Sources</h2>
+      <div class="grey-card">
+        <div class="slot slot-block" data-slot="sources">[Sources]</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>
