@@ -24,30 +24,73 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Derivatives of sin, cos, eˣ, ln</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Derivatives of the functions that appear everywhere in mechanics, sin, cos, eˣ and ln x, and how to combine them with the chain rule.</p>
         </header>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Two trigonometric limits</h3>
+            <div>
+<p>Everything about the derivatives of sine and cosine rests on two limits, with $\theta$ measured in <strong>radians</strong> [2]:</p>
+$$\lim_{\theta\to 0}\frac{\sin\theta}{\theta} = 1, \qquad \lim_{\theta\to 0}\frac{1-\cos\theta}{\theta} = 0.$$
+<p>Picture a unit circle and a small angle $\theta$. The arc has length $\theta$ and the vertical side of the triangle under it has length $\sin\theta$. As $\theta$ shrinks, the arc and that side become almost the same, so their ratio tends to $1$. The gap $1-\cos\theta$ between the triangle and the circle shrinks much faster than $\theta$, so the second ratio tends to $0$ [2].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Derivatives of sin x and cos x</h3>
+            <div>
+<p>Start from the definition and use the addition formula $\sin(x+\Delta x) = \sin x\cos\Delta x + \cos x\sin\Delta x$ [3]:</p>
+$$\begin{aligned} &\frac{\sin(x+\Delta x)-\sin x}{\Delta x} \\ &\quad= \sin x\,\frac{\cos\Delta x - 1}{\Delta x} + \cos x\,\frac{\sin\Delta x}{\Delta x}. \end{aligned}$$
+<p>As $\Delta x \to 0$ the first fraction goes to $0$ and the second to $1$, so</p>
+$$\frac{d}{dx}\sin x = \cos x.$$
+<p>The same steps with $\cos(x+\Delta x) = \cos x\cos\Delta x - \sin x\sin\Delta x$ give $\frac{d}{dx}\cos x = -\sin x$ [3]. Applying the quotient rule to $\tan x = \sin x/\cos x$ then gives $\frac{d}{dx}\tan x = \sec^2 x = 1/\cos^2 x$ [1, §Derivatives of Common Functions].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> The exponential function eˣ</h3>
+            <div>
+<p>For any base $a &gt; 1$, factor $a^x$ out of the difference quotient [5]:</p>
+$$\frac{a^{x+\Delta x}-a^x}{\Delta x} = a^x\,\frac{a^{\Delta x}-1}{\Delta x}.$$
+<p>The remaining fraction does not depend on $x$. Its limit is just the slope of the graph of $a^x$ at $x = 0$; call it $M(a)$. So $\frac{d}{dx}a^x = M(a)\,a^x$: <em>the derivative of an exponential is proportional to the exponential itself</em>.</p>
+<p>The slope $M(a)$ grows with $a$. It is less than $1$ for $a = 2$ and more than $1$ for $a = 4$, so there is one base in between with slope exactly $1$. That base is the number $e \approx 2.718$, and for it [5]</p>
+$$\frac{d}{dx}e^x = e^x.$$
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> The natural logarithm ln x</h3>
+            <div>
+<p>The natural logarithm undoes the exponential: $w = \ln x$ means $e^w = x$, for $x &gt; 0$. Differentiate both sides of $e^w = x$ with respect to $x$, using the chain rule on the left [5]:</p>
+$$e^w\,\frac{dw}{dx} = 1 \quad\Longrightarrow\quad \frac{dw}{dx} = \frac{1}{e^w} = \frac{1}{x}.$$
+<p>So $\frac{d}{dx}\ln x = \frac{1}{x}$. This also fixes the slope $M(a)$ from above. Writing $a^x = e^{x\ln a}$ and using the chain rule gives $\frac{d}{dx}a^x = (\ln a)\,a^x$, so $M(a) = \ln a$ [5].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Combining with the chain rule</h3>
+            <div>
+<p>In mechanics these functions almost always appear with an inner function of time, such as $\sin(\omega t + \varphi)$ or $e^{-bt}$. The chain rule turns the inner derivative into a constant factor [1, Worked Example 5]; [4]:</p>
+$$\begin{gathered} \frac{d}{dt}e^{kt} = k\,e^{kt}, \\ \frac{d}{dt}\sin(\omega t+\varphi) = \omega\cos(\omega t+\varphi), \\ \frac{d}{dt}\cos(\omega t+\varphi) = -\omega\sin(\omega t+\varphi). \end{gathered}$$
+<p>Differentiating $\sin$ or $\cos$ twice brings back the same function times $-\omega^2$. That is exactly the equation of simple harmonic motion, $\ddot x = -\omega^2 x$ (see Example 2) [1, Worked Example 5(c)].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>$e^x$ is positive for every $x$, even negative $x$. Since $\ln x$ is the inverse of $e^x$, it is defined only for $x &gt; 0$ [5].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>The formulas $\frac{d}{dx}\sin x = \cos x$ and $\frac{d}{dx}\cos x = -\sin x$ are only true when $x$ is in radians. In degrees an extra factor $\pi/180$ appears, because the limit $\sin\theta/\theta \to 1$ uses radians [2].</p>
+            </div>
           </aside>
         </section>
 
@@ -56,14 +99,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Trigonometric limits ($\theta$ in radians) [2]</span></figcaption>
+              <div class="formula-body">$$\lim_{\theta\to 0}\frac{\sin\theta}{\theta} = 1, \qquad \lim_{\theta\to 0}\frac{1-\cos\theta}{\theta} = 0$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Sine and cosine [1, 3]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\frac{d}{dx}\sin x = \cos x \\ \frac{d}{dx}\cos x = -\sin x\end{gathered}$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Tangent [1]</span></figcaption>
+              <div class="formula-body">$$\frac{d}{dx}\tan x = \sec^2 x = \frac{1}{\cos^2 x}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Exponential [1, 5]</span></figcaption>
+              <div class="formula-body">$$\frac{d}{dx}e^x = e^x$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>General base [5]</span></figcaption>
+              <div class="formula-body">$$\frac{d}{dx}a^x = (\ln a)\,a^x$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Natural logarithm [1, 5]</span></figcaption>
+              <div class="formula-body">$$\frac{d}{dx}\ln x = \frac{1}{x}, \qquad x &gt; 0$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>With an inner function [1, 4]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\frac{d}{dt}e^{kt} = k\,e^{kt} \\ \frac{d}{dt}\sin(\omega t) = \omega\cos(\omega t)\end{gathered}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -72,15 +141,93 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Differentiate $g(x) = x^2\sin x$ and $h(x) = \sin(3x^2+1)$. (From [1], Worked Example 5(a).)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>$g$ is a product, so use the product rule with $(x^2)' = 2x$ and $(\sin x)' = \cos x$:</p>
+$$g'(x) = 2x\sin x + x^2\cos x.$$
+              </div></li>
+              <li><div>
+<p>$h$ is a composite: outer $\sin u$, inner $u = 3x^2+1$ with $u' = 6x$. By the chain rule,</p>
+$$h'(x) = 6x\cos(3x^2+1).$$
+              </div></li>
+            </ol>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>For simple harmonic motion $x(t) = A\sin(\omega t + \varphi)$, show that the acceleration is $a = -\omega^2 x$. (From [1], Worked Example 5(c).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>First derivative, with the chain rule (inner derivative $\omega$):</p>
+$$v = \dot x = A\omega\cos(\omega t+\varphi).$$
+              </div></li>
+              <li><div>
+<p>Second derivative:</p>
+$$a = \dot v = -A\omega^2\sin(\omega t+\varphi) = -\omega^2 x.$$
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Units: $\omega^2 x$ has units $\text{s}^{-2}\cdot\text{m} = \text{m/s}^2$, as an acceleration should. The minus sign means the acceleration always points back toward $x = 0$, which is what a spring force does [1].</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>For damped motion $x(t) = A e^{-bt}\cos\omega t$, find $\dot x$. (From [1], Worked Example 5(d).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>This is a product of $e^{-bt}$ and $\cos\omega t$. Their derivatives are $-b\,e^{-bt}$ and $-\omega\sin\omega t$ (chain rule).</p>
+              </div></li>
+              <li><div>
+<p>Product rule, with the common factor $e^{-bt}$ already pulled out:</p>
+$$\dot x = A\,e^{-bt}\left[-b\cos\omega t - \omega\sin\omega t\right].$$
+              </div></li>
+              <li><div>
+<p>Factor out the common terms:</p>
+$$\dot x = -A\,e^{-bt}\left(b\cos\omega t + \omega\sin\omega t\right).$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Setting $b = 0$ (no damping) gives $\dot x = -A\omega\sin\omega t$, the derivative of $A\cos\omega t$, as it should.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Differentiate $f(x) = x^x$ for $x &gt; 0$. (From [5], Example 1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>The exponent is not constant, so neither the power rule nor the $a^x$ rule applies. Take the logarithm first: $\ln f = x\ln x$.</p>
+              </div></li>
+              <li><div>
+<p>Differentiate both sides. On the left the chain rule gives $f'/f$; on the right use the product rule:</p>
+$$\frac{f'}{f} = 1\cdot\ln x + x\cdot\frac{1}{x} = \ln x + 1.$$
+              </div></li>
+              <li><div>
+<p>Multiply by $f$:</p>
+$$f'(x) = x^x(\ln x + 1).$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>At $x = 1$: $f'(1) = 1\cdot(0+1) = 1$. The slope is positive there, and indeed $x^x$ is increasing near $x = 1$ ($0.9^{0.9} \approx 0.91 &lt; 1 &lt; 1.1^{1.1} \approx 1.11$).</p>
+              </div>
             </div>
           </div>
         </section>
@@ -88,8 +235,11 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 1: Mathematical Tools</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Derivatives of Common Functions; Worked Example 5. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/mathematical-tools/main.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 2: "Limits, continuity; trigonometric limits", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec2.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 3: "Derivatives of products, quotients, sine, cosine", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec3.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 4: "Chain rule; higher derivatives", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec4.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 6: "Exponential and log; logarithmic differentiation; hyperbolic functions", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/mit18_01_f06_lec06_v3.pdf">PDF</a></span></li>
           </ol>
         </section>
 
