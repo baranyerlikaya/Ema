@@ -26,45 +26,113 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Friction, Drag, Free Fall, Terminal Speed</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Dry friction between surfaces, fluid drag that depends on speed, free fall with and without air resistance, and the terminal speed where gravity and drag balance.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Friction between two solids</strong> comes in two flavours [1]; [2]:</p>
+<ul>
+<li><strong>Kinetic</strong> (things actually sliding): a fixed amount, $f_k = \mu_k N$, pushing against the motion.</li>
+<li><strong>Static</strong> (not sliding yet): whatever is needed to hold things still, up to a maximum $\mu_s N$. Static friction is a little stronger than kinetic — that's why things are hard to start moving but easier to keep moving.</li>
+</ul>
+<p>Here $N$ is how hard the surfaces press together, and $\mu$ is a number between about 0 (ice) and 1 (rubber) that depends on the two materials.</p>
+<p><strong>Drag through air or water</strong> depends on how fast you go [1]; [2]:</p>
+<ul>
+<li><strong>Slow (sticky):</strong> drag is proportional to speed, $F_r = -kv$. Think of marbles in syrup, or sand grains in water.</li>
+<li><strong>Fast:</strong> drag is proportional to <em>speed squared</em>, $F_r \propto v^2$. Think of cars, cyclists, skydivers.</li>
+</ul>
+<p><strong>Dropping something.</strong></p>
+<ul>
+<li><em>No air:</em> it falls with acceleration $g$, hits the ground at speed $\sqrt{2gh}$, regardless of weight [1].</li>
+<li><em>With air drag:</em> as it speeds up, drag grows. Eventually drag = gravity, and the speed stops growing. That's the <strong>terminal speed</strong> [1]:</p>
+$$v_\infty = \frac{mg}{k}.$$
+</li>
+</ul>
+<p>This is why a feather falls slowly and a hammer fast: in air, their terminal speeds are very different. On the Moon (no air) they fall together [1].</p>
+<p>With linear drag, the body approaches $v_\infty$ smoothly: $v(t) = v_\infty(1 - e^{-t/\tau})$, with $\tau = m/k$ the "characteristic time". After a few $\tau$, you're essentially at terminal speed [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Dry friction</h3>
+            <div>
+<p>Between two solid surfaces, friction has two regimes [1, Worked Example “Motion on an Inclined Plane and Friction Forces”]; [2, §8.3.2]:</p>
+<ul>
+<li><strong>Kinetic</strong> (surfaces sliding): $f_k = \mu_k N$, opposite to the relative motion;</li>
+<li><strong>Static</strong> (surfaces at rest): $0 \le f_s \le \mu_s N$, whatever it takes to prevent slipping.</li>
+</ul>
+<p>Both are proportional to the normal force $N$ and are, to a good approximation, independent of the contact area and (for ordinary speeds) of the sliding speed. Usually $\mu_s \gtrsim \mu_k$ [2, §8.3.2].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Fluid drag</h3>
+            <div>
+<p>In a fluid (air or liquid), moving bodies feel a <strong>drag force</strong> opposing their velocity. Two useful models [1, Worked Example “A ‘More Realistic’ Free Fall and Terminal Speed”]; [2, §8.6]:</p>
+<ul>
+<li><strong>Linear (low speed, viscous):</strong> $\mathbf F_r = -k\mathbf v$. For a sphere of radius $R$ in a fluid of viscosity $\eta$, Stokes' law gives $k = 6\pi\eta R$ [2, §8.6, Example 8.5].</li>
+<li><strong>Quadratic (high speed, inertial):</strong> $\mathbf F_r = -\tfrac12C\rho A\,v\,\mathbf v$, with $C$ a drag coefficient, $\rho$ fluid density and $A$ the cross-section area [2, §8.6, Example 8.6].</li>
+</ul>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Free fall without air</h3>
+            <div>
+<p>Dropping a body from height $h$ with no air resistance, Newton's second law gives $\ddot y = -g$. Starting from rest at $y_0 = h$ [1, Worked Example “Free fall Motion”]:</p>
+$$\begin{gathered}y(t) = h - \tfrac12gt^2, \qquad v_y(t) = -gt, \\ t_{\text{land}} = \sqrt{\tfrac{2h}{g}}, \qquad v = \sqrt{2gh}.\end{gathered}$$
+<p>Independent of the mass [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Free fall with linear drag</h3>
+            <div>
+<p>Now add linear drag: $m\dot v = -mg - kv$ (positive $v$ upward). Rearrange and recognize a first-order linear ODE [1, Worked Example “A ‘More Realistic’ Free Fall and Terminal Speed”]:</p>
+$$\frac{dv}{dt} + \frac{k}{m}v = -g.$$
+<p>Solve with the integrating factor $e^{kt/m}$ (or by separating variables around $v = -mg/k$). With $v(0) = 0$:</p>
+$$v(t) = -\frac{mg}{k}\left(1 - e^{-kt/m}\right).$$
+<p>Reading off: speed grows from zero toward $v_\infty = mg/k$ with time constant $\tau = m/k$ [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Terminal speed</h3>
+            <div>
+<p>The <strong>terminal speed</strong> is reached when drag balances gravity, $m\dot v = 0$: $-mg - kv_\infty = 0$ gives [1]</p>
+$$v_\infty = \frac{mg}{k}.$$
+<p>Below $v_\infty$ gravity wins and the body speeds up; above $v_\infty$ drag wins and it slows down; at $v_\infty$ the forces balance and the speed stays constant [1]; [2, Example 8.5].</p>
+<p>For quadratic drag the balance $mg = \tfrac12C\rho Av_\infty^2$ gives $v_\infty = \sqrt{\tfrac{2mg}{C\rho A}}$ instead [2, §8.6]. The heavier the body (for the same shape), the higher the terminal speed.</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>With linear drag, after $t \approx 3\tau$ the body is within about 5% of $v_\infty$. A small sand grain in oil reaches it almost immediately; a raindrop a few hundred metres below a cloud [2, §8.6].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Drag depends on the <em>relative</em> velocity between the body and the fluid. If the air moves with the body (wind), use the velocity difference. In linear drag, $\mathbf F_r = -k(\mathbf v - \mathbf v_{\text{fluid}})$ [2, §8.6].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="drag">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A body dropped from rest with linear air drag $F_r = -kv$. The curve shows $v(t) = v_\infty(1 - e^{-t/\tau})$ with $v_\infty = mg/k$ (the dashed line) and $\tau = m/k$ (the characteristic time). The dark dot marks the current moment. Increase $k$ (more drag): $v_\infty$ drops and the body reaches it faster. Increase $m$: $v_\infty$ rises, approach gets slower.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +140,45 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Kinetic friction [1, 2]</span></figcaption>
+              <div class="formula-body">$$f_k = \mu_k N$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Static friction [1, 2]</span></figcaption>
+              <div class="formula-body">$$0 \le f_s \le \mu_s N$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Linear (Stokes) drag [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F_r = -k\mathbf v, \quad k_{\text{sphere}} = 6\pi\eta R$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Quadratic drag [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F_r = -\tfrac12 C\rho A\,v\,\mathbf v$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Free fall without air [1]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}v = -gt, \quad t_{\text{land}} = \sqrt{2h/g} \\ v_{\text{impact}} = \sqrt{2gh}\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Free fall with linear drag [1]</span></figcaption>
+              <div class="formula-body">$$v(t) = -\frac{mg}{k}\left(1 - e^{-kt/m}\right)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Terminal speed, linear drag [1]</span></figcaption>
+              <div class="formula-body">$$v_\infty = \frac{mg}{k}, \qquad \tau = \frac{m}{k}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Terminal speed, quadratic drag [2]</span></figcaption>
+              <div class="formula-body">$$v_\infty = \sqrt{\frac{2mg}{C\rho A}}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +187,94 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A particle of mass $m$ is released from rest and falls under gravity with linear air drag $F_r = -kv$. Find $v(t)$ and the terminal speed. (From [1], Worked Example “A ‘More Realistic’ Free Fall and Terminal Speed”.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Second law (taking $v$ positive upward, so a falling body has $v &lt; 0$): $m\dot v = -mg - kv$, i.e. $\dot v + (k/m)v = -g$.</p>
+              </div></li>
+              <li><div>
+<p>Integrating factor $e^{kt/m}$: $\dfrac{d}{dt}(ve^{kt/m}) = -ge^{kt/m}$, so $ve^{kt/m} = -\dfrac{mg}{k}e^{kt/m} + C$.</p>
+              </div></li>
+              <li><div>
+<p>$v(0) = 0$ gives $C = mg/k$, so $v(t) = -\dfrac{mg}{k}\left(1 - e^{-kt/m}\right)$.</p>
+              </div></li>
+              <li><div>
+<p>Terminal (set $\dot v = 0$): $v_\infty = -mg/k$, downward, with magnitude $mg/k$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>$t = 0$: $v = 0$ ✓. $t \to \infty$: $v \to -mg/k$ ✓. $k \to 0$: expand $e^{-kt/m} \approx 1 - kt/m$ to get $v \to -gt$, the free-fall limit ✓.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A marble of radius $R$ and mass $m$ is dropped from rest in olive oil of viscosity $\eta$. Find its terminal speed using Stokes' law $k = 6\pi\eta R$. (From [2], Example 8.5.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$v_\infty = mg/k = \dfrac{mg}{6\pi\eta R}$.</p>
+              </div></li>
+              <li><div>
+<p>For $m = 10\ \text{g}$, $R = 5\ \text{mm}$, $\eta = 0.081\ \text{kg/(m·s)}$ (olive oil at 25 °C): $v_\infty \approx \dfrac{(0.010)(9.81)}{6\pi(0.081)(0.005)} \approx 1.3\ \text{m/s}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>A heavier marble (same size) falls faster; a more viscous fluid slows it down. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A $75\ \text{kg}$ skydiver, cross-section $A \approx 0.7\ \text{m}^2$, drag coefficient $C \approx 1.0$, falls through air of density $\rho = 1.2\ \text{kg/m}^3$. Find the terminal speed. (Adapted from [2], Example 8.6.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Quadratic drag balance: $mg = \tfrac12 C\rho A v_\infty^2$, so $v_\infty = \sqrt{\dfrac{2mg}{C\rho A}}$.</p>
+              </div></li>
+              <li><div>
+<p>Insert numbers: $v_\infty = \sqrt{\dfrac{2(75)(9.81)}{(1.0)(1.2)(0.7)}} \approx 42\ \text{m/s}$, about 150 km/h.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Spreading your arms doubles $A$, dropping $v_\infty$ by $\sqrt2 \approx 41\%$. Pulling in halves it, raising $v_\infty$ by $\sqrt2$ ✓.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A block of mass $m$ on a horizontal surface is pushed with a horizontal force $F$. The coefficients of static and kinetic friction are $\mu_s$ and $\mu_k$. What is the smallest $F$ that makes the block move, and what is its acceleration once it does? (Based on [2], §8.3.2.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Normal force: $N = mg$. Static friction can match any applied force up to $\mu_s mg$.</p>
+              </div></li>
+              <li><div>
+<p>Minimum force to start moving: $F_{\min} = \mu_s mg$.</p>
+              </div></li>
+              <li><div>
+<p>Once sliding, kinetic friction $\mu_k mg$ opposes the motion: $a = (F - \mu_k mg)/m = F/m - \mu_k g$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Since $\mu_k &lt; \mu_s$, as soon as the block breaks loose the opposing friction drops: it accelerates even if $F$ is held constant at $F_{\min}$. That's why pushing furniture is easier once it starts moving ✓.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +282,8 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. Worked Examples “Motion on an Inclined Plane and Friction Forces”, “Free fall Motion” and “A ‘More Realistic’ Free Fall and Terminal Speed”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 8 "Applications of Newton’s Second Law", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §8.3.2 Kinetic and Static Friction, §8.6 Drag Forces; Examples 8.5 and 8.6. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter8.pdf">PDF</a></span></li>
           </ol>
         </section>
 

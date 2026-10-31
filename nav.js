@@ -34,7 +34,7 @@ window.PHYSREF_NAV = [
       { id: 'momentum-force',      title: 'Momentum, F = dp/dt = ma, Galilean Invariance',        file: 'topics/mechanics/momentum-force.html',      status: 'ready' },
       { id: 'inertial-mass',       title: 'Inertial Mass, Equation of Motion under Constant Force', file: 'topics/mechanics/inertial-mass.html',     status: 'ready' },
       { id: 'inclined-plane',      title: 'Inclined Plane, Tension',                              file: 'topics/mechanics/inclined-plane.html',      status: 'ready' },
-      { id: 'friction-drag',       title: 'Friction, Drag, Free Fall, Terminal Speed',            file: 'topics/mechanics/friction-drag.html',       status: 'soon' },
+      { id: 'friction-drag',       title: 'Friction, Drag, Free Fall, Terminal Speed',            file: 'topics/mechanics/friction-drag.html',       status: 'ready' },
       { id: 'kinematics-from-force', title: 'Full Kinematics from F(t): a(t), v(t), x(t), Power', file: 'topics/mechanics/kinematics-from-force.html', status: 'soon' }
     ]
   },
