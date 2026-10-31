@@ -31,7 +31,15 @@
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p>These four functions are everywhere in physics, so it's worth knowing their derivatives by heart.</p>
+<p><strong>Sine and cosine.</strong> Imagine a point going round a wheel. Its height goes up and down like $\sin x$, and its sideways position goes back and forth like $\cos x$. The steepness of the sine curve is exactly the cosine curve, and the steepness of cosine is minus sine [3]:</p>
+$$\frac{d}{dx}\sin x = \cos x, \qquad \frac{d}{dx}\cos x = -\sin x.$$
+<p>This only works if the angle is in <strong>radians</strong>, not degrees [2]. It all comes from one fact: for a tiny angle, $\sin\theta$ is almost exactly $\theta$ [2].</p>
+<p><strong>$e^x$, the copycat.</strong> The number $e \approx 2.718$ is special: the function $e^x$ grows exactly as fast as its own value. So its derivative is itself [5]: $\frac{d}{dx}e^x = e^x$. For other bases $a$ there's an extra factor: $\frac{d}{dx}a^x = (\ln a)\,a^x$ [5].</p>
+<p><strong>$\ln x$, the undo button.</strong> The natural logarithm undoes $e^x$: if $e^w = x$ then $w = \ln x$. It only works for positive $x$, and its derivative is $\frac{1}{x}$ [5].</p>
+<p><strong>With the chain rule.</strong> In mechanics these usually have something inside, like $\sin(\omega t)$ or $e^{kt}$. The inside's derivative pops out in front [1]; [4]: $\frac{d}{dt}\sin(\omega t) = \omega\cos(\omega t)$ and $\frac{d}{dt}e^{kt} = k\,e^{kt}$. Take the derivative of $\sin(\omega t)$ twice and you get back $-\omega^2\sin(\omega t)$. That is the recipe for a spring going back and forth [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
@@ -103,11 +111,11 @@ $$\begin{gathered} \frac{d}{dt}e^{kt} = k\,e^{kt}, \\ \frac{d}{dt}\sin(\omega t+
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="phasor">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">The arrow turns steadily around the circle. Its height traces $\sin$ (dark wave) and its sideways position traces $\cos$ (faint wave). Compare the two waves: where the sine wave crosses zero it is steepest, and there the cosine wave is at its highest or lowest. Where the sine wave is flat at a peak, the cosine wave is zero. The cosine measures how steep the sine is.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
