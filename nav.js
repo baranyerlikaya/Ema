@@ -20,7 +20,7 @@ window.PHYSREF_NAV = [
       { id: 'position-velocity-acceleration', title: 'Position, Displacement, Velocity, Acceleration', file: 'topics/mechanics/position-velocity-acceleration.html', status: 'ready' },
       { id: 'vector-components',   title: 'Vector Components of Motion',                          file: 'topics/mechanics/vector-components.html',   status: 'ready' },
       { id: 'projectile-motion',   title: 'Projectile Motion',                                    file: 'topics/mechanics/projectile-motion.html',   status: 'ready' },
-      { id: 'reference-frames',    title: 'Reference Frames, Speed vs Average Speed',             file: 'topics/mechanics/reference-frames.html',    status: 'soon' },
+      { id: 'reference-frames',    title: 'Reference Frames, Speed vs Average Speed',             file: 'topics/mechanics/reference-frames.html',    status: 'ready' },
       { id: 'momentum-intro',      title: 'Momentum (Intro)',                                     file: 'topics/mechanics/momentum-intro.html',      status: 'soon' },
       { id: 'superposition',       title: 'Superposition of Motions',                             file: 'topics/mechanics/superposition.html',       status: 'soon' },
       { id: 'closest-approach',    title: 'Two Particles: Closest Approach',                      file: 'topics/mechanics/closest-approach.html',    status: 'ready' }

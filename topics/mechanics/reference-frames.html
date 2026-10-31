@@ -26,45 +26,92 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Reference Frames, Speed vs Average Speed</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Motion always depends on who is watching: how positions and velocities change between frames moving relative to each other, and the difference between speed, average speed and average velocity.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Who is watching?</strong> Sit in a train and drop your keys: you see them fall straight down. Someone standing outside sees the keys fall <em>and</em> move forward with the train. Both are right. They just use different <strong>reference frames</strong>, each with its own observer and its own axes [2].</p>
+<p><strong>Switching frames.</strong> If the train frame $S'$ moves with velocity $\mathbf V$ relative to the ground frame $S$, then [1]; [2]:</p>
+$$\mathbf v_{\text{seen from train}} = \mathbf v_{\text{seen from ground}} - \mathbf V.$$
+<p>Positions shift the same way, $\mathbf r' = \mathbf r - \mathbf R$, and clocks agree, $t' = t$ [1].</p>
+<p><strong>What everyone agrees on:</strong> if the train moves smoothly (constant velocity), both observers measure the <em>same acceleration</em>. So the laws of motion look exactly the same inside the train as outside. You can't tell you're moving just by doing experiments inside a smooth train [1]; [2].</p>
+<p><strong>Speed vs average speed vs average velocity.</strong></p>
+<ul>
+<li><strong>Speed</strong> = how fast right now, no direction, never negative [3].</li>
+<li><strong>Average speed</strong> = total distance you walked ÷ time [5].</li>
+<li><strong>Average velocity</strong> = (where you ended − where you started) ÷ time, with a direction [3]; [4].</li>
+</ul>
+<p>Walk 1 km to a shop and 1 km back in 1 hour: average speed 2 km/h, average velocity 0, because you ended where you started [4].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Reference frames</h3>
+            <div>
+<p>A <strong>reference frame</strong> is an observer with a coordinate system (and a clock) used to describe positions, velocities and accelerations [2, §11.1]. The position vector depends on where the origin is, but displacements, velocities and accelerations do not, as long as the observer is at rest relative to the first [2, §11.1].</p>
+<p>If the second observer <em>moves</em> relative to the first, the two measure different positions and velocities for the same body [2, §11.1].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The Galilean transformation</h3>
+            <div>
+<p>Let frame $S'$ move relative to frame $S$, and let $\mathbf R$ be the vector from the origin of $S$ to the origin of $S'$. Then the same body has positions related by [2, §11.2]</p>
+$$\mathbf r' = \mathbf r - \mathbf R.$$
+<p>Differentiating gives the <strong>law of addition of velocities</strong>, with $\mathbf V = d\mathbf R/dt$ the velocity of $S'$ relative to $S$ [2, §11.3]:</p>
+$$\mathbf v' = \mathbf v - \mathbf V.$$
+<p>If $S'$ moves with constant velocity $\mathbf v_0$ and the origins coincide at $t = 0$, then $\mathbf R = \mathbf v_0t$, so $\mathbf r' = \mathbf r - \mathbf v_0t$ and $\mathbf v' = \mathbf v - \mathbf v_0$ [1, §Galilean Invariance and Inertial Frames]. Time is the same in both frames, $t' = t$ [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Inertial frames and Galilean invariance</h3>
+            <div>
+<p>If $\mathbf V$ is constant, differentiating once more gives $\mathbf a' = \mathbf a$: <strong>every observer moving at constant velocity measures the same acceleration</strong> [1]; [2, §11.2.1]. Hence $\mathbf F = m\mathbf a$ has the same form in all such frames. Frames moving at constant velocity relative to an inertial frame are also inertial, and the laws of mechanics look the same in all of them: this is <strong>Galilean invariance</strong> [1, §Galilean Invariance and Inertial Frames].</p>
+<p>Put differently: by watching mechanics inside a smoothly moving train, you cannot tell whether the train is moving (the principle of relativity) [2, §11.2.1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Speed, average speed and average velocity</h3>
+            <div>
+<p><strong>Speed</strong> is the magnitude of the instantaneous velocity, $v = |\mathbf v|$, and is never negative [3, §The Instantaneous Velocity Vector].</p>
+<p>Over a time interval $\Delta t$ there are two different averages:</p>
+<ul>
+<li>the <strong>average velocity</strong> $\mathbf v_{\text{avg}} = \Delta\mathbf r/\Delta t$, built from the displacement [3]; [4, §4.3.1];</li>
+<li>the <strong>average speed</strong> $= \dfrac{\text{distance travelled}}{\text{time elapsed}}$, built from the length of the path [5].</li>
+</ul>
+<p>They differ whenever the path is not a straight line covered in one direction. If an object goes out and comes back, its displacement and average velocity are zero, but the distance and average speed are not [4, §4.3.1]. In general $|\mathbf v_{\text{avg}}| \le$ average speed, since the straight segment $|\Delta\mathbf r|$ is never longer than the path.</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Speed and distance are frame-dependent too. A passenger walking forward in a train has one speed relative to the train and another relative to the ground. Only acceleration is the same in all inertial frames [1]; [2, §11.3].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Mind the sign in $\mathbf v' = \mathbf v - \mathbf V$. To find how a body moves <em>as seen from</em> a moving observer, subtract the observer's velocity, as vectors, component by component. Don't just subtract speeds [2, Example 11.1].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="frames">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">The same throw seen from two frames. A ball is thrown straight up inside a train moving at speed $u$. Bottom (train frame $S'$): the train stays put and the ball goes straight up and down. Top (ground frame $S$): the train moves right, and the ball follows a parabola, because its velocity is $\mathbf v = \mathbf v' + u\,\hat\imath$. In both frames the ball lands back in the train and has the same acceleration $-g\,\hat\jmath$. Set $u = 0$ to make the two pictures identical.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +119,35 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Galilean transformation [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf r' = \mathbf r - \mathbf R, \qquad t' = t$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Addition of velocities [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf v' = \mathbf v - \mathbf V$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Constant relative velocity [1]</span></figcaption>
+              <div class="formula-body">$$\mathbf r' = \mathbf r - \mathbf v_0 t, \qquad \mathbf v' = \mathbf v - \mathbf v_0$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Same acceleration in inertial frames [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf a' = \mathbf a \quad (\mathbf V = \text{const})$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Average velocity [3, 4]</span></figcaption>
+              <div class="formula-body">$$\mathbf v_{\text{avg}} = \frac{\Delta\mathbf r}{\Delta t}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Average speed [5]</span></figcaption>
+              <div class="formula-body">$$\bar v = \frac{\text{distance travelled}}{\Delta t} \;\ge\; |\mathbf v_{\text{avg}}|$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +156,92 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Plane A flies northeast at $160\ \text{m/s}$; plane B flies southeast at $200\ \text{m/s}$. What is the velocity of A as seen from B? (From [2], Example 11.1.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Take $\hat\imath$ east and $\hat\jmath$ north. Then $\mathbf v_A = 80\sqrt2\,(\hat\imath + \hat\jmath)$ and $\mathbf v_B = 100\sqrt2\,(\hat\imath - \hat\jmath)$ in m/s.</p>
+              </div></li>
+              <li><div>
+<p>The observer in B is frame $S'$ with $\mathbf V = \mathbf v_B$, so</p>
+$$\begin{aligned}\mathbf v'_A &= \mathbf v_A - \mathbf v_B \\ &= -20\sqrt2\,\hat\imath + 180\sqrt2\,\hat\jmath\ \ \text{m/s}.\end{aligned}$$
+              </div></li>
+              <li><div>
+<p>Magnitude: $\sqrt{(20\sqrt2)^2 + (180\sqrt2)^2} \approx 256\ \text{m/s}$. Direction: $\tan\theta' = -9$ with $v'_x &lt; 0$, $v'_y &gt; 0$, so $\theta' \approx 96.3^\circ$ from east, just west of north.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Seen from B, A moves mostly north, because B itself is moving south quickly. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A ball is thrown straight up with speed $w$ inside a train moving at constant velocity $u\,\hat\imath$. Describe its velocity and path as seen from the ground. (Adapted from [1], §Galilean Invariance and Inertial Frames, using [2], §11.3.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>In the train frame $S'$: $\mathbf v' = (w - gt)\,\hat\jmath$, a vertical up-and-down motion.</p>
+              </div></li>
+              <li><div>
+<p>The ground is $S$; the train moves at $\mathbf V = u\,\hat\imath$ relative to it. So $\mathbf v = \mathbf v' + \mathbf V = u\,\hat\imath + (w - gt)\,\hat\jmath$.</p>
+              </div></li>
+              <li><div>
+<p>From the ground the ball moves sideways at $u$ while rising and falling: a parabola, like a projectile launched with components $(u, w)$. Both observers measure $\mathbf a = -g\,\hat\jmath$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The ball lands back in the thrower's hand in both frames: in the ground frame, ball and hand both move sideways at $u$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle moves on the $x$-axis as $x(t) = t^3 - 6t^2 + 9t$ (SI units). For $0 \le t \le 4\ \text{s}$, compare its average speed with its average velocity. (Adapted from [3], Worked Example “Velocity, Acceleration, and the Interpretation of Signs”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>It turns around at $t = 1$ and $t = 3$, so the distance travelled is $4 + 4 + 4 = 12\ \text{m}$, and the displacement is $x(4) - x(0) = 4\ \text{m}$ [3].</p>
+              </div></li>
+              <li><div>
+<p>Average speed $= 12/4 = 3\ \text{m/s}$; average velocity $= 4/4 = 1\ \text{m/s}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Average speed $\ge |v_{\text{avg}}|$, with the gap caused entirely by the back-and-forth motion. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A pumpkin dropped from $400\ \text{ft}$ has height $y = 400 - 16t^2$. Compare its average speed during the fall with its speed on impact. (From [5], “Physical interpretation of derivatives”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>It lands at $t = 5\ \text{s}$, so the average speed is $400/5 = 80\ \text{ft/s}$.</p>
+              </div></li>
+              <li><div>
+<p>Instantaneous velocity $\dot y = -32t$; at impact $|\dot y| = 160\ \text{ft/s}$, twice the average.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Here the motion is in one direction only, so the average speed equals the magnitude of the average velocity: $|\Delta y|/\Delta t = 400/5$. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +249,11 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Newton's Axioms of Motion, §Galilean Invariance and Inertial Frames. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 11 "Reference Frames", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §11.1–11.3; Example 11.1. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter11.pdf">PDF</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 2: Kinematics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §The Instantaneous Velocity Vector (speed); Worked Example “Velocity, Acceleration, and the Interpretation of Signs”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/kinematics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 4 "One Dimensional Kinematics", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §4.3.1 Average Velocity. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter4.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 1: "Derivatives, slope, velocity, rate of change", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec1.pdf">PDF</a></span></li>
           </ol>
         </section>
 
