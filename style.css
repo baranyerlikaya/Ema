@@ -52,6 +52,7 @@
   --ink: #141414;      /* primary text */
   --black: #000000;
   --line: rgba(0, 0, 0, 0.08);
+  --focus: #8f8f8f;   /* keyboard focus ring: grey, never black; 3.3:1 on white */
 
   --font: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -106,7 +107,7 @@ button { font: inherit; color: inherit; }
 [hidden] { display: none !important; }
 
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -296,7 +297,7 @@ button { font: inherit; color: inherit; }
 .drawer-close:hover { background: rgba(0, 0, 0, 0.09); }
 .drawer-close:hover svg { transform: rotate(90deg); }
 .drawer-close:active { transform: scale(0.9); }
-.drawer-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.drawer-close:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 .search {
   position: relative;
@@ -331,7 +332,7 @@ button { font: inherit; color: inherit; }
 }
 .search-input::placeholder { color: var(--ink-3); }
 .search-input:hover { background: rgba(0, 0, 0, 0.07); }
-.search-input:focus { background: var(--white); box-shadow: 0 0 0 1.5px var(--ink), 0 0 0 5px rgba(0, 0, 0, 0.05); }
+.search-input:focus { background: var(--white); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12), 0 0 0 4px rgba(0, 0, 0, 0.04); }
 .search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 .search-key {
   position: absolute;
