@@ -44,6 +44,7 @@ Each empty slot is an element with `class="slot"` and a label like `[Theory]` or
 
 ```
 index.html                  home
+sources.html                sources page ([Sources] slot)
 style.css                   all styles
 app.js                      header, sidebar, search, drawer, breadcrumb, prev/next, footer
 nav.js                      topic tree (single source of truth)
@@ -60,10 +61,10 @@ GitHub Pages, deployed from the `main` branch, root folder (`/`). Settings → P
 
 All paths are relative, so the site works under `https://<user>.github.io/<repo>/`.
 
-CSS and JS links carry a version tag (`style.css?v=2`) so browsers don't mix a cached old stylesheet with new HTML. After changing `style.css` or a script, bump it everywhere:
+CSS and JS links carry a version tag (`style.css?v=3`) so browsers don't mix a cached old stylesheet with new HTML. After changing `style.css` or a script, bump it everywhere:
 
 ```bash
-sed -i 's/?v=2"/?v=3"/g' index.html topics/mechanics/*.html
+sed -i 's/?v=3"/?v=4"/g' index.html sources.html topics/mechanics/*.html
 ```
 
 ## Credits

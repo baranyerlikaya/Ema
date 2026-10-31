@@ -227,33 +227,19 @@ button { font: inherit; color: inherit; }
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 652;
-  letter-spacing: -0.2px;
+  line-height: 1;
+  letter-spacing: -0.5px;
   text-decoration: none;
 }
-.logo-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
-  background: var(--ink);
-  color: var(--white);
-  font-size: 13px;
-  font-weight: 652;
-  letter-spacing: 0;
-}
-.logo-invert .logo-mark { background: var(--white); color: var(--ink); }
 
 .topbar-links { display: flex; gap: 24px; }
 .topbar-links a,
 .topbar-link {
   color: var(--ink);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 456;
   text-decoration: none;
   transition: color var(--t-fast) var(--ease);
 }
@@ -1068,6 +1054,7 @@ a.pn-card:hover { background: var(--grey-2); }
 .page-end {
   /* Positioned (no z-index, so the mobile drawer isn't trapped) to paint over the footer */
   position: relative;
+  overflow: clip; /* clips grey bands to the rounded corners; unlike hidden, keeps sticky working */
   background: var(--white);
   border-radius: 0 0 var(--r-xl) var(--r-xl);
 }

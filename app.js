@@ -70,10 +70,10 @@
     var header = el('header', { class: 'topbar' }, [
       el('div', { class: 'topbar-inner' }, [
         menuBtn,
-        el('a', { class: 'logo', href: ROOT + 'index.html', html: '<span class="logo-mark" aria-hidden="true">E</span><span>Ema</span>' }),
+        el('a', { class: 'logo', href: ROOT + 'index.html', text: 'Ema' }),
         el('nav', { class: 'topbar-links', 'aria-label': 'Site' }, [
           el('a', { href: ROOT + 'index.html#sections', text: 'Mechanics' }),
-          el('a', { href: ROOT + 'index.html#sources', text: 'Sources' })
+          el('a', { href: ROOT + 'sources.html', text: 'Sources' })
         ]),
         el('div', { class: 'topbar-right' }, [
           el('a', { class: 'topbar-link', href: REPO_URL, text: 'GitHub' })
@@ -399,13 +399,13 @@
     var footer = el('footer', { class: 'footer' }, [
       el('div', { class: 'footer-inner' }, [
         el('div', { class: 'footer-brand' }, [
-          el('a', { class: 'logo logo-invert', href: ROOT + 'index.html', html: '<span class="logo-mark" aria-hidden="true">E</span><span>Ema</span>' })
+          el('a', { class: 'logo logo-invert', href: ROOT + 'index.html', text: 'Ema' })
         ]),
         el('div', { class: 'footer-col' }, [el('p', { class: 'footer-label', text: 'Mechanics' }), sections]),
         el('div', { class: 'footer-col' }, [
           el('p', { class: 'footer-label', text: 'Site' }),
           el('ul', {}, [
-            el('li', {}, [el('a', { href: ROOT + 'index.html#sources', text: 'Sources' })]),
+            el('li', {}, [el('a', { href: ROOT + 'sources.html', text: 'Sources' })]),
             el('li', {}, [el('a', { href: REPO_URL, text: 'GitHub' })])
           ])
         ]),
