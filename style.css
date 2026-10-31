@@ -308,6 +308,8 @@ button { font: inherit; color: inherit; }
 .drawer-close:hover { background: rgba(0, 0, 0, 0.09); }
 .drawer-close:hover svg { transform: rotate(90deg); }
 .drawer-close:active { transform: scale(0.9); }
+.drawer-close:focus-visible { outline: none; background: rgba(0, 0, 0, 0.12); }
+.sidebar:focus { outline: none; }
 
 .search {
   position: relative;

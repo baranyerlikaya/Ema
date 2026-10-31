@@ -205,7 +205,7 @@
     emptyMsg = el('p', { class: 'tree-empty', hidden: '', text: 'No matching topics' });
 
     scrollEl = el('div', { class: 'sidebar-scroll' }, [treeEl, emptyMsg]);
-    sidebarEl = el('aside', { class: 'sidebar', id: 'sidebar', 'aria-label': 'Topics' }, [
+    sidebarEl = el('aside', { class: 'sidebar', id: 'sidebar', 'aria-label': 'Topics', tabindex: '-1' }, [
       el('div', { class: 'sidebar-inner' }, [
         el('div', { class: 'sidebar-head' }, [
           el('a', { class: 'sidebar-brand', href: ROOT + 'index.html', text: 'Ema' }),
@@ -318,7 +318,7 @@
     if (btn) btn.setAttribute('aria-expanded', String(open));
     if (open) {
       lastFocus = document.activeElement;
-      (focusSearch ? searchInput : sidebarEl.querySelector('.drawer-close')).focus({ preventScroll: true });
+      (focusSearch ? searchInput : sidebarEl).focus({ preventScroll: true });
       if (reduceMotion || !sidebarEl.animate) return;
       var rows = sidebarEl.querySelectorAll('.search, .tree-section');
       for (var i = 0; i < rows.length; i++) {
