@@ -505,22 +505,55 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
 /* ---------- Home ---------- */
 
 .hero {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 96px 24px 48px;
+  min-height: min(640px, calc(100vh - var(--topbar-h)));
+  margin-bottom: 96px;
+  padding: 96px 24px;
+  overflow: hidden;
   text-align: center;
+  isolation: isolate;
 }
+/* Phase-portrait canvas behind, faded out under the text */
+.hero-field {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 46% 52% at 50% 50%, var(--white) 35%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0) 70%, var(--white));
+  pointer-events: none;
+}
+.hero-quote { max-width: 760px; margin: 0; }
+.hero-quote blockquote { margin: 0; }
 .hero-title {
   margin: 0;
-  font-size: clamp(40px, 6vw, 56px);
+  font-size: clamp(36px, 5.6vw, 64px);
   font-weight: 652;
-  line-height: 1;
+  line-height: 1.05;
   letter-spacing: -0.6px;
+  text-wrap: balance;
 }
+.hero-title::before { content: '\201C'; }
+.hero-title::after { content: '\201D'; }
+.hero-cite {
+  margin-top: 20px;
+  color: var(--ink-3);
+  font-size: 14px;
+  font-weight: 600;
+}
+.hero-cite::before { content: '\2014\00a0'; }
 .hero-intro {
   max-width: 560px;
   margin-top: 20px;
@@ -534,46 +567,6 @@ a.tree-link.is-active:hover { background: var(--ink); color: var(--white); }
   justify-content: center;
   gap: 12px;
   margin-top: 28px;
-}
-
-/* Live simulations, one per section */
-.sims {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  max-width: 720px;
-  margin: 0 auto 80px;
-  padding: 0 24px;
-}
-.sim-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-  padding: 10px 4px 4px;
-  border-radius: var(--r-lg);
-  background: var(--grey-1);
-  color: var(--ink);
-  text-decoration: none;
-  transition: background-color var(--t-slow) var(--ease);
-}
-.sim-card:hover { background: var(--grey-2); }
-.sim-label {
-  overflow: hidden;
-  padding: 0 8px;
-  color: var(--ink-2);
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.sim-canvas {
-  display: block;
-  width: 100%;
-  height: 80px;
-  border-radius: 20px;
-  background: var(--white);
 }
 
 /* Live preview of a topic page, like Mobbin's product shot under the hero */
@@ -1146,19 +1139,6 @@ a.pn-card:hover { background: var(--grey-2); }
 }
 
 @media (max-width: 1023px) {
-  /* Simulations become a swipeable row */
-  .sims {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: 136px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 24px;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-  .sims::-webkit-scrollbar { display: none; }
-  .sim-card { scroll-snap-align: start; }
   .section-grid { grid-template-columns: 1fr 1fr; }
   .section-card,
   .section-card:nth-child(4),
@@ -1171,9 +1151,8 @@ a.pn-card:hover { background: var(--grey-2); }
 @media (max-width: 640px) {
   .topbar-inner { gap: 16px; padding: 0 16px; }
   .topbar-links { display: none; }
-  .hero { padding: 88px 16px 48px; }
+  .hero { min-height: 560px; margin-bottom: 56px; padding: 80px 16px; }
   .preview { padding: 0 16px; }
-  .sims { padding: 0 16px 4px; scroll-padding-inline: 16px; margin-bottom: 56px; }
   .preview-frame { padding: 20px 20px 0; }
   .band { margin-top: 96px; padding: 80px 16px 96px; }
   .home-block { padding: 96px 16px 128px; }

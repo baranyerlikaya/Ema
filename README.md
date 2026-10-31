@@ -48,7 +48,7 @@ style.css                   all styles
 app.js                      header, sidebar, search, drawer, breadcrumb, prev/next, footer
 nav.js                      topic tree (single source of truth)
 lib/                        KaTeX 0.16.22 + render-math.js (auto-render setup)
-assets/hero-sims.js         live physics simulations on the home page
+assets/hero-field.js        animated pendulum phase portrait behind the home hero
 assets/fonts/               Instrument Sans and Geist Mono (SIL OFL 1.1)
 topics/mechanics/           one page per topic; _template.html is the template
 tools/new-pages.mjs         optional helper that creates missing pages from the template
