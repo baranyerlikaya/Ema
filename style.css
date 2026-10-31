@@ -519,6 +519,8 @@ a.tree-link:active { background: rgba(var(--fg-rgb), 0.08); }
   view-transition-name: active-topic;
 }
 .tree-link.is-active .tree-num { color: rgba(var(--bg-rgb), 0.55); }
+a.tree-link.is-active:hover { color: var(--white); }
+a.tree-link.is-active:hover .tree-num { color: rgba(var(--bg-rgb), 0.55); }
 .tree-link.is-soon { color: var(--ink-3); cursor: default; }
 .tree-link.is-soon .tree-num { color: var(--grey-3); }
 .tree-soon {
