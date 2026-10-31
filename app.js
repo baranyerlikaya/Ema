@@ -234,8 +234,8 @@
     sidebarEl = el('aside', { class: 'sidebar', id: 'sidebar', 'aria-label': 'Topics' }, [
       el('div', { class: 'sidebar-inner' }, [
         el('div', { class: 'sidebar-head' }, [
-          el('p', { class: 'sidebar-label', text: 'Mechanics' }),
-          el('button', { class: 'icon-btn drawer-close', type: 'button', 'aria-label': 'Close topics', html: ICON_CLOSE })
+          el('a', { class: 'sidebar-brand', href: ROOT + 'index.html', text: 'Ema' }),
+          el('button', { class: 'drawer-close', type: 'button', 'aria-label': 'Close topics', html: ICON_CLOSE })
         ]),
         el('div', { class: 'search' }, [
           el('span', { class: 'search-icon', html: ICON_SEARCH }),
