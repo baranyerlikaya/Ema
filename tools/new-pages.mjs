@@ -1,6 +1,3 @@
-// Creates a page from topics/mechanics/_template.html for every topic in
-// nav.js whose file does not exist yet. Never overwrites an existing page.
-// Usage: node tools/new-pages.mjs
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

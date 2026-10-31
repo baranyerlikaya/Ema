@@ -1,10 +1,3 @@
-/*
- * Ema topic tree. Single source of truth for the sidebar, the home grid,
- * breadcrumbs and prev/next links.
- *
- * Each topic: id (unique), title, file (path from the site root), status.
- * status: 'ready' -> clickable link; 'soon' -> shows a badge, not clickable.
- */
 window.PHYSREF_NAV = [
   {
     id: 'math',
