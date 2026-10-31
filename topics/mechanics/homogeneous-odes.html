@@ -26,7 +26,7 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">1st and 2nd Order Homogeneous ODEs</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Solving linear homogeneous ODEs: ẋ + p(t)x = 0 by integrating, and ẍ + bẋ + cx = 0 by the ansatz e^{λt} and the characteristic equation. The key to oscillators.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
@@ -38,23 +38,70 @@
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The language</h3>
+            <div>
+<p>An <strong>ordinary differential equation</strong> (ODE) is a relation between an unknown function $x(t)$ and its derivatives; a solution is a function that satisfies it [2, §1.3]. Its <strong>order</strong> is the highest derivative that appears. It is <strong>linear</strong> if $x$ and its derivatives appear only to the first power, multiplied by coefficients that depend on $t$ alone, and <strong>homogeneous</strong> if there is no term without $x$ (the right-hand side is zero) [2, §3.1].</p>
+<p>The <strong>general solution</strong> contains free constants: one for a first-order equation, two for a second-order equation. They are fixed by <strong>initial conditions</strong>, for example $x(0)$ and $\dot x(0)$ in mechanics [1, §Solution to the Equation of Motion]; [2, §1.4, §3.1].</p>
+<p>Linear homogeneous equations have a key property, <strong>superposition</strong>: if $x_1$ and $x_2$ are solutions, then so is any combination $c_1x_1 + c_2x_2$ [2, §3.1]; [1].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> First order: ẋ + p(t)x = 0</h3>
+            <div>
+<p>A first-order linear homogeneous equation can be separated and integrated. The general solution is [2, §3.1]</p>
+$$x(t) = c\,e^{-\int_a^t p(\tau)\,d\tau}, \qquad c = x(a).$$
+<p>If $p$ is a constant, this is simply $x = c\,e^{-pt}$. Equivalently, $\dot x = \lambda x$ has the solution $x = x(0)\,e^{\lambda t}$: growth for $\lambda &gt; 0$, decay for $\lambda &lt; 0$ [2, §3.1, §6.1].</p>
+<p>Because an exponential is never zero, a solution is either zero everywhere or never zero [2, §3.1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Second order with constant coefficients</h3>
+            <div>
+<p>Consider $\ddot x + b\,\dot x + c\,x = 0$ with constant $b$ and $c$. Try $x = e^{\lambda t}$. Each derivative brings down a factor $\lambda$, so the equation becomes $(\lambda^2 + b\lambda + c)\,e^{\lambda t} = 0$. The exponential is never zero, so $\lambda$ must solve the <strong>characteristic equation</strong> [1, §Solution to the Equation of Motion]; [2, §6.1]:</p>
+$$\lambda^2 + b\lambda + c = 0, \qquad \lambda_{1,2} = \frac{-b \pm \sqrt{b^2 - 4c}}{2}.$$
+<p>Each root gives a solution $e^{\lambda t}$, and by superposition the general solution is a combination of two independent ones. What it looks like depends on the roots.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> The three cases</h3>
+            <div>
+<p><strong>Two distinct real roots</strong> ($b^2 &gt; 4c$): $x = A\,e^{\lambda_1 t} + B\,e^{\lambda_2 t}$ [2, §6.1]; [1, §Overdamped Motion].</p>
+<p><strong>Complex pair</strong> $\lambda = \alpha \pm i\omega$ ($b^2 &lt; 4c$): the complex solutions $e^{(\alpha\pm i\omega)t}$ combine into two real ones, the real and imaginary parts of $e^{(\alpha+i\omega)t}$ [2, §6.2]:</p>
+$$\begin{aligned}x &= e^{\alpha t}\left(C\cos\omega t + D\sin\omega t\right) \\ &= R\,e^{\alpha t}\cos(\omega t + \phi).\end{aligned}$$
+<p><strong>Repeated root</strong> $\lambda_1 = \lambda_2 = \lambda$ ($b^2 = 4c$): $e^{\lambda t}$ is only one solution. The second is $t\,e^{\lambda t}$, so $x = (A + Bt)\,e^{\lambda t}$ [1, §Critically Damped Oscillations].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> The oscillator equations</h3>
+            <div>
+<p>Newton's second law for a mass on a spring, $m\ddot x = -kx$, gives the <strong>simple harmonic oscillator</strong> [1, §Equation of Motion for Simple Oscillations]:</p>
+$$\ddot x + \omega_0^2 x = 0, \qquad \omega_0 = \sqrt{k/m}.$$
+<p>The roots are $\lambda = \pm i\omega_0$, so $x = C\cos\omega_0 t + D\sin\omega_0 t = R\cos(\omega_0 t + \phi)$, with period $T = 2\pi/\omega_0$ [1].</p>
+<p>Adding a drag force $-b\dot x$ gives the <strong>damped oscillator</strong> $\ddot x + 2\gamma\dot x + \omega_0^2 x = 0$ with $\gamma = b/2m$. Its roots $\lambda = -\gamma \pm \sqrt{\gamma^2 - \omega_0^2}$ produce exactly the three cases above [1, §Damped Oscillations]:</p>
+<ul>
+<li><strong>underdamped</strong> ($\gamma &lt; \omega_0$): $x = R\,e^{-\gamma t}\cos(\omega_1 t + \phi)$ with $\omega_1 = \sqrt{\omega_0^2 - \gamma^2}$;</li>
+<li><strong>critically damped</strong> ($\gamma = \omega_0$): $x = (A + Bt)\,e^{-\gamma t}$;</li>
+<li><strong>overdamped</strong> ($\gamma &gt; \omega_0$): $x = A\,e^{\lambda_1 t} + B\,e^{\lambda_2 t}$ with both $\lambda$ negative.</li>
+</ul>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>The angular frequency $\omega_0$ depends only on the system ($k$ and $m$), not on the initial conditions. The amplitude $R$ and phase $\phi$ are the two free constants, and they are set by $x(0)$ and $\dot x(0)$ [1, §Physical Interpretation of the General Solution].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>A second-order equation needs <em>two</em> initial conditions. Fixing only $x(0)$ leaves a whole family of possible motions. Use both the initial position and the initial velocity to find both constants [1, §Solution to the Equation of Motion].</p>
+            </div>
           </aside>
         </section>
 
@@ -72,14 +119,45 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>First-order homogeneous [2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\dot x + p(t)\,x = 0 \\ x = x(a)\,e^{-\int_a^t p\,d\tau}\end{gathered}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Constant rate [2]</span></figcaption>
+              <div class="formula-body">$$\dot x = \lambda x \;\Rightarrow\; x = x(0)\,e^{\lambda t}$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Characteristic equation [1, 2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\ddot x + b\dot x + cx = 0 \\ \lambda^2 + b\lambda + c = 0\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Distinct real roots [1, 2]</span></figcaption>
+              <div class="formula-body">$$x = A\,e^{\lambda_1 t} + B\,e^{\lambda_2 t}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Complex roots $\alpha \pm i\omega$ [2]</span></figcaption>
+              <div class="formula-body">$$x = e^{\alpha t}\left(C\cos\omega t + D\sin\omega t\right)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Repeated root [1]</span></figcaption>
+              <div class="formula-body">$$x = (A + Bt)\,e^{\lambda t}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Simple harmonic oscillator [1]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\ddot x + \omega_0^2 x = 0 \\ x = x_0\cos\omega_0 t + \frac{v_0}{\omega_0}\sin\omega_0 t\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Damped oscillator [1]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\ddot x + 2\gamma\dot x + \omega_0^2 x = 0 \\ \lambda = -\gamma \pm \sqrt{\gamma^2 - \omega_0^2}\end{gathered}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +166,96 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Solve $\ddot x + \omega_0^2 x = 0$ with $x(0) = x_0$ and $\dot x(0) = v_0$, and write the answer in amplitude–phase form. (From [1], §Solution to the Equation of Motion and §Amplitude-Phase Form.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Characteristic equation $\lambda^2 + \omega_0^2 = 0$, so $\lambda = \pm i\omega_0$. The real general solution is $x = C\cos\omega_0 t + D\sin\omega_0 t$.</p>
+              </div></li>
+              <li><div>
+<p>At $t = 0$: $x(0) = C = x_0$. Differentiate, $\dot x = -C\omega_0\sin\omega_0 t + D\omega_0\cos\omega_0 t$, so $\dot x(0) = D\omega_0 = v_0$ and $D = v_0/\omega_0$:</p>
+$$x(t) = x_0\cos\omega_0 t + \frac{v_0}{\omega_0}\sin\omega_0 t.$$
+              </div></li>
+              <li><div>
+<p>Write it as $x = R\cos(\omega_0 t + \phi)$ with</p>
+$$R = \sqrt{x_0^2 + \frac{v_0^2}{\omega_0^2}}, \qquad \tan\phi = -\frac{v_0}{\omega_0 x_0}.$$
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>$R\cos(\omega_0 t + \phi) = R\cos\phi\cos\omega_0 t - R\sin\phi\sin\omega_0 t$. Matching gives $R\cos\phi = x_0$ and $R\sin\phi = -v_0/\omega_0$, which reproduce both formulas. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Solve the critically damped equation $\ddot x + 2\gamma\dot x + \gamma^2 x = 0$ with $x(0) = x_0$, $\dot x(0) = v_0$. (From [1], §Critically Damped Oscillations.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>The characteristic equation $\lambda^2 + 2\gamma\lambda + \gamma^2 = (\lambda + \gamma)^2 = 0$ has the double root $\lambda = -\gamma$, giving only one solution $e^{-\gamma t}$.</p>
+              </div></li>
+              <li><div>
+<p>Multiply the equation by $e^{\gamma t}$. By the product rule, the left side is exactly $\frac{d^2}{dt^2}\left[e^{\gamma t}x\right]$, so</p>
+$$\frac{d^2}{dt^2}\left[e^{\gamma t}x\right] = 0 \;\Rightarrow\; e^{\gamma t}x = A + Bt.$$
+              </div></li>
+              <li><div>
+<p>So $x = (A + Bt)\,e^{-\gamma t}$. From $x(0) = A = x_0$ and $\dot x(0) = B - \gamma A = v_0$:</p>
+$$x(t) = \left[x_0 + (v_0 + \gamma x_0)\,t\right]e^{-\gamma t}.$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>At $t = 0$ this gives $x_0$ ✓. As $t \to \infty$, $t\,e^{-\gamma t} \to 0$, so the particle returns to equilibrium without oscillating, as [1] states.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Find the real general solution of $\ddot x + 2\dot x + 2x = 0$. (From [2], §6.1–6.2.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Characteristic equation: $\lambda^2 + 2\lambda + 2 = 0$, so $\lambda = \frac{-2 \pm \sqrt{4 - 8}}{2} = -1 \pm i$.</p>
+              </div></li>
+              <li><div>
+<p>Complex pair with $\alpha = -1$, $\omega = 1$. The real and imaginary parts of $e^{(-1+i)t} = e^{-t}(\cos t + i\sin t)$ are both solutions:</p>
+$$x(t) = e^{-t}\left(C\cos t + D\sin t\right).$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Take $x = e^{-t}\cos t$: $\dot x = -e^{-t}(\cos t + \sin t)$ and $\ddot x = 2e^{-t}\sin t$. Then $\ddot x + 2\dot x + 2x = e^{-t}(2\sin t - 2\cos t - 2\sin t + 2\cos t) = 0$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Money in a savings account earns interest continuously at rate $I$ per year, with no deposits or withdrawals. Write and solve the equation for the balance $x(t)$. (From [2], §2.1 and §3.1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Over a short time $\Delta t$ the bank adds $I\,x\,\Delta t$, so $\dfrac{x(t+\Delta t) - x(t)}{\Delta t} = Ix$. In the limit $\Delta t \to 0$: $\dot x = Ix$.</p>
+              </div></li>
+              <li><div>
+<p>This is first-order, linear and homogeneous with $p = -I$ constant. So $x(t) = x(0)\,e^{It}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$\dot x = I\,x(0)\,e^{It} = Ix$ ✓, and $x(0)$ is reproduced at $t = 0$. The same equation with $\lambda &lt; 0$ in place of $I$ describes exponential decay.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +263,8 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 4: Small Oscillations</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Equation of Motion for Simple Oscillations, §Solution to the Equation of Motion, §Amplitude-Phase Form, §Physical Interpretation, §Damped Oscillations (underdamped, critically damped, overdamped). <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/small-oscillations/main.pdf">PDF</a></span></li>
+            <li><span>H. R. Miller, <em>18.03 Supplementary Notes</em>, MIT OpenCourseWare, 18.03 Differential Equations, Spring 2010. §1 Notation and language; §2.1 The savings account model; §3.1 Homogeneous and inhomogeneous; superposition; §6.1–6.2. <a href="https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/5bd84a2e02dece25f25b5e0606b30392_MIT18_03S10_sup.pdf">PDF</a></span></li>
           </ol>
         </section>
 
