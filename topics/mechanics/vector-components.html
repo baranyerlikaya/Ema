@@ -26,45 +26,89 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Vector Components of Motion</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Any motion in a plane or in space can be split into motions along the x, y and z axes, each described separately and then put back together.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Split it up.</strong> An arrow pointing diagonally is the same as "this much to the right" plus "this much up". Those two pieces are its <strong>components</strong>. For an arrow of length $A$ at angle $\theta$: $A_x = A\cos\theta$ and $A_y = A\sin\theta$ [2].</p>
+<p><strong>Motion works the same way.</strong> Imagine a ball rolling diagonally across a floor with lights shining straight down and from the side. Its shadow on one wall moves only left–right; its shadow on the other wall moves only up–down. Each shadow is a simple one-line motion. Put them together and you get the real motion [4].</p>
+<p>So you can treat each direction on its own [3]; [4]:</p>
+<ul>
+<li>$x$-velocity $v_x = \dot x$, $y$-velocity $v_y = \dot y$;</li>
+<li>$x$-acceleration $a_x = \dot v_x$, $y$-acceleration $a_y = \dot v_y$.</li>
+</ul>
+<p><strong>Putting it back together.</strong> The real speed is <em>not</em> $v_x + v_y$. The two parts are at right angles, so use Pythagoras: $v = \sqrt{v_x^2 + v_y^2}$. The direction comes from $\tan\theta = v_y/v_x$; check the signs to see which way it really points [2].</p>
+<p>The velocity arrow always points along the path, and the path's steepness is $dy/dx = v_y/v_x$ [4].</p>
+<p><strong>You choose the axes.</strong> Turning your axes changes the numbers $x, y$, but not the arrow itself or its length. Pick the axes that make the problem easiest [2].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Components of a vector</h3>
+            <div>
+<p>A vector in the $xy$-plane that has length $A$ and makes an angle $\theta$ counterclockwise from the $+x$-axis has components [2, §3.3]:</p>
+$$\begin{gathered}A_x = A\cos\theta, \qquad A_y = A\sin\theta, \\ \mathbf A = A_x\,\hat\imath + A_y\,\hat\jmath.\end{gathered}$$
+<p>Going back, $A = \sqrt{A_x^2 + A_y^2}$ and $\tan\theta = A_y/A_x$. Because $\tan$ repeats every $180^\circ$, use the signs of $A_x$ and $A_y$ to pick the right quadrant [2, §3.3]; [1, §Components of Vectors].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Motion in components</h3>
+            <div>
+<p>The position of a moving particle is $\mathbf r(t) = x(t)\,\hat\imath + y(t)\,\hat\jmath + z(t)\,\hat k$. Because $\hat\imath$, $\hat\jmath$, $\hat k$ are constant, differentiating the vector means differentiating each component [3, §The Instantaneous Velocity Vector]; [4, §5.1]:</p>
+$$\mathbf v = \dot x\,\hat\imath + \dot y\,\hat\jmath + \dot z\,\hat k = v_x\hat\imath + v_y\hat\jmath + v_z\hat k,$$
+$$\mathbf a = \dot v_x\,\hat\imath + \dot v_y\,\hat\jmath + \dot v_z\,\hat k = a_x\hat\imath + a_y\hat\jmath + a_z\hat k.$$
+<p>So a motion in two or three dimensions is several one-dimensional motions running at the same time, one along each axis, each with its own $x$–$t$, $v$–$t$ and $a$–$t$ relations [4, §5.1]. Integration works the same way: integrate each component of $\mathbf a$ to get $\mathbf v$, with one initial condition per component [3, §Connecting position, velocity, and acceleration].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Speed and direction of motion</h3>
+            <div>
+<p>The speed is the length of the velocity vector, and its direction gives the direction of motion [3]; [4, §5.2]:</p>
+$$v = \sqrt{v_x^2 + v_y^2 + v_z^2},$$
+<p>and in the plane the direction of motion makes an angle $\theta$ with the $x$-axis where</p>
+$$\tan\theta = \frac{v_y}{v_x}.$$
+<p>The velocity is always tangent to the trajectory. In the plane, the slope of the path $y(x)$ is $\dfrac{dy}{dx} = \dfrac{dy/dt}{dx/dt} = \dfrac{v_y}{v_x}$ [4, §5.2].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> The choice of axes</h3>
+            <div>
+<p>The components depend on the axes; the vector does not. If the axes are rotated by an angle $\theta$, the same position vector has new components [2, §3.3.2]</p>
+$$x' = x\cos\theta + y\sin\theta, \qquad y' = -x\sin\theta + y\cos\theta,$$
+<p>and its length $\sqrt{x^2+y^2} = \sqrt{x'^2+y'^2}$ is unchanged. Choose the axes that make the problem simplest, for example one axis along a fixed force [2, §3.2].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>The components are independent only in the sense of bookkeeping: each obeys its own equation. They share the same time $t$, which is what ties them into one motion [4, §5.1].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Don't add speeds component by component. $v_x$ and $v_y$ add as perpendicular sides of a right triangle: $v = \sqrt{v_x^2 + v_y^2}$, not $v_x + v_y$ [2, §3.3].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="components">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">The dark dot moves along a figure-eight. Its shadows (grey dots) on the bottom axis and the left axis each move back and forth on a line: these are the $x$ and $y$ motions. The grey arrows are the velocity components $v_x$ and $v_y$, drawn at the dot and at the shadows. Their vector sum is the dark velocity arrow, which is always tangent to the path, with length $\sqrt{v_x^2+v_y^2}$.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +116,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Components from length and angle [2]</span></figcaption>
+              <div class="formula-body">$$A_x = A\cos\theta, \qquad A_y = A\sin\theta$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Length and angle from components [2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}A = \sqrt{A_x^2+A_y^2} \\ \tan\theta = \frac{A_y}{A_x}\end{gathered}$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Velocity components [3, 4]</span></figcaption>
+              <div class="formula-body">$$v_x = \dot x, \quad v_y = \dot y, \quad v_z = \dot z$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Acceleration components [3, 4]</span></figcaption>
+              <div class="formula-body">$$a_x = \dot v_x = \ddot x, \quad a_y = \ddot y, \quad a_z = \ddot z$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Speed [3, 4]</span></figcaption>
+              <div class="formula-body">$$v = \sqrt{v_x^2 + v_y^2 + v_z^2}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Slope of the trajectory [4]</span></figcaption>
+              <div class="formula-body">$$\frac{dy}{dx} = \frac{v_y}{v_x}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Rotated axes [2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}x' = x\cos\theta + y\sin\theta \\ y' = -x\sin\theta + y\cos\theta\end{gathered}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +158,70 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Two particles move as $\mathbf r_1 = (t^2+1)\,\hat\imath + 2t\,\hat\jmath$ and $\mathbf r_2 = (5-t)\,\hat\imath + (t^2-1)\,\hat\jmath$. Find their displacements and average velocities for $0 \le t \le 2$, and their velocities $\mathbf v_1(t)$, $\mathbf v_2(t)$. (From [3], Worked Example “Displacement, Average Velocity, Instantaneous Velocity, and Collision”.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Positions: $\mathbf r_1(0) = \hat\imath$, $\mathbf r_1(2) = 5\hat\imath + 4\hat\jmath$; $\mathbf r_2(0) = 5\hat\imath - \hat\jmath$, $\mathbf r_2(2) = 3\hat\imath + 3\hat\jmath$.</p>
+              </div></li>
+              <li><div>
+<p>Displacements: $\Delta\mathbf r_1 = 4\hat\imath + 4\hat\jmath$, $\Delta\mathbf r_2 = -2\hat\imath + 4\hat\jmath$. Dividing by $\Delta t = 2$: $\mathbf v_{\text{avg},1} = 2\hat\imath + 2\hat\jmath$, $\mathbf v_{\text{avg},2} = -\hat\imath + 2\hat\jmath$.</p>
+              </div></li>
+              <li><div>
+<p>Differentiate each component: $\mathbf v_1 = 2t\,\hat\imath + 2\,\hat\jmath$ and $\mathbf v_2 = -\hat\imath + 2t\,\hat\jmath$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>For particle 2, $v_x$ is constant, so its average equals its instantaneous value, $-1$. ✓ And $v_{2y} = 2t$ is linear, so its average over $[0,2]$ is its value at $t = 1$, namely $2$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle moves as $\mathbf r(t) = R\cos(\omega t)\,\hat\imath + R\sin(\omega t)\,\hat\jmath$. Find $\mathbf v$, the speed and $\mathbf a$, and show that $\mathbf r\cdot\mathbf v = 0$. (From [3], Worked Example “Uniform Circular Motion”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$\mathbf v = -R\omega\sin(\omega t)\,\hat\imath + R\omega\cos(\omega t)\,\hat\jmath$, so $v = \sqrt{R^2\omega^2(\sin^2 + \cos^2)} = R\omega$: constant speed.</p>
+              </div></li>
+              <li><div>
+<p>$\mathbf a = -R\omega^2\cos(\omega t)\,\hat\imath - R\omega^2\sin(\omega t)\,\hat\jmath = -\omega^2\,\mathbf r$: it points to the centre, with size $R\omega^2$.</p>
+              </div></li>
+              <li><div>
+<p>$\mathbf r\cdot\mathbf v = -R^2\omega\cos\sin + R^2\omega\sin\cos = 0$: the velocity is perpendicular to the radius, i.e. tangent to the circle.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Both components are simple harmonic motions, $x = R\cos\omega t$ and $y = R\sin\omega t$; together they make the circle. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A stone is thrown at $v_0 = 20\ \text{m/s}$, $45^\circ$ above the horizontal. Find the velocity components, and the slope of the path at launch. (From [4], Example 5.1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$v_{x,0} = v_0\cos45^\circ = 20 \times 0.707 \approx 14.1\ \text{m/s}$ and $v_{y,0} = v_0\sin45^\circ \approx 14.1\ \text{m/s}$.</p>
+              </div></li>
+              <li><div>
+<p>Slope of the trajectory at launch: $dy/dx = v_{y,0}/v_{x,0} = \tan45^\circ = 1$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$\sqrt{14.1^2 + 14.1^2} \approx 20\ \text{m/s}$, the original speed. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +229,10 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 1: Mathematical Tools</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Components of Vectors. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/mathematical-tools/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 3 "Vectors", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §3.2 Coordinate Systems, §3.3 Vectors (components, rotated coordinate systems). <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter3.pdf">PDF</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 2: Kinematics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §The Position Vector, §The Instantaneous Velocity Vector, §Connecting position, velocity, and acceleration; Worked Examples “Displacement, Average Velocity, Instantaneous Velocity, and Collision” and “Uniform Circular Motion”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/kinematics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 5 "Two Dimensional Kinematics", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §5.1, §5.2; Example 5.1. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter5.pdf">PDF</a></span></li>
           </ol>
         </section>
 
