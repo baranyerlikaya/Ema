@@ -31,7 +31,19 @@
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Integrating is differentiating backwards.</strong> A derivative takes a function and tells you how fast it changes. An integral goes the other way: you know how fast something changes, and you want the thing itself. A function $F$ with $F' = f$ is called an <strong>antiderivative</strong> of $f$ [1]; [2].</p>
+<p><strong>Don't forget $+C$.</strong> Adding any constant doesn't change the slope, so there are many antiderivatives: $\int f\,dx = F(x) + C$ [1]; [2]. In mechanics $C$ is fixed by where you started, such as $x(0)$ or $v(0)$ [1].</p>
+<p><strong>The basic recipes</strong> (each one is a derivative rule read backwards) [1]; [2]:</p>
+<ul>
+<li>powers: raise the power by one and divide by the new power, $\int x^n dx = \frac{x^{n+1}}{n+1} + C$ (not for $n = -1$);</li>
+<li>for $n = -1$: $\int \frac{dx}{x} = \ln|x| + C$;</li>
+<li>$\int e^x dx = e^x + C$, $\int \cos x\,dx = \sin x + C$, $\int \sin x\,dx = -\cos x + C$;</li>
+<li>with $kx$ inside, divide by $k$: $\int e^{kx}dx = \frac1k e^{kx} + C$.</li>
+</ul>
+<p><strong>The definite integral is an area.</strong> Cut the space under a curve into thin strips and add up their areas. As the strips get infinitely thin you get $\int_a^b f(x)\,dx$ [3]. Area below the $x$-axis counts as negative [1]; [4].</p>
+<p><strong>The big shortcut</strong> (the fundamental theorem): you don't have to add strips. Just take any antiderivative and subtract, $\int_a^b f\,dx = F(b) - F(a)$ [4]. For motion: adding up velocity over time gives how far you moved, $\int v\,dt = \Delta x$. Careful: going forward and then back gives a net movement of zero, even though your legs walked a long way [4].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
