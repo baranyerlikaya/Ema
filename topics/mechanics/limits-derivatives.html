@@ -24,30 +24,80 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Limits &amp; Derivatives (power rule, chain rule)</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">What a limit is, how the derivative is defined from it, and the two rules you use most: the power rule and the chain rule.</p>
         </header>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Limits and continuity</h3>
+            <div>
+<p>The limit $\lim_{x\to x_0} f(x) = L$ says that $f(x)$ gets as close as we like to $L$ when $x$ is close enough to $x_0$, but not equal to it. The value $f(x_0)$ itself plays no role in the limit.</p>
+<p>For many functions you can find the limit just by plugging in $x_0$, for example $\lim_{x\to 3} \frac{x^2+x}{x+1} = \frac{12}{4} = 3$. A function for which this always works at $x_0$ is called <strong>continuous</strong> there:</p>
+$$\lim_{x\to x_0} f(x) = f(x_0).$$
+<p>The limit can also be taken from one side only: $x \to x_0^+$ (from the right) or $x \to x_0^-$ (from the left). If the two one-sided limits differ, the function has a jump at $x_0$ and is not continuous there [3].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The derivative as a limit</h3>
+            <div>
+<p>The <strong>derivative</strong> of $f$ at $x$ measures how fast the output changes when the input changes. Take a small step $\Delta x$, form the average rate of change (the <em>difference quotient</em>), and let the step shrink to zero [1, §Derivative]; [2]:</p>
+$$f'(x) = \frac{df}{dx} = \lim_{\Delta x \to 0} \frac{f(x+\Delta x) - f(x)}{\Delta x}.$$
+<p><strong>Geometrically</strong>, the difference quotient is the slope of the secant line through two points of the graph. As the second point slides onto the first, the secant becomes the tangent line, so $f'(x_0)$ is the slope of the tangent at $x_0$. The tangent line there is $y - f(x_0) = f'(x_0)(x - x_0)$ [2].</p>
+<p><strong>Physically</strong>, the derivative is an instantaneous rate of change. If $y(t)$ is a position, $\Delta y/\Delta t$ is the average velocity over a time interval and $dy/dt$ is the velocity at one instant [2]; [3].</p>
+<p>Three notations are common in mechanics: Leibniz $\frac{df}{dx}$, Lagrange $f'(x)$, and Newton's dot $\dot f = \frac{df}{dt}$, which is used only for derivatives with respect to time [1, §Different Notations for Derivatives].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> The power rule</h3>
+            <div>
+<p>For $f(x) = x^n$ with $n = 1, 2, 3, \dots$, expand $(x+\Delta x)^n$ with the binomial theorem. Only the first two terms matter:</p>
+$$(x+\Delta x)^n = x^n + n x^{n-1}\Delta x + \dots$$
+<p>where the dots stand for terms containing $(\Delta x)^2$, $(\Delta x)^3$ and higher powers.</p>
+<p>Subtract $x^n$, divide by $\Delta x$, and let $\Delta x \to 0$. Every leftover term still contains a factor of $\Delta x$ and vanishes, so [2]</p>
+$$\frac{d}{dx}x^n = n x^{n-1}.$$
+<p>The same formula holds for negative powers, $\frac{d}{dx}x^{-n} = -n x^{-n-1}$ (this follows from the chain rule below [5]), and in fact for any real exponent [1, §Derivatives of Common Functions].</p>
+<p>Together with the rules for sums, constant multiples, products and quotients, the power rule lets you differentiate any polynomial or rational function [1]; [4]:</p>
+$$\begin{gathered} (f+g)' = f' + g', \qquad (cf)' = cf', \\ (fg)' = f'g + fg', \qquad \left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}. \end{gathered}$$
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> The chain rule</h3>
+            <div>
+<p>A <strong>composite function</strong> $f(g(x))$ feeds the output of $g$ into $f$. To differentiate it, let $u = g(x)$. A small change $\Delta x$ causes a change $\Delta u$, which in turn causes a change $\Delta y$ in $y = f(u)$. Writing</p>
+$$\frac{\Delta y}{\Delta x} = \frac{\Delta y}{\Delta u}\cdot\frac{\Delta u}{\Delta x}$$
+<p>and letting $\Delta x \to 0$ (then $\Delta u \to 0$ too, because $g$ is continuous) gives the <strong>chain rule</strong> [5]; [1]:</p>
+$$\frac{dy}{dx} = \frac{dy}{du}\,\frac{du}{dx},$$
+<p>or, in Lagrange notation,</p>
+$$\frac{d}{dx}f(g(x)) = f'(g(x))\,g'(x).$$
+<p>In words: differentiate the outer function, keep the inside unchanged, then multiply by the derivative of the inside. The order matters, since $f(g(x))$ and $g(f(x))$ are different functions in general [5].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Higher derivatives</h3>
+            <div>
+<p>The derivative of a derivative is the <strong>second derivative</strong>, $f''(x) = \frac{d^2 f}{dx^2}$, and so on for higher orders [5]. In mechanics this is how acceleration comes from position: $v = \dot x$ and $a = \dot v = \ddot x$.</p>
+<p>The first two derivatives also locate extreme values. Where $f'(x) = 0$ the tangent is horizontal; if $f'' &lt; 0$ there, the graph is concave and the point is a maximum, and if $f'' &gt; 0$ it is convex and the point is a minimum [1, §Maxima and Minima, §Concave and Convex Functions].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>If $f$ has a derivative at $x_0$, then $f$ is automatically continuous at $x_0$. The reverse is not true: a function can be continuous at a point where its graph has a corner and no tangent [3].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>You cannot find a derivative by setting $\Delta x = 0$ in the difference quotient straight away: that always gives $0/0$. First simplify algebraically so that $\Delta x$ cancels, and only then take the limit [2].</p>
+            </div>
           </aside>
         </section>
 
@@ -56,14 +106,45 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Definition of the derivative [1, 2]</span></figcaption>
+              <div class="formula-body">$$f'(x) = \lim_{\Delta x\to 0}\frac{f(x+\Delta x)-f(x)}{\Delta x}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Continuity at $x_0$ [3]</span></figcaption>
+              <div class="formula-body">$$\lim_{x\to x_0} f(x) = f(x_0)$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Tangent line at $x_0$ [2]</span></figcaption>
+              <div class="formula-body">$$y = f(x_0) + f'(x_0)\,(x-x_0)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Power rule [1, 2]</span></figcaption>
+              <div class="formula-body">$$\frac{d}{dx}x^n = n\,x^{n-1}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Sum and constant rules [1, 4]</span></figcaption>
+              <div class="formula-body">$$(f+g)' = f'+g', \qquad (cf)' = c\,f'$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Product rule [1, 4]</span></figcaption>
+              <div class="formula-body">$$(fg)' = f'g + fg'$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Quotient rule [1, 4]</span></figcaption>
+              <div class="formula-body">$$\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Chain rule [1, 5]</span></figcaption>
+              <div class="formula-body">$$\frac{d}{dx}f(g(x)) = f'(g(x))\,g'(x)$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -72,15 +153,93 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Use the definition of the derivative to differentiate $f(x) = \dfrac{1}{x}$. (From [2], Example 1.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Write the difference quotient:</p>
+$$\frac{\Delta f}{\Delta x} = \frac{1}{\Delta x}\left(\frac{1}{x+\Delta x} - \frac{1}{x}\right).$$
+              </div></li>
+              <li><div>
+<p>Put the bracket over a common denominator so that $\Delta x$ cancels:</p>
+$$\frac{1}{\Delta x}\cdot\frac{x - (x+\Delta x)}{(x+\Delta x)\,x} = \frac{-1}{(x+\Delta x)\,x}.$$
+              </div></li>
+              <li><div>
+<p>Now the limit is easy:</p>
+$$f'(x) = \lim_{\Delta x\to 0}\frac{-1}{(x+\Delta x)\,x} = -\frac{1}{x^2}.$$
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>The power rule with $n = -1$ gives $\frac{d}{dx}x^{-1} = -x^{-2}$, the same result. The derivative is negative for every $x \ne 0$, which matches the graph of $1/x$: it falls everywhere.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A pumpkin is dropped from a roof. Its height in feet after $t$ seconds is $y(t) = 400 - 16t^2$. Find its average speed during the fall and its velocity when it hits the ground. (From [2], "Physical interpretation of derivatives".)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>It lands when $y = 0$: $400 - 16t^2 = 0$, so $t = 5\ \text{s}$.</p>
+              </div></li>
+              <li><div>
+<p>Average speed = distance / time = $\dfrac{400\ \text{ft}}{5\ \text{s}} = 80\ \text{ft/s}$.</p>
+              </div></li>
+              <li><div>
+<p>Instantaneous velocity, using the power rule: $\dot y = -32t$. At $t = 5\ \text{s}$, $\dot y = -160\ \text{ft/s}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The velocity is negative because the height is decreasing. The impact speed is twice the average speed, as expected when the speed grows linearly from zero.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Differentiate $f(x) = 3x^4 - 5x^2 + 7$ and $q(x) = e^{-x^2}$. (From [1], Worked Example 5(a).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$f$ is a sum of powers, so use the power, constant and sum rules term by term:</p>
+$$f'(x) = 12x^3 - 10x.$$
+              </div></li>
+              <li><div>
+<p>$q$ is a composite function: outer $e^u$, inner $u = -x^2$. With $\frac{d}{du}e^u = e^u$ (see the next topic) and $\frac{du}{dx} = -2x$, the chain rule gives</p>
+$$q'(x) = e^{-x^2}\cdot(-2x) = -2x\,e^{-x^2}.$$
+              </div></li>
+            </ol>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A ball's height is $y(t) = 5 + 20t - 5t^2$ (metres, seconds). Find $v(t)$ and $a(t)$, and the time and value of the maximum height. Confirm it is a maximum. (From [1], Worked Example 5(b).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Differentiate once and twice: $v = \dot y = 20 - 10t$ and $a = \ddot y = -10\ \text{m/s}^2$.</p>
+              </div></li>
+              <li><div>
+<p>At the top the velocity is zero: $20 - 10t = 0$, so $t = 2\ \text{s}$ and $y(2) = 5 + 40 - 20 = 25\ \text{m}$.</p>
+              </div></li>
+              <li><div>
+<p>Since $\ddot y = -10 &lt; 0$, the graph is concave, so $t = 2\ \text{s}$ is a maximum.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$y(0) = 5\ \text{m}$ and $y(4) = 5\ \text{m}$: the motion is symmetric about $t = 2\ \text{s}$, as the top of a parabola should be.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -88,8 +247,11 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 1: Mathematical Tools</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Basic Calculus: Derivative, Different Notations for Derivatives, Derivatives of Common Functions, Maxima and Minima, Concave and Convex Functions; Worked Example 5. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/mathematical-tools/main.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 1: "Derivatives, slope, velocity, rate of change", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec1.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 2: "Limits, continuity; trigonometric limits", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec2.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 3: "Derivatives of products, quotients, sine, cosine", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec3.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 4: "Chain rule; higher derivatives", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec4.pdf">PDF</a></span></li>
           </ol>
         </section>
 
