@@ -31,7 +31,15 @@
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>A complex number is a point on a flat map.</strong> Ordinary numbers sit on a line. Complex numbers need a whole plane: $z = x + iy$ means "go $x$ to the right and $y$ up". The special number $i$ is defined by $i^2 = -1$ [1]; [2].</p>
+<p><strong>Doing sums.</strong> Add by adding the right-parts and the up-parts separately. Multiply by expanding the brackets and replacing every $i^2$ with $-1$. Divide by multiplying top and bottom by the <strong>conjugate</strong> $\bar z = x - iy$ (the mirror image) [2].</p>
+<p><strong>Size and direction.</strong> Every point can also be described by how far it is from the centre, $r = |z| = \sqrt{x^2+y^2}$, and which way it points, the angle $\theta$. That is the <strong>polar form</strong> $z = r(\cos\theta + i\sin\theta)$ [1]. Careful: for points on the left side ($x &lt; 0$) the angle is not just $\tan^{-1}(y/x)$; add $\pi$ [1].</p>
+<p><strong>Euler's formula: the magic link.</strong></p>
+$$e^{i\theta} = \cos\theta + i\sin\theta.$$
+<p>It says $e^{i\theta}$ is a point on a circle of radius $1$ at angle $\theta$ [1]; [2]. So any complex number is just $z = r\,e^{i\theta}$.</p>
+<p><strong>Why this is great.</strong> Multiplying becomes easy: <strong>multiply the sizes and add the angles</strong> [2]. Multiplying by $i$ turns a number by a quarter turn ($90^\circ$) without changing its size. That's why spinning and swinging things are so easy to describe with complex numbers [1]; [2].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
@@ -104,11 +112,11 @@ $$r_1 e^{i\theta_1}\cdot r_2 e^{i\theta_2} = r_1 r_2\,e^{i(\theta_1+\theta_2)}.$
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="phasor">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">The arrow is the complex number $e^{i\theta}$, with $\theta = \omega t$ growing steadily, so it goes around the unit circle. Its shadow on the horizontal axis is the real part, $\cos\theta$ (marked Re). Its height is the imaginary part, $\sin\theta$; it is carried to the right and drawn as the dark wave (the faint wave is $\cos\theta$). This is Euler's formula, $e^{i\theta} = \cos\theta + i\sin\theta$, in motion.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
