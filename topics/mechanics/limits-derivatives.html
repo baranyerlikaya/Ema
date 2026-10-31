@@ -31,7 +31,15 @@
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>A limit is "where you are heading".</strong> Imagine walking toward a door. Even if you stop one tiny step before it, everyone knows where you were heading: the door. A limit, $\lim_{x\to x_0} f(x)$, is the value $f(x)$ heads toward as $x$ gets closer and closer to $x_0$. What happens exactly <em>at</em> $x_0$ doesn't matter. If the value you're heading to and the value you land on are the same, the function is <strong>continuous</strong>: you can draw it without lifting your pencil [3].</p>
+<p><strong>A derivative is "how fast something changes right now".</strong> A car's speedometer shows how fast your position is changing at this very moment. To find it, measure how far the car goes in a short time and divide by that time. Then make the time shorter and shorter. The number you are heading toward (a limit again!) is the derivative [1]; [2]:</p>
+$$f'(x) = \lim_{\Delta x\to 0}\frac{f(x+\Delta x)-f(x)}{\Delta x}.$$
+<p>On a graph it is the <strong>steepness</strong> (slope) of the line that just touches the curve at one point, the tangent [2]. Never just put $\Delta x = 0$ in: you get $0/0$. Simplify first, then let $\Delta x$ shrink [2].</p>
+<p><strong>The power rule is a shortcut.</strong> For $x^n$, bring the power down in front and lower it by one: $\frac{d}{dx}x^n = n\,x^{n-1}$. So $x^2 \to 2x$ and $x^3 \to 3x^2$ [1]; [2].</p>
+<p><strong>The chain rule is for "a function inside a function"</strong>, like a toy inside a box inside a bigger box. Take the derivative of the outer box (leave the inside alone), then multiply by the derivative of the inside: $\frac{d}{dx}f(g(x)) = f'(g(x))\,g'(x)$ [1]; [5]. Sums, products and fractions have their own simple rules, listed in the Key formulas below.</p>
+<p><strong>Doing it twice</strong> gives the second derivative. Position → velocity → acceleration. At the top of a hill, the slope is $0$ (flat), and the second derivative is negative (the curve bends down) [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
@@ -110,11 +118,11 @@ $$\frac{d}{dx}f(g(x)) = f'(g(x))\,g'(x).$$
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="tangent">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">The dark curve is $f(x) = x^3/3 - x$. The light point slides toward the dark point, so $\Delta x$ shrinks. The solid line through both points is the secant line; its slope $\Delta y/\Delta x$ is shown at the bottom. As $\Delta x \to 0$ it lands on the dashed tangent line, and the slope approaches $f'(a) = a^2 - 1$. Move the slider to choose a different point $a$.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
