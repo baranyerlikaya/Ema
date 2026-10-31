@@ -357,6 +357,8 @@
   function setMode(mode) {
     var root = document.documentElement;
     if (mode === 'basic') root.setAttribute('data-mode', 'basic'); else root.removeAttribute('data-mode');
+    root.style.background = '';
+    root.style.colorScheme = '';
     try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
     document.querySelectorAll('.mode-switch button').forEach(function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === mode));
