@@ -24,30 +24,71 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Cartesian &amp; Polar Coordinates</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Two ways to label a point in the plane, with x and y or with a distance r and an angle θ, and how position, velocity and acceleration look in each.</p>
         </header>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> What a coordinate system is</h3>
+            <div>
+<p>To describe motion with numbers we first fix a <strong>coordinate system</strong>. That means choosing an origin, a set of axes, a positive direction along each axis, and a set of unit vectors at every point [3, §3.2]. None of these choices is forced by nature: picking them to fit the problem can make a hard problem easy.</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Cartesian coordinates</h3>
+            <div>
+<p>In <strong>Cartesian coordinates</strong> the axes $x$, $y$, $z$ are mutually perpendicular and meet at the origin. A point is labelled by three numbers $(x, y, z)$, and a vector is written through its components along the axes [1, §Components of Vectors]:</p>
+$$\begin{gathered}\mathbf{A} = A_x\,\hat\imath + A_y\,\hat\jmath + A_z\,\hat k, \\ |\mathbf{A}| = \sqrt{A_x^2 + A_y^2 + A_z^2}.\end{gathered}$$
+<p>The unit vectors $\hat\imath$, $\hat\jmath$, $\hat k$ have length $1$ and point in the directions of increasing $x$, $y$ and $z$ [1, §Unit Vectors]. Their key property is that they are the <em>same at every point in space</em>. Cartesian coordinates are the only system where this is true [3, §3.2.1], and it is what makes differentiating a Cartesian vector so simple: you just differentiate each component.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Polar coordinates</h3>
+            <div>
+<p>In the plane, a point can instead be labelled by its distance $r \ge 0$ from the origin and the angle $\theta$ between the position vector and the positive $x$-axis, measured counterclockwise. These are the <strong>polar coordinates</strong> $(r, \theta)$ [3, §3.2.2]; [5]. Adding a $z$-axis gives cylindrical coordinates $(r, \theta, z)$.</p>
+<p>From the right triangle formed by $x$, $y$ and $r$ [3, §3.2.2]; [5]:</p>
+$$\begin{gathered} x = r\cos\theta, \qquad y = r\sin\theta, \\ r = \sqrt{x^2 + y^2}, \qquad \tan\theta = \frac{y}{x}.\end{gathered}$$
+<p>The angle is measured in radians. An angle of $\theta$ radians cuts an arc of length $s = R\theta$ from a circle of radius $R$, so a full turn is $2\pi\ \text{rad} = 360^\circ$ [2, §Circular Motion].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Polar unit vectors</h3>
+            <div>
+<p>At each point we use two unit vectors: $\hat r$ points radially away from the origin (direction of increasing $r$), and $\hat\theta$ points along the circle in the direction of increasing $\theta$, i.e. counterclockwise [3, §3.2.2]. In terms of the Cartesian unit vectors [4, §6.2]:</p>
+$$\hat r = \cos\theta\,\hat\imath + \sin\theta\,\hat\jmath, \qquad \hat\theta = -\sin\theta\,\hat\imath + \cos\theta\,\hat\jmath.$$
+<p>Unlike $\hat\imath$ and $\hat\jmath$, these depend on where the point is. For a moving particle $\theta$ changes with time, so $\hat r$ and $\hat\theta$ change too. Differentiating with the chain rule gives [4, §6.2]:</p>
+$$\frac{d\hat r}{dt} = \dot\theta\,\hat\theta, \qquad \frac{d\hat\theta}{dt} = -\dot\theta\,\hat r.$$
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Velocity and acceleration in polar coordinates</h3>
+            <div>
+<p>The position vector is simply $\mathbf r = r\,\hat r$. Differentiating with the product rule and the derivatives above gives the velocity [4, §6.6]:</p>
+$$\mathbf v = \dot r\,\hat r + r\dot\theta\,\hat\theta.$$
+<p>Differentiating once more and collecting terms gives the acceleration [4, §6.6]:</p>
+$$\mathbf a = \left(\ddot r - r\dot\theta^2\right)\hat r + \left(r\ddot\theta + 2\dot r\dot\theta\right)\hat\theta.$$
+<p>For motion on a circle, $r = R$ is constant, so $\dot r = \ddot r = 0$. Then $\mathbf v = R\dot\theta\,\hat\theta$ is tangent to the circle, and for constant $\omega = \dot\theta$ the acceleration is $-R\omega^2\,\hat r$: it points to the centre and has magnitude $R\omega^2 = v^2/R$ [2, §Circular Motion]; [4, §6.3].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Use Cartesian coordinates when the motion is along straight lines or the force has a fixed direction (projectiles, inclined planes). Use polar coordinates when something turns around a fixed point (circular motion, central forces) [3, §3.2]; [4, §6.2].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>$\hat r$ and $\hat\theta$ are not constant vectors. When you differentiate $\mathbf r = r\hat r$, you must differentiate $\hat r$ too. Forgetting this loses the $r\dot\theta\,\hat\theta$ term in the velocity and the $-r\dot\theta^2$ (centripetal) term in the acceleration [4, §6.2, §6.6].</p>
+            </div>
           </aside>
         </section>
 
@@ -56,14 +97,45 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Cartesian vector and its length [1]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\mathbf A = A_x\hat\imath + A_y\hat\jmath + A_z\hat k \\ |\mathbf A| = \sqrt{A_x^2+A_y^2+A_z^2}\end{gathered}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Polar to Cartesian [3, 5]</span></figcaption>
+              <div class="formula-body">$$x = r\cos\theta, \qquad y = r\sin\theta$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Cartesian to polar [3, 5]</span></figcaption>
+              <div class="formula-body">$$r = \sqrt{x^2+y^2}, \qquad \tan\theta = \frac{y}{x}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Polar unit vectors [4]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\hat r = \cos\theta\,\hat\imath + \sin\theta\,\hat\jmath \\ \hat\theta = -\sin\theta\,\hat\imath + \cos\theta\,\hat\jmath\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Time derivatives of the unit vectors [4]</span></figcaption>
+              <div class="formula-body">$$\dot{\hat r} = \dot\theta\,\hat\theta, \qquad \dot{\hat\theta} = -\dot\theta\,\hat r$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Velocity in polar coordinates [4]</span></figcaption>
+              <div class="formula-body">$$\mathbf v = \dot r\,\hat r + r\dot\theta\,\hat\theta$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Acceleration in polar coordinates [4]</span></figcaption>
+              <div class="formula-body">$$\begin{aligned}\mathbf a = {}&\left(\ddot r - r\dot\theta^2\right)\hat r \\ &+ \left(r\ddot\theta + 2\dot r\dot\theta\right)\hat\theta\end{aligned}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Arc length (θ in radians) [2]</span></figcaption>
+              <div class="formula-body">$$s = R\,\theta$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -72,15 +144,102 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Find the polar coordinates of the point with Cartesian coordinates $(1, -1)$. (From [5], Example 1.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>$r = \sqrt{1^2 + (-1)^2} = \sqrt 2$.</p>
+              </div></li>
+              <li><div>
+<p>The point lies in the fourth quadrant, below the positive $x$-axis, at $45^\circ$. So $\theta = -\pi/4$ (or equivalently $7\pi/4$).</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>$x = \sqrt2\cos(-\pi/4) = \sqrt2\cdot\frac{\sqrt2}{2} = 1$ and $y = \sqrt2\sin(-\pi/4) = -1$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Write the circle of radius $a$ centred at $(a, 0)$ as an equation in polar coordinates. (From [5], Example 2.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>In Cartesian form the circle is $(x-a)^2 + y^2 = a^2$. Substitute $x = r\cos\theta$, $y = r\sin\theta$:</p>
+$$(r\cos\theta - a)^2 + r^2\sin^2\theta = a^2.$$
+              </div></li>
+              <li><div>
+<p>Expand and use $\cos^2\theta + \sin^2\theta = 1$:</p>
+$$r^2 - 2ar\cos\theta = 0.$$
+              </div></li>
+              <li><div>
+<p>Divide by $r$: $\;r = 2a\cos\theta$, with $-\pi/2 \le \theta \le \pi/2$ tracing the circle once.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>At $\theta = 0$, $r = 2a$: the point $(2a, 0)$, the far side of the circle. At $\theta = \pm\pi/2$, $r = 0$: the origin, which lies on this circle. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle moves on a circle of radius $R$ with $\mathbf r(t) = R\cos\theta\,\hat\imath + R\sin\theta\,\hat\jmath$, where $\theta = \omega t + \theta_0$ and $\omega$ is constant. Find its velocity and acceleration. (From [2], §Circular Motion.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Differentiate each Cartesian component (the unit vectors are constant), using $\dot\theta = \omega$:</p>
+$$\mathbf v = R\omega\left(-\sin\theta\,\hat\imath + \cos\theta\,\hat\jmath\right).$$
+              </div></li>
+              <li><div>
+<p>The bracket is $\hat\theta$, so $\mathbf v = R\omega\,\hat\theta$: tangent to the circle, with speed $v = R|\omega|$.</p>
+              </div></li>
+              <li><div>
+<p>Differentiate again:</p>
+$$\begin{aligned}\mathbf a &= -R\omega^2\left(\cos\theta\,\hat\imath + \sin\theta\,\hat\jmath\right) \\ &= -R\omega^2\,\hat r.\end{aligned}$$
+<p>The acceleration points to the centre, with magnitude $a = R\omega^2 = v^2/R$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The polar formula with $r = R$, $\dot r = 0$, $\ddot\theta = 0$ gives $\mathbf a = -R\dot\theta^2\hat r$, the same result. Also $\mathbf r\cdot\mathbf v = 0$: velocity is perpendicular to position, as it must be on a circle.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle moves along the spiral $r = b\theta$, with $\theta = ct^2$ ($b, c &gt; 0$). Find its acceleration, and the time at which the radial acceleration is zero. (From [4], Example 6.4.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Write $r = bct^2$ and compute the four derivatives: $\dot r = 2bct$, $\ddot r = 2bc$, $\dot\theta = 2ct$, $\ddot\theta = 2c$.</p>
+              </div></li>
+              <li><div>
+<p>Radial component: $a_r = \ddot r - r\dot\theta^2 = 2bc - bct^2(2ct)^2 = 2bc - 4bc^3t^4$.</p>
+              </div></li>
+              <li><div>
+<p>Tangential component: $a_\theta = r\ddot\theta + 2\dot r\dot\theta = 2bc^2t^2 + 8bc^2t^2 = 10bc^2t^2$.</p>
+              </div></li>
+              <li><div>
+<p>$a_r = 0$ when $4bc^3t^4 = 2bc$, i.e. $t^4 = \dfrac{1}{2c^2}$, so $t_1 = \left(\dfrac{1}{2c^2}\right)^{1/4}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>At $t_1$ the angle is $\theta_1 = ct_1^2 = c\cdot\frac{1}{\sqrt2\,c} = \frac{1}{\sqrt 2}\ \text{rad}$, independent of $b$ and $c$, which matches [4]. Units: $bc$ has units $\text{m}\cdot\text{rad}^{-1}\cdot\text{rad}\cdot\text{s}^{-2} = \text{m/s}^2$. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -88,8 +247,11 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 1: Mathematical Tools</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Components of Vectors, §Unit Vectors. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/mathematical-tools/main.pdf">PDF</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 2: Kinematics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Circular Motion. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/kinematics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 3 "Vectors", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §3.2 Coordinate Systems. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter3.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 6 "Circular Motion", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §6.2, §6.3, §6.6; Example 6.4. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter6.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 32: "Polar coordinates; area in polar coordinates", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec32.pdf">PDF</a></span></li>
           </ol>
         </section>
 
