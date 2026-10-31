@@ -26,45 +26,94 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Inertial Mass, Equation of Motion under Constant Force</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Mass as resistance to acceleration, how it is measured, weight and gravitational mass, and the complete solution of the equation of motion when the force is constant.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Mass is "how hard it is to get moving".</strong> Push an empty shopping cart and a full one with the same force: the empty one speeds up much more. The full one has more <strong>inertial mass</strong>. Same push, acceleration $a = F/m$ [2].</p>
+<p><strong>How to measure it.</strong> Let two carts push each other apart with a spring between them. By Newton's third law they push each other equally hard, so the lighter cart gets the bigger acceleration [1]:</p>
+$$\frac{m_2}{m_1} = \frac{a_1}{a_2}.$$
+<p>Know one mass, measure both accelerations, and you know the other mass [1]; [2].</p>
+<p><strong>Weight is a force, mass is not.</strong> Weight is how hard gravity pulls: $W = mg$, measured in newtons. Your mass is the same on the Moon, but your weight is smaller there [1]. Amazingly, the mass that resists pushing and the mass that gravity pulls on are the same. That's why a hammer and a feather would fall together without air [1].</p>
+<p><strong>A constant push.</strong> If the force never changes, the acceleration never changes, and you get the familiar formulas [1]:</p>
+$$v = v_0 + \frac{F}{m}t, \qquad x = x_0 + v_0t + \frac{F}{2m}t^2.$$
+<p><strong>Dropping something</strong> from height $h$: it lands after $\sqrt{2h/g}$ seconds at speed $\sqrt{2gh}$, whatever its mass [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Inertial mass</h3>
+            <div>
+<p>The <strong>inertial mass</strong> $m$ measures how strongly a body resists being accelerated: the same force gives a heavier body a smaller acceleration, $a = F/m$ [2, §7.1].</p>
+<p>It can be calibrated against a standard body of mass $m_s$. Apply the same force to both and measure the accelerations $a_s$ and $a$. Since $F = m_sa_s = ma$ [2, §7.1.1],</p>
+$$m = m_s\,\frac{a_s}{a}.$$
+<p>The method is consistent because repeating it with a different force gives the same ratio of accelerations [2, §7.1.1].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Measuring mass with the third law</h3>
+            <div>
+<p>Let two bodies interact with nothing else acting on them (an <strong>isolated system</strong>). By the third law $\mathbf F_1 = -\mathbf F_2$, and by the second law $m_1\mathbf a_1 = -m_2\mathbf a_2$. Taking magnitudes [1, §Measurement of Mass]:</p>
+$$\frac{m_2}{m_1} = \frac{|\mathbf a_1|}{|\mathbf a_2|}.$$
+<p>So choosing one body as the reference mass, the other's mass follows from the two measured accelerations: the lighter body always gets the larger acceleration [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Weight and gravitational mass</h3>
+            <div>
+<p>Near the Earth's surface every body falls with the same acceleration $\mathbf g$ (neglecting air resistance). The gravitational force on it, its <strong>weight</strong>, is therefore [1, §Measurement of Mass]</p>
+$$\mathbf W = m\mathbf g.$$
+<p>Comparing weights at the same place compares masses: $m_2/m_1 = |\mathbf W_2|/|\mathbf W_1|$. That the mass found this way (gravitational mass) equals the inertial mass is an experimental fact, the <strong>equivalence of inertial and gravitational mass</strong> [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Equation of motion under a constant force</h3>
+            <div>
+<p>For a constant force $F$ along the $x$-axis, the equation of motion is $m\ddot x = F$ [1, Worked Example “Motion of a Particle under a Constant Force”]. Integrating once and using $\dot x(0) = v_0$, then again with $x(0) = x_0$:</p>
+$$\begin{gathered}v(t) = v_0 + \frac{F}{m}t, \qquad x(t) = x_0 + v_0t + \frac{F}{2m}t^2, \\ a = \frac{F}{m} = \text{const}.\end{gathered}$$
+<p>These are exactly the constant-acceleration formulas with $a = F/m$ [1]. In more than one dimension, each component of the motion obeys the same law with its own component of the force; a component with no force moves uniformly, as in projectile motion [3, §5.2].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Free fall</h3>
+            <div>
+<p>A body dropped from height $h$ feels the constant force $-mg$ (vertical axis up), so $\ddot y = -g$: the mass cancels [1, Worked Example “Free fall Motion”]. With $v_0 = 0$ and $y_0 = h$:</p>
+$$y(t) = h - \tfrac12gt^2, \qquad v_y(t) = -gt.$$
+<p>It reaches the ground after $t = \sqrt{2h/g}$ with speed $v = \sqrt{2gh}$ [1].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>All bodies fall with the same acceleration precisely because weight is proportional to inertial mass: in $m\ddot y = -mg$ the same $m$ appears on both sides and cancels [1, §Measurement of Mass, Worked Example “Free fall Motion”].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Mass and weight are different. Mass (kg) is a property of the body and is the same everywhere; weight $mg$ (N) is a force and depends on the local $g$ [1, §Measurement of Mass].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="massratio">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">Two carts at rest are pushed apart by a compressed spring for 0.6 s. By the third law the spring pushes both with the same force, so each acceleration is $a = F/m$ and $a_1/a_2 = m_2/m_1$, the inverse ratio of the masses (shown live). After the push both carts move at constant velocity, the lighter one faster. Make the masses equal and the carts move apart symmetrically.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +121,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Mass calibration [2]</span></figcaption>
+              <div class="formula-body">$$m = m_s\,\frac{a_s}{a}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Mass ratio from the third law [1]</span></figcaption>
+              <div class="formula-body">$$\frac{m_2}{m_1} = \frac{|\mathbf a_1|}{|\mathbf a_2|}$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Weight [1]</span></figcaption>
+              <div class="formula-body">$$\mathbf W = m\mathbf g$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Constant force: acceleration [1]</span></figcaption>
+              <div class="formula-body">$$a = \frac{F}{m}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Constant force: velocity [1]</span></figcaption>
+              <div class="formula-body">$$v(t) = v_0 + \frac{F}{m}t$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Constant force: position [1]</span></figcaption>
+              <div class="formula-body">$$x(t) = x_0 + v_0t + \frac{F}{2m}t^2$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Free fall [1]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}y = h - \tfrac12gt^2 \\ t_{\text{fall}} = \sqrt{2h/g}, \quad v = \sqrt{2gh}\end{gathered}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +163,74 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A particle of mass $m$ moves under a constant force $F$. Write down the equation of motion and solve it for $v(t)$ and $x(t)$ with $v(0) = v_0$ and $x(0) = x_0$. (From [1], Worked Example “Motion of a Particle under a Constant Force”.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Second law along the force: $m\ddot x = F$, i.e. $\ddot x = F/m$.</p>
+              </div></li>
+              <li><div>
+<p>Integrate once: $\dot x = \frac{F}{m}t + C$, and $\dot x(0) = v_0$ gives $C = v_0$: $v(t) = v_0 + \frac{F}{m}t$.</p>
+              </div></li>
+              <li><div>
+<p>Integrate again: $x(t) = x_0 + v_0t + \frac{F}{2m}t^2$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>$\ddot x = F/m$ ✓, $x(0) = x_0$ ✓, $\dot x(0) = v_0$ ✓.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle is released from rest at height $h$. Find $y(t)$, $v_y(t)$ and its speed when it hits the ground. (From [1], Worked Example “Free fall Motion”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$m\ddot y = -mg$, so $\ddot y = -g$. This is Example 1 with $F = -mg$, $v_0 = 0$, $x_0 = h$: $y = h - \tfrac12gt^2$, $v_y = -gt$.</p>
+              </div></li>
+              <li><div>
+<p>Ground: $y = 0$ at $t = \sqrt{2h/g}$.</p>
+              </div></li>
+              <li><div>
+<p>$v_y = -g\sqrt{2h/g} = -\sqrt{2gh}$, so the impact speed is $v = \sqrt{2gh}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Units: $\sqrt{(\text{m/s}^2)(\text{m})} = \text{m/s}$ ✓. The result doesn't depend on $m$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Starting from the energy $E = \tfrac12mv^2 + U(x)$, derive $x(t)$ for a constant force $F$ and show it agrees with Example 1. (From [1], Worked Example “Using Total Energy as the Equation of Motion for a Particle Under a Constant Force”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>For a constant force, $F = -dU/dx$ gives $U = -Fx$ (choosing the constant zero), so $E = \tfrac12mv^2 - Fx$ and $\dfrac{dx}{dt} = \sqrt{\tfrac2m(E + Fx)}$ (for $v &gt; 0$).</p>
+              </div></li>
+              <li><div>
+<p>Separate and integrate with $u = E + Fx$: $\dfrac2F\left[\sqrt{E + Fx} - \sqrt{E + Fx_0}\right] = \sqrt{\tfrac2m}\,t$.</p>
+              </div></li>
+              <li><div>
+<p>Use $E + Fx_0 = \tfrac12mv_0^2$, square and simplify:</p>
+$$x(t) = x_0 + v_0t + \frac{F}{2m}t^2.$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Identical to Example 1, as it must be: energy conservation is a first integral of the same equation of motion [1]. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +238,9 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Measurement of Mass; Worked Examples “Motion of a Particle under a Constant Force”, “Free fall Motion” and “Using Total Energy as the Equation of Motion for a Particle Under a Constant Force”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 7 "Newton’s Laws of Motion", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §7.1 Force and Quantity of Matter, §7.1.1 Mass Calibration. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter7.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 5 "Two Dimensional Kinematics", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §5.2 Projectile Motion. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter5.pdf">PDF</a></span></li>
           </ol>
         </section>
 
