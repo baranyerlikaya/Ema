@@ -13,6 +13,9 @@
   if (!hero) return;
   var canvas = document.createElement('canvas');
   canvas.className = 'hero-field';
+  // Inline layout so a stale cached stylesheet can never make the canvas take up space.
+  canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:-2;pointer-events:none';
+  if (getComputedStyle(hero).position === 'static') hero.style.position = 'relative';
   canvas.setAttribute('aria-hidden', 'true');
   hero.insertBefore(canvas, hero.firstChild);
   var c = canvas.getContext('2d');

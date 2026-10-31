@@ -60,6 +60,12 @@ GitHub Pages, deployed from the `main` branch, root folder (`/`). Settings → P
 
 All paths are relative, so the site works under `https://<user>.github.io/<repo>/`.
 
+CSS and JS links carry a version tag (`style.css?v=2`) so browsers don't mix a cached old stylesheet with new HTML. After changing `style.css` or a script, bump it everywhere:
+
+```bash
+sed -i 's/?v=2"/?v=3"/g' index.html topics/mechanics/*.html
+```
+
 ## Credits
 
 - [KaTeX](https://katex.org), MIT License (`lib/KATEX-LICENSE`)
