@@ -10,7 +10,7 @@ window.PHYSREF_NAV = [
       { id: 'complex-numbers',     title: "Complex Numbers, Polar Form, Euler's Formula",          file: 'topics/mechanics/complex-numbers.html',     status: 'ready' },
       { id: 'exponential-lambda',  title: 'e^(λt) for real and complex λ',                        file: 'topics/mechanics/exponential-lambda.html',  status: 'ready' },
       { id: 'homogeneous-odes',    title: '1st and 2nd Order Homogeneous ODEs',                   file: 'topics/mechanics/homogeneous-odes.html',    status: 'ready' },
-      { id: 'vectors',             title: 'Vectors: Dot & Cross Product',                         file: 'topics/mechanics/vectors.html',             status: 'soon' }
+      { id: 'vectors',             title: 'Vectors: Dot & Cross Product',                         file: 'topics/mechanics/vectors.html',             status: 'ready' }
     ]
   },
   {
