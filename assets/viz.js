@@ -559,7 +559,7 @@
       [[0, 'ground frame S'], [1, "train frame S′"]].forEach(function (f) {
         var base = f[0] ? h - 22 : h / 2 - 12, x0 = 40;
         D.line(c, 12, base, w - 12, base, FAINT, 1);
-        D.label(c, f[1], 16, base - (h / 2 - 34) - 4);
+        D.label(c, f[1], w - 16, base - 10, 'right');
         var shift = f[0] ? 0 : p.u * tt, trainX = x0 + shift * sc;
         c.strokeStyle = MUTED; c.lineWidth = 1.25; c.strokeRect(trainX - 14, base - 16, 28, 16);
         c.beginPath();
@@ -570,7 +570,6 @@
         if (t <= T) D.arrow(c, bx, by, bx + vxs * 5, by - vys * 5, INK, 1.5);
         D.dot(c, bx, by, 5, INK);
       });
-      D.label(c, 'v (ground) = v′ (train) + u', w - 16, 18, 'right', INK);
     }
   });
 
