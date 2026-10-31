@@ -524,6 +524,169 @@
     });
   }
 
+  var ICON_ARROW_RIGHT = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function topicNumber(entry) {
+    var si = NAV.indexOf(entry.section);
+    return (si + 1) + '.' + (entry.section.topics.indexOf(entry.topic) + 1);
+  }
+
+  function workLabel(span) {
+    var c = span.cloneNode(true);
+    c.querySelectorAll('a').forEach(function (a) { a.remove(); });
+    var html = c.innerHTML.trim();
+    var cut = html.search(/[,.;]?\s*(§|Worked Example|Example\s|Examples\s|Lectures? \d)/);
+    if (cut > 20) html = html.slice(0, cut);
+    return html.replace(/[\s.,;:]+$/, '') + '.';
+  }
+
+  function trackIndex(links, marker) {
+    if (!window.IntersectionObserver) return;
+    var visible = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+      var on = links.filter(function (a) { return visible[a.getAttribute('href').slice(1)]; })[0];
+      if (!on) return;
+      links.forEach(function (a) { a.classList.toggle('is-active', a === on); });
+      if (marker) {
+        marker.style.transform = 'translateY(' + on.offsetTop + 'px) scaleY(' + on.offsetHeight + ')';
+        marker.classList.add('is-on');
+      }
+      if (getComputedStyle(on.closest('.src-index')).overflowX === 'auto') {
+        var box = on.closest('.src-index');
+        box.scrollTo({ left: on.offsetLeft - 16, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    }, { rootMargin: '-96px 0px -60% 0px' });
+    links.forEach(function (a) {
+      var t = document.getElementById(a.getAttribute('href').slice(1));
+      if (t) io.observe(t);
+    });
+  }
+
+  function buildSources() {
+    var section = document.getElementById('sources');
+    var holder = section && section.querySelector('.grey-card');
+    if (!holder) return;
+
+    var byTitle = {};
+    TOPICS.forEach(function (e) { byTitle[e.topic.title] = e; });
+    var blocks = [];
+    holder.querySelectorAll('h2').forEach(function (h) {
+      var list = h.nextElementSibling;
+      if (!list || !list.matches('ol')) return;
+      blocks.push({ title: h.textContent.trim(), entry: byTitle[h.textContent.trim()] || null, list: list });
+    });
+    if (!blocks.length) return;
+    blocks.sort(function (a, b) { return (a.entry ? TOPICS.indexOf(a.entry) : 1e3) - (b.entry ? TOPICS.indexOf(b.entry) : 1e3); });
+
+    var refCount = 0, works = [], workByKey = {};
+    var byTopic = el('div', { class: 'src-view', 'data-view': 'topic' });
+    blocks.forEach(function (bk) {
+      var id = 'src-' + (bk.entry ? bk.entry.topic.id : bk.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+      var heading = bk.entry && bk.entry.topic.status === 'ready'
+        ? el('a', { href: href(bk.entry.topic.file) }, [
+            el('span', { class: 'src-num', text: topicNumber(bk.entry) }),
+            el('span', { class: 'src-title', text: bk.title }),
+            el('span', { class: 'src-go', html: ICON_ARROW_RIGHT })
+          ])
+        : el('span', {}, [
+            el('span', { class: 'src-num', text: bk.entry ? topicNumber(bk.entry) : '' }),
+            el('span', { class: 'src-title', text: bk.title })
+          ]);
+      byTopic.appendChild(el('section', { class: 'src-topic', id: id }, [el('h2', {}, [heading]), bk.list]));
+      bk.id = id;
+      bk.list.querySelectorAll('li').forEach(function (li) {
+        refCount++;
+        var span = li.querySelector('span') || li;
+        var link = span.querySelector('a');
+        var key = link ? link.getAttribute('href') : span.textContent.trim();
+        var w = workByKey[key];
+        if (!w) { w = workByKey[key] = { label: workLabel(span), link: link, topics: [] }; works.push(w); }
+        if (w.topics.indexOf(bk) === -1) w.topics.push(bk);
+      });
+    });
+
+    var bySource = el('div', { class: 'src-view', 'data-view': 'source', hidden: '' });
+    var workList = el('ol', { class: 'src-works' });
+    works.sort(function (a, b) { return b.topics.length - a.topics.length; });
+    works.forEach(function (w) {
+      var used = el('div', { class: 'src-used' }, [el('span', { class: 'src-used-label', text: 'Used in' })]);
+      w.topics.forEach(function (bk) {
+        used.appendChild(el('a', { class: 'src-chip', href: '#' + bk.id, 'data-view-link': 'topic' }, [
+          el('span', { class: 'src-num', text: bk.entry ? topicNumber(bk.entry) : '' }),
+          el('span', { text: bk.title })
+        ]));
+      });
+      var title = el('p', { class: 'src-work-title', html: w.label });
+      if (w.link) title.appendChild(w.link.cloneNode(true));
+      workList.appendChild(el('li', { class: 'src-work' }, [title, used]));
+    });
+    bySource.appendChild(workList);
+
+    var thumb = el('span', { class: 'mode-thumb', 'aria-hidden': 'true' });
+    var views = el('div', { class: 'mode-switch src-switch', role: 'group', 'aria-label': 'Group sources' }, [thumb]);
+    var meta = el('p', { class: 'src-meta' });
+    function setView(v, animate) {
+      views.classList.toggle('is-second', v === 'source');
+      views.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === v)); });
+      meta.textContent = v === 'topic'
+        ? refCount + ' references across ' + blocks.length + ' topics'
+        : works.length + ' works, ' + refCount + ' citations';
+      [byTopic, bySource].forEach(function (pane) {
+        var show = pane.getAttribute('data-view') === v;
+        if (show === !pane.hidden) return;
+        pane.hidden = !show;
+        if (show && animate && !reduceMotion && pane.animate) {
+          pane.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: SMOOTH });
+        }
+      });
+      index.classList.toggle('is-muted', v === 'source');
+    }
+    [['topic', 'By topic'], ['source', 'By source']].forEach(function (m) {
+      var b = el('button', { type: 'button', 'data-view': m[0], text: m[1] });
+      b.addEventListener('click', function () { setView(m[0], true); });
+      views.appendChild(b);
+    });
+
+    var index = el('nav', { class: 'src-index', 'aria-label': 'Topics' });
+    var marker = el('span', { class: 'toc-marker', 'aria-hidden': 'true' });
+    var indexLinks = [];
+    var groups = el('div', { class: 'src-index-groups' }, [marker]);
+    NAV.forEach(function (sec) {
+      var mine = blocks.filter(function (bk) { return bk.entry && bk.entry.section === sec; });
+      if (!mine.length) return;
+      var ul = el('ul', {});
+      mine.forEach(function (bk) {
+        var a = el('a', { href: '#' + bk.id }, [el('span', { class: 'src-num', text: topicNumber(bk.entry) }), el('span', { text: bk.title })]);
+        indexLinks.push(a);
+        ul.appendChild(el('li', {}, [a]));
+      });
+      groups.appendChild(el('div', { class: 'src-index-group' }, [el('p', { class: 'src-index-label', text: sec.title }), ul]));
+    });
+    index.appendChild(groups);
+
+    document.addEventListener('click', function (e) {
+      var chip = e.target.closest('[data-view-link]');
+      if (chip) setView('topic', true);
+    });
+
+    var page = el('div', { class: 'src-page' }, [
+      index,
+      el('div', { class: 'src-main' }, [
+        el('header', { class: 'src-head' }, [
+          el('div', {}, [el('h1', { class: 'src-h1', text: 'Sources' }), meta]),
+          views
+        ]),
+        byTopic,
+        bySource
+      ])
+    ]);
+    section.replaceWith(page);
+    page.id = 'sources';
+    setView('topic', false);
+    trackIndex(indexLinks, marker);
+  }
+
   function buildFooter() {
     var mount = document.getElementById('site-footer');
     if (!mount) return;
@@ -613,7 +776,8 @@
       ['.example-check'],
       ['.refs > li', 50],
       ['.pn-card', 50],
-      ['.home-block .grey-card'],
+      ['.src-topic'],
+      ['.src-work', 30],
       ['.footer-inner > *', 50]
     ];
     var io = new IntersectionObserver(function (entries) {
@@ -673,6 +837,7 @@
   buildModeSwitch();
   buildPrevNext();
   buildHome();
+  buildSources();
   buildFooter();
   watchScroll();
   animateHero();
