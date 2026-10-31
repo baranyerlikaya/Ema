@@ -24,30 +24,74 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Complex Numbers, Polar Form, Euler's Formula</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Complex numbers as points in a plane: their algebra, the polar form r(cos θ + i sin θ), and Euler's formula e^{iθ} = cos θ + i sin θ.</p>
         </header>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Complex numbers and their algebra</h3>
+            <div>
+<p>A <strong>complex number</strong> has the form $z = x + iy$, where $x$ and $y$ are real and the imaginary unit $i$ satisfies $i^2 = -1$. The real number $x = \operatorname{Re} z$ is the <em>real part</em> and $y = \operatorname{Im} z$ is the <em>imaginary part</em> [1, §Complex Numbers]; [2, §5.1].</p>
+<p>Complex numbers obey the usual rules of arithmetic, plus the single extra rule $i^2 = -1$. Addition works component by component. To multiply, expand the brackets and replace $i^2$ by $-1$ [2, §5.1]:</p>
+$$(a+bi)(c+di) = (ac - bd) + (ad + bc)\,i.$$
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The complex plane, conjugate and modulus</h3>
+            <div>
+<p>Since $z = x + iy$ is fixed by the pair $(x, y)$, it can be drawn as a point in the <strong>complex plane</strong>: the real part on the horizontal axis and the imaginary part on the vertical axis [1]; [2, §5.1]. Adding complex numbers is then the same as adding vectors.</p>
+<p>The <strong>complex conjugate</strong> $\bar z = x - iy$ is the mirror image of $z$ in the real axis. The <strong>modulus</strong> $|z|$ is the distance from the origin [1]; [2, §5.2]:</p>
+$$|z| = \sqrt{x^2 + y^2}, \qquad z\bar z = |z|^2.$$
+<p>The relation $z\bar z = |z|^2$ is how you divide: multiply top and bottom by the conjugate of the denominator, which makes the denominator real [2, §5.2]:</p>
+$$\frac{1}{a+bi} = \frac{a-bi}{a^2+b^2}.$$
+<p>With complex numbers every quadratic equation has solutions, even when the discriminant is negative. More generally, every polynomial of degree $n$ has $n$ complex roots, counted with multiplicity (the fundamental theorem of algebra) [2, §5.2, §5.3].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Polar form</h3>
+            <div>
+<p>Describe the point $z$ by its distance $r = |z|$ from the origin and the angle $\theta$ it makes with the positive real axis. This angle is the <strong>argument</strong>, $\theta = \arg z$. Then $x = r\cos\theta$ and $y = r\sin\theta$, which gives the <strong>polar form</strong> [1]:</p>
+$$z = r\,(\cos\theta + i\sin\theta).$$
+<p>For $x &gt; 0$ the argument is $\theta = \tan^{-1}(y/x)$. In general you must check which quadrant $z$ is in, because $y/x$ alone cannot tell $1+i$ from $-1-i$ [1]. The argument is only defined up to adding multiples of $2\pi$ [2, §6.3].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Euler's formula</h3>
+            <div>
+<p>Put $x = i\theta$ into the Taylor series $e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots$ and use $i^2 = -1$, $i^3 = -i$, $i^4 = 1$, … The terms split into a real series and an imaginary series, which are exactly the Taylor series of $\cos\theta$ and $\sin\theta$ [1, §Complex Exponential Function]:</p>
+$$e^{i\theta} = \cos\theta + i\sin\theta.$$
+<p>This is <strong>Euler's formula</strong>. A second way to see it: $z(t) = \cos t + i\sin t$ satisfies $\dot z = iz$ with $z(0) = 1$, which is exactly the property that defines $e^{it}$ [2, §6.2].</p>
+<p>With Euler's formula the polar form becomes very compact, $z = r\,e^{i\theta}$. As $\theta$ runs from $0$ to $2\pi$, $e^{i\theta}$ goes once counterclockwise around the unit circle [2, §6.3]. Replacing $\theta$ by $-\theta$ and adding or subtracting gives cosine and sine in terms of exponentials [2, §6.2]:</p>
+$$\cos\theta = \frac{e^{i\theta} + e^{-i\theta}}{2}, \qquad \sin\theta = \frac{e^{i\theta} - e^{-i\theta}}{2i}.$$
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Multiplication in polar form</h3>
+            <div>
+<p>The exponential law $e^{i\alpha}e^{i\beta} = e^{i(\alpha+\beta)}$ holds for complex exponents too [2, §6.4]. So to multiply two complex numbers, <strong>multiply the moduli and add the arguments</strong>:</p>
+$$r_1 e^{i\theta_1}\cdot r_2 e^{i\theta_2} = r_1 r_2\,e^{i(\theta_1+\theta_2)}.$$
+<p>In particular, $z^n = r^n e^{in\theta}$. This makes powers and roots easy: an $n$-th root of $w = \rho\,e^{i\varphi}$ has modulus $\rho^{1/n}$ and argument $\varphi/n$, and the other roots are obtained by adding multiples of $2\pi/n$ to the angle [2, §6.4, §6.5].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Multiplying by $i = e^{i\pi/2}$ rotates a complex number by $90^\circ$ counterclockwise without changing its length. This is why, for $z = r e^{i\omega t}$, the velocity $\dot z = i\omega z$ is perpendicular to the position, as in circular motion [1, §Complex Exponential Function]; [2, §6.4].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>$\tan^{-1}(y/x)$ gives the right argument only when $x &gt; 0$. For $x &lt; 0$ add $\pi$. For example, $-1-i$ has argument $-3\pi/4$ (or $5\pi/4$), not $\pi/4$ [1].</p>
+            </div>
           </aside>
         </section>
 
@@ -56,14 +100,45 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Complex number [1, 2]</span></figcaption>
+              <div class="formula-body">$$z = x + iy, \qquad i^2 = -1$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Product [2]</span></figcaption>
+              <div class="formula-body">$$\begin{aligned}&(a+bi)(c+di) \\ &\quad= (ac-bd) + (ad+bc)\,i\end{aligned}$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Conjugate and modulus [1, 2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\bar z = x - iy \\ |z| = \sqrt{x^2+y^2} = \sqrt{z\bar z}\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Inverse [2]</span></figcaption>
+              <div class="formula-body">$$\frac{1}{a+bi} = \frac{a-bi}{a^2+b^2}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Polar form [1]</span></figcaption>
+              <div class="formula-body">$$z = r(\cos\theta + i\sin\theta) = r\,e^{i\theta}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Euler's formula [1, 2]</span></figcaption>
+              <div class="formula-body">$$e^{i\theta} = \cos\theta + i\sin\theta$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Cosine and sine from exponentials [2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\cos\theta = \frac{e^{i\theta}+e^{-i\theta}}{2} \\ \sin\theta = \frac{e^{i\theta}-e^{-i\theta}}{2i}\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Multiplication and powers [2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered} r_1e^{i\theta_1}\,r_2e^{i\theta_2} = r_1r_2\,e^{i(\theta_1+\theta_2)} \\ z^n = r^n e^{in\theta}\end{gathered}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -72,15 +147,89 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Compute $(1+2i)(3+4i)$. (From [2], §5.1.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Expand all four products: $1\cdot3 + 1\cdot4i + 2i\cdot3 + 2i\cdot4i = 3 + 4i + 6i + 8i^2$.</p>
+              </div></li>
+              <li><div>
+<p>Replace $i^2$ by $-1$: $3 + 10i - 8 = -5 + 10i$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Moduli multiply: $|1+2i|\,|3+4i| = \sqrt5\cdot5 = 5\sqrt5$, and $|-5+10i| = \sqrt{25+100} = \sqrt{125} = 5\sqrt5$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Write $(1+i)^{-1}$ and $\dfrac{1+i}{2-i}$ in the form $a + bi$. (Adapted from [2], Exercise 5.2.3.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Multiply top and bottom by the conjugate of the denominator:</p>
+$$\begin{aligned}\frac{1}{1+i} &= \frac{1-i}{(1+i)(1-i)} \\ &= \frac{1-i}{2} = \frac12 - \frac12 i.\end{aligned}$$
+              </div></li>
+              <li><div>
+<p>Same idea for the second one. The conjugate of $2-i$ is $2+i$, and $(2-i)(2+i) = 4+1 = 5$:</p>
+$$\begin{aligned}\frac{1+i}{2-i} &= \frac{(1+i)(2+i)}{5} \\ &= \frac{2 + 3i + i^2}{5} = \frac{1+3i}{5}.\end{aligned}$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$(1+i)\cdot\frac{1-i}{2} = \frac{1 - i^2}{2} = \frac{2}{2} = 1$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Compute $(1+i)^4$ using the polar form. (Adapted from [2], Exercise 6.4.1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$1+i$ has modulus $\sqrt2$ and argument $\pi/4$, so $1+i = \sqrt2\,e^{i\pi/4}$.</p>
+              </div></li>
+              <li><div>
+<p>Raise to the fourth power: multiply the modulus four times and add the angle four times:</p>
+$$\begin{aligned}(1+i)^4 &= (\sqrt2)^4\,e^{i\pi} \\ &= 4\,(\cos\pi + i\sin\pi) = -4.\end{aligned}$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Directly: $(1+i)^2 = 1 + 2i + i^2 = 2i$, and $(2i)^2 = 4i^2 = -4$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Solve $x^2 + x + 1 = 0$. (Adapted from [2], Exercise 5.2.4.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>The discriminant is $b^2 - 4ac = 1 - 4 = -3 &lt; 0$, so there are no real roots. The quadratic formula still works with $\sqrt{-3} = i\sqrt3$:</p>
+$$x = \frac{-1 \pm i\sqrt3}{2}.$$
+              </div></li>
+              <li><div>
+<p>The two roots are complex conjugates of each other, as always happens for a real quadratic with negative discriminant.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Sum of roots $= -1 = -b/a$ and product $= \frac{1 + 3}{4} = 1 = c/a$. ✓ Both roots have modulus $1$ and arguments $\pm 2\pi/3$.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -88,8 +237,8 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 2: Kinematics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Oscillatory Motion: Complex Numbers, The Exponential Function, Complex Exponential Function. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/kinematics/main.pdf">PDF</a></span></li>
+            <li><span>H. R. Miller, <em>18.03 Supplementary Notes</em>, MIT OpenCourseWare, 18.03 Differential Equations, Spring 2010. §5 The algebra of complex numbers; §6 The complex exponential. <a href="https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/5bd84a2e02dece25f25b5e0606b30392_MIT18_03S10_sup.pdf">PDF</a></span></li>
           </ol>
         </section>
 
