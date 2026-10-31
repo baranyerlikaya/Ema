@@ -282,7 +282,7 @@ button { font: inherit; color: inherit; }
   padding: 0;
   border: 0;
   border-radius: var(--r-pill);
-  background: var(--grey-1);
+  background: rgba(0, 0, 0, 0.05);
   color: var(--ink);
   cursor: pointer;
   transition: background-color var(--t-med) var(--smooth), transform var(--t-med) var(--smooth);
@@ -293,7 +293,7 @@ button { font: inherit; color: inherit; }
   transition: transform 460ms var(--smooth);
 }
 .drawer-close svg path { stroke-width: 1.75; }
-.drawer-close:hover { background: var(--grey-2); }
+.drawer-close:hover { background: rgba(0, 0, 0, 0.09); }
 .drawer-close:hover svg { transform: rotate(90deg); }
 .drawer-close:active { transform: scale(0.9); }
 .drawer-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -319,7 +319,7 @@ button { font: inherit; color: inherit; }
   padding: 0 36px 0 34px;
   border: 0;
   border-radius: var(--r-pill);
-  background: var(--grey-1);
+  background: rgba(0, 0, 0, 0.05);
   box-shadow: 0 0 0 1px transparent;
   color: var(--ink);
   font: inherit;
@@ -330,7 +330,7 @@ button { font: inherit; color: inherit; }
   appearance: none;
 }
 .search-input::placeholder { color: var(--ink-3); }
-.search-input:hover { background: #ebebeb; }
+.search-input:hover { background: rgba(0, 0, 0, 0.07); }
 .search-input:focus { background: var(--white); box-shadow: 0 0 0 1.5px var(--ink), 0 0 0 5px rgba(0, 0, 0, 0.05); }
 .search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 .search-key {
@@ -403,7 +403,7 @@ button { font: inherit; color: inherit; }
   left: 0;
   z-index: 0;
   border-radius: 10px;
-  background: var(--grey-1);
+  background: rgba(0, 0, 0, 0.05);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -498,7 +498,7 @@ button { font: inherit; color: inherit; }
 .tree-link-text { flex: 1; min-width: 0; }
 a.tree-link:hover { color: var(--ink); }
 a.tree-link:hover .tree-num { color: var(--ink-2); }
-a.tree-link:active { background: var(--grey-2); }
+a.tree-link:active { background: rgba(0, 0, 0, 0.08); }
 .tree-link.is-active {
   background: var(--ink);
   color: var(--white);
@@ -520,7 +520,7 @@ a.tree-link:active { background: var(--grey-2); }
 
 /* Without a mouse there is no glide, so give touch a simple pressed state */
 @media (hover: none) {
-  .tree-toggle:active { background: var(--grey-1); }
+  .tree-toggle:active { background: rgba(0, 0, 0, 0.05); }
 }
 
 .tree mark {
@@ -548,8 +548,11 @@ a.tree-link:active { background: var(--grey-2); }
   left: 0;
   z-index: 60;
   width: min(320px, 88vw);
-  background: var(--white);
-  border-radius: 0 var(--r-lg) var(--r-lg) 0;
+  /* Frosted glass: the blurred page shows through */
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(160%);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
   transform: translateX(-104%);
   visibility: hidden;
   transition: transform 380ms var(--smooth), visibility 0s linear 380ms;
@@ -557,14 +560,16 @@ a.tree-link:active { background: var(--grey-2); }
 .drawer-open .sidebar {
   transform: none;
   visibility: visible;
-  box-shadow: 0 0 0 1px var(--line), 0 12px 80px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
   transition: transform 560ms var(--smooth), visibility 0s, box-shadow 560ms var(--smooth);
 }
 .drawer-overlay {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(0, 0, 0, 0.28);
+  background: rgba(255, 255, 255, 0.25);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   opacity: 0;
   visibility: hidden;
   transition: opacity 380ms var(--smooth), visibility 0s linear 380ms;
@@ -1196,6 +1201,9 @@ a.pn-card:hover { background: var(--grey-2); }
     margin: 0;
     border-right: 1px solid var(--line);
     border-radius: 0;
+    background: var(--white);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     transform: none;
     visibility: visible;
     transition: none;
