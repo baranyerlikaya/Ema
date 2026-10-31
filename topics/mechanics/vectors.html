@@ -31,7 +31,16 @@
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Some things just have a size</strong>, like your mass or the temperature. These are <strong>scalars</strong>. <strong>Other things have a size and a direction</strong>, like "walk 5 metres north" or "push to the left". These are <strong>vectors</strong>, drawn as arrows [1]; [2].</p>
+<p><strong>Adding arrows:</strong> put the second arrow's tail on the first arrow's tip. The sum goes from the very start to the very end [2]. In numbers, add the matching parts: $x$ with $x$, $y$ with $y$, $z$ with $z$ [1]. Careful: lengths don't simply add. Walking 4 km east and then 3 km north puts you only 5 km from home, not 7 [1].</p>
+<p><strong>Two ways to multiply arrows:</strong></p>
+<ul>
+<li><strong>Dot product</strong>, $\mathbf A\cdot\mathbf B = AB\cos\theta = A_xB_x + A_yB_y + A_zB_z$. The answer is a <em>number</em>. It asks "how much do these arrows point the same way?" It is biggest when they are lined up, zero when they are at right angles, and negative when they point against each other. Work is a dot product: $W = \mathbf F\cdot\mathbf d$ [1]; [3].</li>
+<li><strong>Cross product</strong>, $\mathbf A\times\mathbf B$. The answer is a new <em>arrow</em>, standing straight up from both. Its length $AB\sin\theta$ is the area of the parallelogram the two arrows make. Find its direction with your right hand: curl your fingers from $\mathbf A$ to $\mathbf B$, and your thumb points the way [1]; [2].</li>
+</ul>
+<p><strong>Order matters for the cross product:</strong> $\mathbf B\times\mathbf A = -\mathbf A\times\mathbf B$ (the thumb flips). For lined-up arrows it is zero [2]. Turning a wrench uses it: the torque is $\boldsymbol\tau = \mathbf r\times\mathbf F$ [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
