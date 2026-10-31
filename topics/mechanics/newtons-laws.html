@@ -26,45 +26,93 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Newton's Three Laws, Inertial vs Non-inertial Frames</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Newton's three laws of motion, the frames in which they hold (inertial frames), and what changes when you describe motion from an accelerating frame.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Law 1: things are lazy.</strong> If nothing pushes or pulls it, a resting thing stays put and a moving thing keeps going straight at the same speed. A hockey puck on smooth ice glides for a very long time [1]; [2].</p>
+<p><strong>Law 2: a push changes motion.</strong> The bigger the total push (net force), the faster the motion changes; the heavier the thing, the slower it changes [1]; [2]:</p>
+$$\mathbf F = \frac{d\mathbf p}{dt} = m\mathbf a.$$
+<p><strong>Law 3: pushes come in pairs.</strong> If you push a wall, the wall pushes you back just as hard. The two pushes act on <em>different</em> things (you and the wall), so they don't cancel out [1]; [2].</p>
+<p><strong>Forces add like arrows</strong>: the total force is the vector sum of all the pushes and pulls [2].</p>
+<p><strong>Where do these laws work?</strong> In <strong>inertial frames</strong>: places that aren't speeding up, slowing down or turning, like the ground or a smoothly moving train [1].</p>
+<p><strong>In a car that speeds up</strong>, you feel thrown backward, but nothing is actually pushing you. Your body just wants to keep its old speed (law 1). If you insist on describing things from inside the car, you have to add a pretend force, $-m\mathbf A$, pointing backward. It's called a <strong>fictitious force</strong> [1]; [3]. That's why a toy hanging from the car's mirror swings backward when the car speeds up.</p>
+<p>Newton's laws work for everyday things moving much slower than light [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Force</h3>
+            <div>
+<p>A <strong>force</strong> is an action on a body that changes its state of rest or uniform motion [2, §7.1]. It is a vector: forces acting together add like vectors, because the accelerations they produce add like vectors [2, §7.1]. The vector sum of all forces on a body is the <strong>net force</strong> $\mathbf F = \sum_i \mathbf F_i$.</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The three laws</h3>
+            <div>
+<p><strong>First law (inertia).</strong> A body stays at rest or keeps moving in a straight line at constant speed unless a net force acts on it [1, §Newton's Axioms of Motion]; [2, §7.2].</p>
+<p><strong>Second law.</strong> The rate of change of a body's momentum equals the net force on it [1]; [2, §7.3]:</p>
+$$\mathbf F = \frac{d\mathbf p}{dt}, \qquad \mathbf p = m\mathbf v.$$
+<p>For constant mass this becomes $\mathbf F = m\mathbf a$.</p>
+<p><strong>Third law (action–reaction).</strong> If body 1 exerts a force on body 2, then body 2 exerts an equal and opposite force on body 1 [1]; [2, §7.4]:</p>
+$$\mathbf F_{12} = -\mathbf F_{21}.$$
+<p>The two forces of a pair act on <em>different</em> bodies, so they never cancel each other in the equation of motion of one body [2, §7.4].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Inertial frames</h3>
+            <div>
+<p>The first law looks like the special case $\mathbf F = 0$ of the second, but it has its own job: it singles out the <strong>inertial frames</strong>, the reference frames in which a body with no net force really does move uniformly. Newton's laws hold in these frames [1, §Newton's Axioms of Motion].</p>
+<p>Any frame moving at constant velocity relative to an inertial frame is also inertial. Since accelerations are the same in both ($\mathbf a' = \mathbf a$), $\mathbf F = m\mathbf a$ has the same form in all of them (Galilean invariance) [1, §Galilean Invariance and Inertial Frames].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Non-inertial frames and fictitious forces</h3>
+            <div>
+<p>In an <strong>accelerating</strong> frame Newton's laws in their plain form fail. Sitting in a car that speeds up, you feel pushed back into your seat, although nothing physical pushes you backward [1, §Newton's Axioms of Motion].</p>
+<p>Let frame $O'$ accelerate with $\mathbf A$ relative to an inertial frame $O$. Positions add, $\mathbf r = \mathbf r' + \mathbf R$, so accelerations do too: $\mathbf a = \mathbf a' + \mathbf A$ [3, §31.2]. Then $m\mathbf a' = \mathbf F_{\text{physical}} - m\mathbf A$. Defining the <strong>fictitious force</strong> $\mathbf F_{\text{fic}} = -m\mathbf A$, the second law in $O'$ becomes [3, §31.2]</p>
+$$\mathbf F_{\text{physical}} + \mathbf F_{\text{fic}} = m\mathbf a'.$$
+<p>The fictitious force points opposite to the frame's acceleration. It has no reaction partner, because no body exerts it.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Range of validity</h3>
+            <div>
+<p>Newton's laws are postulates confirmed by experiment. They describe macroscopic bodies moving much slower than light, when quantum effects can be neglected [1, §Validity of Newton's Axioms]; [2, §7.4]. The third law in the form $\mathbf F_{12} = -\mathbf F_{21}$ along the line joining the bodies holds for central forces such as gravity and electrostatics [1, §Validity of Newton's Axioms].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>The second law becomes predictive only when combined with <strong>force laws</strong> (gravity, springs, friction…). Constraint forces, such as the push of a surface, are not given in advance; they are whatever is needed to produce the observed motion [2, §7.3].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Fictitious forces exist only when you describe the motion from an accelerating frame. If you work in an inertial frame (usually the ground), don't add them: there, the backward "push" in an accelerating car is just your body's inertia [1]; [3, §31.2].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="accframe">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A car accelerates to the right at $A$, with a pendulum hanging from its roof. In the car's frame the bob is at rest, so three forces balance: the weight $mg$ (down), the fictitious force $-mA$ (backward, toward the left) and the string tension (dark). The string tilts backward by $\arctan(A/g)$ from the vertical. Set $A = 0$: the car moves at constant velocity, it is an inertial frame again, and the string hangs straight down.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +120,35 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Net force [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F = \sum_i\mathbf F_i$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Second law [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F = \frac{d\mathbf p}{dt} \;\overset{m=\text{const}}{=}\; m\mathbf a$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Third law [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F_{12} = -\mathbf F_{21}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Accelerations in an accelerating frame [3]</span></figcaption>
+              <div class="formula-body">$$\mathbf a = \mathbf a' + \mathbf A$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Fictitious force [3]</span></figcaption>
+              <div class="formula-body">$$\mathbf F_{\text{fic}} = -m\mathbf A$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Second law in a non-inertial frame [3]</span></figcaption>
+              <div class="formula-body">$$\mathbf F_{\text{physical}} + \mathbf F_{\text{fic}} = m\mathbf a'$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +157,73 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Two ropes pull on a post of mass $1\ \text{kg}$ stuck in the ground with $\mathbf F_1 = (70\hat\imath + 20\hat\jmath)\ \text{N}$ and $\mathbf F_2 = (-30\hat\imath + 40\hat\jmath)\ \text{N}$; gravity is $\mathbf F_{\text{grav}} = -10\hat\jmath\ \text{N}$. Find the force of the ground on the post. (From [2], Example 7.1.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>The post is at rest, so by the first (or second) law the net force is zero: $\mathbf F_1 + \mathbf F_2 + \mathbf F_{\text{grav}} + \mathbf F_{\text{ground}} = 0$.</p>
+              </div></li>
+              <li><div>
+<p>$\mathbf F_1 + \mathbf F_2 + \mathbf F_{\text{grav}} = (40\hat\imath + 50\hat\jmath)\ \text{N}$, so $\mathbf F_{\text{ground}} = (-40\hat\imath - 50\hat\jmath)\ \text{N}$.</p>
+              </div></li>
+              <li><div>
+<p>Magnitude $\sqrt{40^2 + 50^2} \approx 64\ \text{N}$, pointing down and to the left at $\tan^{-1}(50/40) \approx 51.3^\circ$ below the $-x$-axis.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Adding all four forces: $x$: $70 - 30 - 40 = 0$; $y$: $20 + 40 - 10 - 50 = 0$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A thin rod hangs from a hinge in the roof of a car that accelerates at $A$. At what angle does it hang in equilibrium? (From [3], Example 1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Work in the car's frame, where the rod is at rest ($\mathbf a' = 0$). Forces: gravity $m\mathbf g$, the pivot force, and the fictitious force $-m\mathbf A$ (backward).</p>
+              </div></li>
+              <li><div>
+<p>Equilibrium: $m\mathbf g - m\mathbf A + \mathbf F_{\text{pivot}} = 0$. Gravity and the fictitious force act like an effective gravity $\mathbf g' = \mathbf g - \mathbf A$, pointing down and backward.</p>
+              </div></li>
+              <li><div>
+<p>The rod lines up with $\mathbf g'$. Its angle with the roof is $\theta = \tan^{-1}(g/A)$; equivalently it tilts backward from the vertical by $\tan^{-1}(A/g)$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$A = 0$: $\theta = 90^\circ$, hanging straight down. ✓ Large $A$: the rod swings almost flat against the roof, toward the back. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>You stand at rest on the frictionless floor of a spaceship drifting in empty space with its engines off. Suddenly you start to slide backwards. What is the ship doing? (From [3], Concept Question 1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Before the slide, you stayed at rest with no net force on you: the ship was an inertial frame.</p>
+              </div></li>
+              <li><div>
+<p>On a frictionless floor, nothing physical pushes you backward. In the ship's frame your motion is explained by a fictitious force $-m\mathbf A$ pointing backward.</p>
+              </div></li>
+              <li><div>
+<p>So $\mathbf A$ points forward: the ship has started accelerating forward, and it is no longer an inertial frame.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>From outside (inertial frame) you simply stay where you were while the ship speeds up under you, consistent with the first law. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +231,9 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Newton's Axioms of Motion, §Galilean Invariance and Inertial Frames, §Validity of Newton's Axioms. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 7 "Newton’s Laws of Motion", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §7.1 Force and Quantity of Matter, §7.2 Newton’s First Law, §7.3 Second Law, §7.4 Third Law; Example 7.1. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter7.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 31 "Non-Inertial Rotating Reference Frames", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §31.2 Linearly Accelerating Reference Frames; Example 1, Concept Question 1. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter31.pdf">PDF</a></span></li>
           </ol>
         </section>
 

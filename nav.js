@@ -30,7 +30,7 @@ window.PHYSREF_NAV = [
     id: 'dynamics',
     title: 'Dynamics',
     topics: [
-      { id: 'newtons-laws',        title: "Newton's Three Laws, Inertial vs Non-inertial Frames", file: 'topics/mechanics/newtons-laws.html',        status: 'soon' },
+      { id: 'newtons-laws',        title: "Newton's Three Laws, Inertial vs Non-inertial Frames", file: 'topics/mechanics/newtons-laws.html',        status: 'ready' },
       { id: 'momentum-force',      title: 'Momentum, F = dp/dt = ma, Galilean Invariance',        file: 'topics/mechanics/momentum-force.html',      status: 'soon' },
       { id: 'inertial-mass',       title: 'Inertial Mass, Equation of Motion under Constant Force', file: 'topics/mechanics/inertial-mass.html',     status: 'soon' },
       { id: 'inclined-plane',      title: 'Inclined Plane, Tension',                              file: 'topics/mechanics/inclined-plane.html',      status: 'soon' },
