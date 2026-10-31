@@ -31,7 +31,17 @@
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>One rule for everything:</strong> $\frac{d}{dt}e^{\lambda t} = \lambda\,e^{\lambda t}$. The speed of change is always $\lambda$ times the current value [1]; [2]. What $e^{\lambda t}$ looks like depends only on the number $\lambda$:</p>
+<ul>
+<li><strong>$\lambda$ real and positive:</strong> it grows faster and faster, like a snowball rolling downhill [1].</li>
+<li><strong>$\lambda$ real and negative:</strong> it shrinks toward zero, like a cooling cup of tea [1].</li>
+<li><strong>$\lambda = i\omega$ (imaginary):</strong> it doesn't grow or shrink at all. It goes round and round a circle, $e^{i\omega t} = \cos\omega t + i\sin\omega t$. Its real part swings back and forth like a spring [1]; [2].</li>
+<li><strong>$\lambda = \alpha + i\omega$ (complex):</strong> both at once: $e^{\alpha t}(\cos\omega t + i\sin\omega t)$. It spirals outward if $\alpha &gt; 0$ and inward if $\alpha &lt; 0$ [2].</li>
+</ul>
+<p><strong>Easy way to remember:</strong> the real part of $\lambda$ controls the <em>size</em> (grow or shrink). The imaginary part controls the <em>spinning</em> (how fast it wiggles) [2].</p>
+<p><strong>Back to the real world.</strong> Real things have real positions. Calculate with the complex exponential, then keep only the real part at the end. You get real motions like $e^{\alpha t}\cos\omega t$, a wiggle that slowly dies out [1]; [2]. Do this only after derivatives and additions; products of two oscillations, such as energy, must be computed with the real functions [2].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
@@ -104,11 +114,11 @@ $$e^{(\alpha+i\omega)t} = e^{\alpha t}\left(\cos\omega t + i\sin\omega t\right).
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="spring">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">This is a damped spring, $m\ddot x = -kx - b\dot x$, released from $x = 1$. Its motion is built from $e^{\lambda t}$ with $\lambda = -\gamma \pm i\sqrt{\omega_0^2 - \gamma^2}$, where $\gamma = b/2m$ and $\omega_0 = \sqrt{k/m}$. Set $b = 0$: $\lambda$ is purely imaginary, and $x(t)$ is a steady cosine. Increase $b$: $\lambda$ gets a negative real part, so the wiggle shrinks like $e^{-\gamma t}$. With $k = 2\ \text{N/m}$ and $m = 0.2\ \text{kg}$, pushing $b$ above about $1.3\ \text{kg/s}$ makes both $\lambda$ real and negative: no more wiggle, only decay.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
