@@ -26,45 +26,84 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Momentum, F = dp/dt = ma, Galilean Invariance</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">The second law as an equation of motion: force equals the rate of change of momentum, F = ma for constant mass, and why it looks the same to every inertial observer.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Momentum is "amount of motion"</strong>: mass times velocity, $\mathbf p = m\mathbf v$ [1].</p>
+<p><strong>Force is what changes it.</strong> The stronger the force, the faster the momentum changes [1]; [2]:</p>
+$$\mathbf F = \frac{d\mathbf p}{dt}.$$
+<p>A short push gives a short kick: force × time = change in momentum, $\mathbf F\,\Delta t = \Delta\mathbf p$ [2].</p>
+<p><strong>For things whose mass doesn't change</strong> (almost everything in this course), this becomes $\mathbf F = m\mathbf a$. Push twice as hard and it speeds up twice as quickly; make it twice as heavy and it speeds up half as quickly [1]; [2].</p>
+<p><strong>The equation of motion.</strong> If you know the force, $m\ddot{\mathbf r} = \mathbf F$ is a "riddle" for the path $\mathbf r(t)$. Solve it, plug in where the object started and how fast it was going, and you know its whole future [1]; [2].</p>
+<p><strong>Everyone agrees on forces.</strong> A friend gliding past you at a steady speed sees different positions and velocities, but the <em>same</em> acceleration, so the same force. The laws are the same for both of you. That's Galilean invariance [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Force as rate of change of momentum</h3>
+            <div>
+<p>With momentum $\mathbf p = m\mathbf v$, Newton's second axiom says that a net force is what changes momentum [1, §Newton's Axioms of Motion]; [2, §7.3]:</p>
+$$\mathbf F = \frac{d\mathbf p}{dt}.$$
+<p>Newton first stated it for a short push: a force acting for a time $\Delta t$ produces an impulse $\mathbf I = \mathbf F\Delta t = \Delta\mathbf p$. Letting $\Delta t \to 0$ gives the instantaneous form $\mathbf F = \lim_{\Delta t\to0}\Delta\mathbf p/\Delta t = d\mathbf p/dt$ [2, §7.3].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Constant mass: F = ma</h3>
+            <div>
+<p>If the mass does not change, $d\mathbf p/dt = m\,d\mathbf v/dt$, so [1]; [2, §7.3]</p>
+$$\mathbf F = m\mathbf a, \qquad \mathbf a = \frac{\mathbf F}{m}.$$
+<p>The acceleration is proportional to the net force and inversely proportional to the mass, and it points in the direction of the force [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> The equation of motion</h3>
+            <div>
+<p>Once the force is known as a function of position, velocity and time, the second law becomes a differential equation for the motion, the <strong>equation of motion</strong> [1, §Equations of Motion]; [2, §7.3]:</p>
+$$m\ddot{\mathbf r} = \mathbf F(\mathbf r, \dot{\mathbf r}, t).$$
+<p>It is second order, so its solution is fixed by two vector initial conditions: the initial position and the initial velocity [1].</p>
+<p>When the force depends on position, it helps to use the chain rule to write $a = \dfrac{dv}{dt} = \dfrac{dv}{dx}\dfrac{dx}{dt} = v\dfrac{dv}{dx}$, which links speed and position directly [1, Worked Example “Force law from a given speed function”].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Galilean invariance</h3>
+            <div>
+<p>Let $S'$ move at constant velocity $\mathbf v_0$ relative to the inertial frame $S$. Then [1, §Galilean Invariance and Inertial Frames]</p>
+$$\begin{gathered}\mathbf r' = \mathbf r - \mathbf v_0t, \qquad \mathbf v' = \mathbf v - \mathbf v_0, \\ \mathbf a' = \mathbf a, \qquad t' = t.\end{gathered}$$
+<p>Positions, velocities and momenta differ between the frames, but accelerations agree. Therefore $\mathbf F' = m\mathbf a' = m\mathbf a = \mathbf F$: the second law has the same form in every inertial frame. This is <strong>Galilean invariance</strong> [1].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Momentum depends on the frame (it contains $\mathbf v$), but its rate of change does not, as long as the frames move at constant velocity relative to each other: $d\mathbf p'/dt = m\mathbf a' = m\mathbf a = d\mathbf p/dt$ [1]; [3, §10.2].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>$\mathbf F = m\mathbf a$ assumes the mass is constant. The general statement is $\mathbf F = d\mathbf p/dt$, since both mass and velocity can change with time [1, §Newton's Axioms of Motion]; [2, §7.3]. Also, $\mathbf F$ is the <em>net</em> force: add all forces as vectors before using it.</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="forcep">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A constant force $F$ pushes a block of mass $m$ for 3 s, then stops. The graph shows the momentum $p(t)$: while the force acts, $p$ grows in a straight line with slope $dp/dt = F$; after the force stops, the slope is zero and $p$ stays constant (first law). The velocity is $v = p/m$. Change $m$: the momentum graph is identical, because it depends only on the force, but a heavier block ends up slower.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +111,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Second law [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F = \frac{d\mathbf p}{dt}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Impulse form [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F\,\Delta t = \Delta\mathbf p$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Constant mass [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F = m\mathbf a$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Equation of motion [1, 2]</span></figcaption>
+              <div class="formula-body">$$m\ddot{\mathbf r} = \mathbf F(\mathbf r, \dot{\mathbf r}, t)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Acceleration via position [1]</span></figcaption>
+              <div class="formula-body">$$a = v\frac{dv}{dx}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Galilean transformation [1]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\mathbf r' = \mathbf r - \mathbf v_0t, \quad \mathbf v' = \mathbf v - \mathbf v_0 \\ \mathbf a' = \mathbf a, \quad t' = t\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Galilean invariance of the second law [1]</span></figcaption>
+              <div class="formula-body">$$\mathbf F' = m\mathbf a' = m\mathbf a = \mathbf F$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +153,73 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A particle of mass $m$ moves along a line with speed $v(x) = \alpha/x$, where $\alpha &gt; 0$. Find the force acting on it as a function of $x$. (From [1], Worked Example “Force law from a given speed function”.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Use $a = v\,dv/dx$, since $v$ is given as a function of position.</p>
+              </div></li>
+              <li><div>
+<p>$\dfrac{dv}{dx} = -\dfrac{\alpha}{x^2}$, so $a = \dfrac{\alpha}{x}\cdot\left(-\dfrac{\alpha}{x^2}\right) = -\dfrac{\alpha^2}{x^3}$.</p>
+              </div></li>
+              <li><div>
+<p>$F = ma = -\dfrac{m\alpha^2}{x^3}$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>The particle slows down as $x$ grows ($v = \alpha/x$ decreases), so for $x &gt; 0$ the force must point backward: $F &lt; 0$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A block slides from rest down a frictionless incline of angle $\theta$, with equation of motion $\ddot x = g\sin\theta$ along the incline. Find its speed after a distance $x$ without solving for $x(t)$. (From [1], Worked Example “Velocity with respect to distance”, Solution 1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Multiply the equation of motion by $2\dot x$: $2\dot x\ddot x = 2g\sin\theta\,\dot x$.</p>
+              </div></li>
+              <li><div>
+<p>The left side is $\frac{d}{dt}(\dot x^2)$ and the right side is $\frac{d}{dt}(2g\sin\theta\,x)$, so $\dot x^2 = 2g\sin\theta\,x + C$.</p>
+              </div></li>
+              <li><div>
+<p>Starting from rest at $x = 0$ gives $C = 0$, so $\dot x = \sqrt{2g\sin\theta\,x}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The same result follows from energy conservation: $mgx\sin\theta = \tfrac12m\dot x^2$ [1, Solution 2]. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Show that an observer moving at constant velocity $\mathbf v_0$ measures the same force on a particle as an observer at rest in an inertial frame. (From [1], §Galilean Invariance and Inertial Frames.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>With origins coinciding at $t = 0$: $\mathbf r' = \mathbf r - \mathbf v_0t$.</p>
+              </div></li>
+              <li><div>
+<p>Differentiate: $\mathbf v' = \mathbf v - \mathbf v_0$; again, since $\mathbf v_0$ is constant: $\mathbf a' = \mathbf a$.</p>
+              </div></li>
+              <li><div>
+<p>Hence $\mathbf F' = m\mathbf a' = m\mathbf a = \mathbf F$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>If $\mathbf v_0$ were changing, an extra term $-m\,d\mathbf v_0/dt$ would appear: that is exactly the fictitious force of a non-inertial frame [4, §31.2]. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +227,10 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Newton's Axioms of Motion, §Galilean Invariance and Inertial Frames, §Equations of Motion; Worked Examples “Force law from a given speed function” and “Velocity with respect to distance”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 7 "Newton’s Laws of Motion", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §7.3 Momentum, Newton’s Second Law and Third Law. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter7.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 10 "Momentum, System of Particles, and Conservation of Momentum", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §10.2 Momentum. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter10.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 31 "Non-Inertial Rotating Reference Frames", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §31.2 Linearly Accelerating Reference Frames. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter31.pdf">PDF</a></span></li>
           </ol>
         </section>
 
