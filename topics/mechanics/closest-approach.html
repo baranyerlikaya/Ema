@@ -24,30 +24,66 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Two Particles: Closest Approach</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">How close two interacting particles get: reduce the pair to one particle of reduced mass, then find where the radial velocity vanishes in the effective potential.</p>
         </header>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Reduction to a one-body problem</h3>
+            <div>
+              <p>Take two particles of masses $m_1$ and $m_2$ that interact only with each other, through a potential $U(r)$ that depends only on their separation $r = |\vec r_2 - \vec r_1|$. With no external force, the centre of mass $\vec R = (m_1\vec r_1 + m_2\vec r_2)/M$, where $M = m_1 + m_2$, moves with constant velocity and plays no further role.</p>
+              <p>Everything interesting is in the relative coordinate $\vec r = \vec r_2 - \vec r_1$. Rewriting the kinetic energy in terms of $\vec R$ and $\vec r$ splits it into a centre-of-mass part and a relative part:</p>
+              $$T = \tfrac12 M\dot{\vec R}^{\,2} + \tfrac12 \mu\,\dot{\vec r}^{\,2}, \qquad \mu = \frac{m_1 m_2}{m_1 + m_2}.$$
+              <p>So the relative motion is that of a single fictitious particle of mass $\mu$, the <strong>reduced mass</strong>, moving in the fixed potential $U(r)$. The separation of the two real particles is exactly the distance of this fictitious particle from the origin, so the closest approach of the pair is the minimum of $r$ for the one-body problem [2, §3.1.1].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Effective potential and the centrifugal barrier</h3>
+            <div>
+              <p>Because the force is central, the relative angular momentum $\vec L = \mu\,\vec r \times \dot{\vec r}$ is conserved. The motion therefore stays in a fixed plane, and in polar coordinates $(r, \varphi)$ in that plane $L = \mu r^2 \dot\varphi$ [2, §3.1.2].</p>
+              <p>Using $\dot\varphi = L/(\mu r^2)$, the energy of the relative motion becomes a function of $r$ and $\dot r$ only:</p>
+              $$E = \tfrac12 \mu \dot r^2 + \underbrace{U(r) + \frac{L^2}{2\mu r^2}}_{U_{\text{eff}}(r)}.$$
+              <p>The radial motion is then one-dimensional motion in the <strong>effective potential</strong> $U_{\text{eff}}$. The extra term $L^2/(2\mu r^2)$ is the <strong>centrifugal barrier</strong>: it grows without bound as $r \to 0$, so a particle with $L \neq 0$ cannot reach $r = 0$ unless $U$ is very strongly attractive there [2, §3.1.2, §3.2].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Turning points</h3>
+            <div>
+              <p>Since $\tfrac12\mu\dot r^2 \ge 0$, the motion is only possible where $E \ge U_{\text{eff}}(r)$. Solving the energy equation for the radial speed gives</p>
+              $$\dot r = \pm\sqrt{\tfrac{2}{\mu}\bigl(E - U_{\text{eff}}(r)\bigr)}.$$
+              <p>An incoming particle has $\dot r &lt; 0$. It keeps approaching until it reaches the smallest $r$ with $E = U_{\text{eff}}(r)$. There $\dot r = 0$, the radial motion reverses, and $r$ starts to grow again. This radius is a <strong>turning point</strong>, and for a scattering (unbound) motion it is the distance of closest approach $r_{\min}$ [2, §3.2]; [1, §20.2].</p>
+              <p>At $r_{\min}$ the velocity is not zero in general; only its radial component vanishes. The velocity is perpendicular to $\vec r$ there, so $L = \mu v_{\min} r_{\min}$ [1, §20.2].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> $r_{\min}$ from the initial conditions</h3>
+            <div>
+              <p>Suppose the particles start far apart ($r \to \infty$, where $U \to 0$) with relative speed $v_0$, and the line of the initial relative velocity misses the other particle by a perpendicular distance $b$, the <strong>impact parameter</strong>. Then both conserved quantities are fixed by $v_0$ and $b$ [2, §3.5]:</p>
+              $$E = \tfrac12 \mu v_0^2, \qquad L = \mu v_0 b.$$
+              <p>Substituting these into the turning-point condition $E = U_{\text{eff}}(r_{\min})$ gives</p>
+              $$\tfrac12 \mu v_0^2 = U(r_{\min}) + \frac{\tfrac12 \mu v_0^2\, b^2}{r_{\min}^2}, \qquad\text{i.e.}\qquad 1 - \frac{b^2}{r_{\min}^2} = \frac{U(r_{\min})}{\tfrac12\mu v_0^2}.$$
+              <p>Solve this for $r_{\min}$ and take the largest root, which is the first one the incoming particle meets. For $U = 0$ it gives $r_{\min} = b$: a free particle passes at exactly the impact parameter. A repulsive $U$ pushes $r_{\min}$ above $b$, and an attractive $U$ pulls it below.</p>
+              <p>When one mass is much larger, $\mu$ is close to the lighter mass and the heavy particle hardly moves. This is the fixed-target case treated in [1, §20.2–20.4].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+              <p>$v_0$ is the <em>relative</em> speed $|\dot{\vec r}_2 - \dot{\vec r}_1|$ at large separation, and $E$ is the energy of the relative motion only. The centre-of-mass kinetic energy $\tfrac12 M \dot{\vec R}^{\,2}$ is conserved separately and cannot be spent on getting closer.</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+              <p>Don't set the whole velocity to zero at closest approach. Only $\dot r = 0$. Unless $b = 0$, the particles still move sideways at $r_{\min}$, and that tangential motion carries the angular momentum $L$.</p>
+            </div>
           </aside>
         </section>
 
@@ -56,13 +92,38 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Reduced mass [2]</span></figcaption>
+              <div class="formula-body">$$\mu = \frac{m_1 m_2}{m_1 + m_2}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Effective potential [2]</span></figcaption>
+              <div class="formula-body">$$U_{\text{eff}}(r) = U(r) + \frac{L^2}{2\mu r^2}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Radial energy equation [2]</span></figcaption>
+              <div class="formula-body">$$E = \tfrac12 \mu \dot r^2 + U_{\text{eff}}(r)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Turning point ($\dot r = 0$) [1, 2]</span></figcaption>
+              <div class="formula-body">$$E = U_{\text{eff}}(r_{\min})$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Initial conditions at $r \to \infty$ [2]</span></figcaption>
+              <div class="formula-body">$$E = \tfrac12 \mu v_0^2, \qquad L = \mu v_0 b$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Repulsive Coulomb, $U = k/r$, $k = \dfrac{q_1 q_2}{4\pi\varepsilon_0} &gt; 0$ [1]</span></figcaption>
+              <div class="formula-body">$$r_{\min} = \frac{k}{\mu v_0^2}\left[1 + \sqrt{1 + \left(\frac{\mu v_0^2\, b}{k}\right)^{2}}\,\right]$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Head-on, $b = 0$ [1, 3]</span></figcaption>
+              <div class="formula-body">$$r_{\min} = \frac{2k}{\mu v_0^2} = \frac{k}{E}$$</div>
             </figure>
           </div>
         </section>
@@ -72,15 +133,61 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+              <p>Two particles with like charges $q_1$, $q_2$ and masses $m_1$, $m_2$ approach each other from far away with relative speed $v_0$ and impact parameter $b$. Find their distance of closest approach. (Adapted from [1, §20.2 and §20.4], with the fixed target replaced by the reduced mass from [2].)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+                <p>Reduce to one body. The relative motion is a particle of mass $\mu = m_1 m_2/(m_1+m_2)$ in $U(r) = k/r$ with $k = q_1 q_2/(4\pi\varepsilon_0) &gt; 0$. From the initial conditions, $E = \tfrac12\mu v_0^2$ and $L = \mu v_0 b$.</p>
+              </div></li>
+              <li><div>
+                <p>Apply the turning-point condition $\dot r = 0$:</p>
+                $$E = \frac{L^2}{2\mu r_{\min}^2} + \frac{k}{r_{\min}}.$$
+                <p>Multiply by $r_{\min}^2$ to get a quadratic:</p>
+                $$E\, r_{\min}^2 - k\, r_{\min} - \frac{L^2}{2\mu} = 0.$$
+              </div></li>
+              <li><div>
+                <p>Solve the quadratic and keep the positive root:</p>
+                $$r_{\min} = \frac{k}{2E}\left[1 + \sqrt{1 + \frac{2EL^2}{\mu k^2}}\,\right].$$
+              </div></li>
+              <li><div>
+                <p>Insert $E$ and $L$. Since $\dfrac{2EL^2}{\mu k^2} = \left(\dfrac{\mu v_0^2 b}{k}\right)^2$,</p>
+                $$r_{\min} = \frac{k}{\mu v_0^2}\left[1 + \sqrt{1 + \left(\frac{\mu v_0^2\, b}{k}\right)^{2}}\,\right].$$
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+                <p>For $k \to 0$ (no force), $\sqrt{1 + (\mu v_0^2 b/k)^2} \approx \mu v_0^2 b/k$, so $r_{\min} \to b$, as for a straight line. For $b = 0$ the bracket is $2$ and $r_{\min} = 2k/(\mu v_0^2)$. In every case $r_{\min} &gt; b$, as it must be for a repulsive force.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+              <p>An alpha particle ($z = 2$) with kinetic energy $K = 7.7\ \text{MeV}$ is fired head-on ($b = 0$) at a gold nucleus ($Z = 79$). How close does it get? Use $e^2/(4\pi\varepsilon_0) = 1.44\ \text{MeV fm}$. (Adapted from [3], which treats the gold nucleus as fixed; the recoil correction uses [2].)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+                <p>With $b = 0$ we have $L = 0$, so there is no centrifugal barrier. The particle stops completely at $r_{\min}$, and all of the relative kinetic energy has turned into Coulomb energy: $E = k/r_{\min}$.</p>
+              </div></li>
+              <li><div>
+                <p>Here $k = zZ\,e^2/(4\pi\varepsilon_0) = 2 \times 79 \times 1.44\ \text{MeV fm} = 227.5\ \text{MeV fm}$.</p>
+              </div></li>
+              <li><div>
+                <p>Fixed nucleus ($\mu \approx m_\alpha$, so $E \approx K$):</p>
+                $$r_{\min} = \frac{k}{K} = \frac{227.5}{7.7}\ \text{fm} \approx 29.5\ \text{fm}.$$
+              </div></li>
+              <li><div>
+                <p>With recoil: the gold nucleus starts at rest, so $v_0$ is the alpha's speed and $E = \tfrac12\mu v_0^2 = K\,\dfrac{m_{\text{Au}}}{m_\alpha + m_{\text{Au}}}$. Using mass numbers $4$ and $197$, $E \approx 7.7 \times \tfrac{197}{201} \approx 7.55\ \text{MeV}$, so $r_{\min} \approx 30.1\ \text{fm}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+                <p>The recoil changes the answer by only about $2\%$, because gold is about 50 times heavier than the alpha particle. For two equal masses $\mu = m/2$, so only half of the lab kinetic energy is available and $r_{\min}$ doubles compared with the fixed-target estimate.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -88,8 +195,9 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>N. Harnew, <em>Introduction to Classical Mechanics</em>, Lectures 20–29, University of Oxford, Hilary Term 2017. §20.2 "Hyperbolic orbit: the distance of closest approach" and §20.4 "Rutherford scattering". Source of the turning-point condition, the $r_{\min}$ quadratic and Example 1. <a href="https://users.physics.ox.ac.uk/~harnew/lectures/mechanics-lectures-20to29.pdf">PDF</a></span></li>
+            <li><span>J. Shapiro, <em>Classical Mechanics</em>, Ch. 3 "Two Body Central Forces", Rutgers University. §3.1.1 (reduction to a one-body problem, reduced mass), §3.1.2 (effective potential, centrifugal barrier), §3.2 (turning points), §3.5 ($E = \tfrac12\mu v_0^2$, $L = \mu b v_0$). <a href="https://www.physics.rutgers.edu/~shapiro/507/book4.pdf">PDF</a></span></li>
+            <li><span>R. Nave, <em>HyperPhysics</em>: "Rutherford Scattering", Department of Physics and Astronomy, Georgia State University. Head-on closest approach $r_{\min} = 2 \times 1.44\,Z/K$ (MeV fm) for alpha particles, and the 7.7 MeV alpha energy used in Example 2. <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/Nuclear/rutsca2.html">Web page</a></span></li>
           </ol>
         </section>
 
