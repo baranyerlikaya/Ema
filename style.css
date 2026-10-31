@@ -67,12 +67,12 @@
   --sidebar-w: 320px;
   --doc-w: 720px;
 
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);        /* ease-out, for things entering */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);        /* same soft curve as --smooth, used site-wide */
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* for things leaving */
   --smooth: cubic-bezier(0.32, 0.72, 0, 1);       /* sidebar and drawer: quick start, soft landing */
-  --t-fast: 150ms;
-  --t-med: 240ms;
-  --t-slow: 320ms;
+  --t-fast: 280ms;
+  --t-med: 420ms;
+  --t-slow: 600ms;
   --t-drawer: 420ms;
   --t-drawer-out: 280ms;
 }
@@ -82,6 +82,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
+  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-padding-top: calc(var(--topbar-h) + 24px);
@@ -754,11 +755,11 @@ a.tree-link:active { background: rgba(0, 0, 0, 0.08); }
   padding: 32px;
   border-radius: var(--r-lg);
   background: var(--white);
-  transition: opacity var(--t-med) var(--ease);
 }
 .section-card:nth-child(4),
 .section-card:nth-child(5) { grid-column: span 3; }
-.section-card.is-dim { opacity: 0.4; }
+.section-card > * { transition: opacity var(--t-slow) var(--ease); }
+.section-card.is-dim > * { opacity: 0.4; }
 
 .card-label {
   margin: 0;
@@ -1283,4 +1284,104 @@ a.pn-card:hover { background: var(--grey-2); }
   .doc { max-width: none; }
   .formula, .example, .callout-note { background: none; box-shadow: inset 0 0 0 1px #999; }
   .doc-section { break-inside: avoid-page; }
+}
+
+/* ---------- Motion ----------
+   One soft curve (--smooth), long durations, nothing that loops except the
+   hero physics. All of it is off under prefers-reduced-motion (see below). */
+
+/* Scroll reveal: added by app.js, so content is visible without JS */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 900ms var(--smooth) var(--reveal-delay, 0ms),
+    transform 1100ms var(--smooth) var(--reveal-delay, 0ms);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+.preview-frame.reveal { transform: translateY(40px) scale(0.97); }
+.preview-frame.reveal.is-in { transform: none; }
+
+/* Hero entrance: words rise out of a blur, then the rest follows */
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(0.4em); filter: blur(10px); }
+}
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(14px); }
+}
+.hero-word {
+  display: inline-block;
+  animation: word-in 1100ms var(--smooth) both;
+}
+.hero-anim .hero-title::before,
+.hero-anim .hero-title::after { animation: fade-rise 1100ms var(--smooth) both; }
+.hero-anim .hero-title::after { animation-delay: var(--hero-after); }
+.hero-anim .hero-cite { animation: fade-rise 1000ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 100ms); }
+.hero-anim .hero-intro { animation: fade-rise 1000ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 200ms); }
+.hero-anim .hero-actions { animation: fade-rise 1000ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 300ms); }
+.hero-anim .hero-field { animation: field-in 2400ms var(--smooth) both; }
+@keyframes field-in { from { opacity: 0; } }
+
+/* Top bar links: a grey underline grows from the left, leaves to the right */
+.topbar-links a { position: relative; }
+.topbar-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: var(--grey-4);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 520ms var(--smooth);
+}
+.topbar-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+/* Buttons: soft colour change, arrow glides, gentle press */
+.btn { transition: background-color var(--t-med) var(--smooth), transform var(--t-med) var(--smooth); }
+.btn:active { transform: scale(0.97); }
+.btn svg { transition: transform 520ms var(--smooth); }
+.btn:hover svg { transform: translateX(3px); }
+
+/* Filter tabs: a grey bar slides under the active tab */
+.tabs { position: relative; }
+.tabs-indicator {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--grey-4);
+  transition: transform 640ms var(--smooth), width 640ms var(--smooth);
+}
+.tabs-indicator.is-instant { transition: none; }
+
+/* Card list rows and prev/next */
+.card-list a { transition: background-color var(--t-med) var(--smooth); }
+.pn-card { transition: background-color var(--t-med) var(--smooth); }
+.pn-label::before,
+.pn-label::after { display: inline-block; transition: transform 520ms var(--smooth); }
+a.pn-prev:hover .pn-label::before { transform: translateX(-4px); }
+a.pn-next:hover .pn-label::after { transform: translateX(4px); }
+
+/* On this page: marker follows the section being read */
+.toc ul { position: relative; padding-left: 12px; }
+.toc-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--grey-4);
+  opacity: 0;
+  transition: transform 640ms var(--smooth), height 640ms var(--smooth), opacity var(--t-med) var(--smooth);
+}
+.toc-marker.is-on { opacity: 1; }
+.toc a { transition: color var(--t-med) var(--smooth); }
+.toc a.is-active { color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; }
 }

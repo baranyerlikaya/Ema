@@ -467,9 +467,19 @@
       tab.addEventListener('click', function () {
         var f = tab.getAttribute('data-filter');
         tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+        var shown = 0;
         grid.querySelectorAll('.card-list li').forEach(function (li) {
-          li.hidden = f !== 'all' && li.getAttribute('data-status') !== f;
+          var hide = f !== 'all' && li.getAttribute('data-status') !== f;
+          var appearing = !hide && li.hidden;
+          li.hidden = hide;
+          if (appearing && li.animate && !reduceMotion) {
+            li.animate(
+              [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }],
+              { duration: 560, delay: Math.min(shown++ * 18, 360), easing: SMOOTH, fill: 'backwards' }
+            );
+          }
         });
+        moveTabIndicator();
         grid.querySelectorAll('.section-card').forEach(function (card) {
           var visible = card.querySelectorAll('li:not([hidden])').length;
           card.classList.toggle('is-dim', visible === 0);
@@ -523,6 +533,132 @@
     window.addEventListener('scroll', update, { passive: true });
   }
 
+  // ---------- motion ----------
+  // Everything here uses the one SMOOTH curve and long, soft durations.
+  // Nothing runs when the visitor prefers reduced motion.
+
+  var tabIndicator = null;
+
+  function moveTabIndicator(instant) {
+    var tabsEl = document.querySelector('.tabs');
+    var active = tabsEl && tabsEl.querySelector('[aria-selected="true"]');
+    if (!active) return;
+    if (!tabIndicator) {
+      tabIndicator = el('span', { class: 'tabs-indicator', 'aria-hidden': 'true' });
+      tabsEl.appendChild(tabIndicator);
+      instant = true;
+    }
+    if (instant) tabIndicator.classList.add('is-instant');
+    tabIndicator.style.transform = 'translateX(' + active.offsetLeft + 'px)';
+    tabIndicator.style.width = active.offsetWidth + 'px';
+    if (instant) { tabIndicator.getBoundingClientRect(); tabIndicator.classList.remove('is-instant'); }
+  }
+
+  // Hero quote: words drift up out of a blur, one after another.
+  function animateHero() {
+    var title = document.querySelector('.hero-title');
+    if (!title || reduceMotion) return;
+    var words = title.textContent.trim().split(/\s+/);
+    title.textContent = '';
+    words.forEach(function (w, i) {
+      var span = el('span', { class: 'hero-word', text: w });
+      span.style.animationDelay = (120 + i * 70) + 'ms';
+      title.appendChild(span);
+      if (i < words.length - 1) title.appendChild(document.createTextNode(' '));
+    });
+    var after = 120 + words.length * 70;
+    document.body.style.setProperty('--hero-after', after + 'ms');
+    document.body.classList.add('hero-anim');
+  }
+
+  // Content eases up into place as it scrolls into view.
+  function setupReveal() {
+    if (reduceMotion || !window.IntersectionObserver) return;
+    var groups = [
+      ['.preview-frame'],
+      ['.section-head > *', 90],
+      ['.section-card', 90],
+      ['.doc-header > *', 80],
+      ['.doc-section > h2'],
+      ['.subsection'],
+      ['.callout', 90],
+      ['.formula', 90],
+      ['.example'],
+      ['.steps > li', 90],
+      ['.example-check'],
+      ['.refs > li', 70],
+      ['.pn-card', 90],
+      ['.home-block .grey-card'],
+      ['.footer-inner > *', 80]
+    ];
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+    groups.forEach(function (g) {
+      // Stagger siblings that share a parent, e.g. cards in a grid.
+      var counters = new Map();
+      document.querySelectorAll(g[0]).forEach(function (node) {
+        var n = counters.get(node.parentNode) || 0;
+        counters.set(node.parentNode, n + 1);
+        node.classList.add('reveal');
+        if (g[1]) node.style.setProperty('--reveal-delay', Math.min(n * g[1], 480) + 'ms');
+        io.observe(node);
+      });
+    });
+  }
+
+  // "On this page": a marker slides to the section you're reading.
+  function setupTocTracking() {
+    var toc = document.querySelector('.toc ul');
+    if (!toc || !window.IntersectionObserver) return;
+    var links = Array.prototype.slice.call(toc.querySelectorAll('a'));
+    var marker = el('span', { class: 'toc-marker', 'aria-hidden': 'true' });
+    toc.appendChild(marker);
+    var visible = {};
+
+    function setActive(id) {
+      links.forEach(function (a) {
+        var on = a.getAttribute('href') === '#' + id;
+        a.classList.toggle('is-active', on);
+        if (on) {
+          marker.style.transform = 'translateY(' + a.offsetTop + 'px)';
+          marker.style.height = a.offsetHeight + 'px';
+          marker.classList.add('is-on');
+        }
+      });
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+      var first = links.map(function (a) { return a.getAttribute('href').slice(1); })
+        .filter(function (id) { return visible[id]; })[0];
+      if (first) setActive(first);
+    }, { rootMargin: '-' + (64 + 24) + 'px 0px -55% 0px' });
+    links.forEach(function (a) {
+      var sec = document.getElementById(a.getAttribute('href').slice(1));
+      if (sec) io.observe(sec);
+    });
+  }
+
+  // Drawer: topics cascade in as it opens.
+  var _setDrawer = setDrawer;
+  setDrawer = function (open, focusSearch) {
+    _setDrawer(open, focusSearch);
+    if (!open || reduceMotion || !sidebarEl || !sidebarEl.animate) return;
+    var rows = sidebarEl.querySelectorAll('.search, .tree-section');
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].animate(
+        [{ opacity: 0, transform: 'translateX(-12px)' }, { opacity: 1, transform: 'none' }],
+        { duration: 640, delay: 80 + i * 45, easing: SMOOTH, fill: 'backwards' }
+      );
+    }
+  };
+
   // ---------- init ----------
 
   buildHeader();
@@ -532,4 +668,9 @@
   buildHome();
   buildFooter();
   watchScroll();
+  animateHero();
+  setupReveal();
+  setupTocTracking();
+  moveTabIndicator(true);
+  window.addEventListener('resize', function () { moveTabIndicator(true); });
 })();
