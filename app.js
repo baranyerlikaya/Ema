@@ -364,13 +364,13 @@
   }
 
   function liquidPolygon(cx, cy, radius, wobble, phase) {
-    var pts = [], n = 72;
+    var pts = [], n = 96;
     for (var i = 0; i < n; i++) {
       var a = (i / n) * Math.PI * 2;
       var k = 1 + wobble * (
-        0.5 * Math.sin(3 * a + phase * 1.3) +
+        0.55 * Math.sin(3 * a + phase * 1.3) +
         0.3 * Math.sin(5 * a - phase * 1.7 + 1.1) +
-        0.2 * Math.sin(8 * a + phase * 2.1 + 2.3));
+        0.15 * Math.sin(7 * a + phase * 2.1 + 2.3));
       pts.push((cx + Math.cos(a) * radius * k).toFixed(1) + 'px ' + (cy + Math.sin(a) * radius * k).toFixed(1) + 'px');
     }
     return 'polygon(' + pts.join(',') + ')';
@@ -381,16 +381,16 @@
     if (reduceMotion || !document.startViewTransition) { apply(); return; }
     var r = origin.getBoundingClientRect();
     var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    var far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy)) * 1.4;
+    var far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy)) * 1.18;
     root.classList.add('vt-liquid');
     var vt = document.startViewTransition(apply);
     vt.ready.then(function () {
       var frames = [];
-      for (var f = 0; f <= 24; f++) {
-        var p = f / 24;
-        frames.push({ clipPath: liquidPolygon(cx, cy, far * p, 0.28 * Math.sin(Math.PI * Math.min(p * 1.4, 1)), p * 6) });
+      for (var f = 0; f <= 60; f++) {
+        var p = f / 60;
+        frames.push({ clipPath: liquidPolygon(cx, cy, far * p, 0.2 * Math.sin(Math.PI * Math.min(p * 1.2, 1)), p * 3.5) });
       }
-      root.animate(frames, { duration: 1300, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', pseudoElement: '::view-transition-new(root)' });
+      root.animate(frames, { duration: 900, easing: 'cubic-bezier(0.4, 0.1, 0.2, 1)', pseudoElement: '::view-transition-new(root)' });
     }).catch(function () {});
     vt.finished.finally(function () { root.classList.remove('vt-liquid'); });
   }
