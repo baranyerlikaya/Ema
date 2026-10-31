@@ -26,45 +26,101 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Inclined Plane, Tension</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Blocks on inclined planes with and without friction, and tension in strings that connect bodies: how to draw free-body diagrams, pick axes along the surface and apply Newton's second law.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>A block on a tilted ramp.</strong> Three things can push on it: gravity (straight down), the ramp pushing back on the block (perpendicular to the slope, called the <strong>normal force</strong> $N$), and <strong>friction</strong> (along the slope) [1]; [2].</p>
+<p><strong>Trick: tilt your axes with the slope.</strong> Then gravity splits into "pulling the block down the slope" ($mg\sin\theta$) and "pressing it against the slope" ($mg\cos\theta$). The ramp pushes back exactly the second one, so $N = mg\cos\theta$ [1].</p>
+<p><strong>No friction?</strong> Only $mg\sin\theta$ is left along the slope, so [1]</p>
+$$a = g\sin\theta.$$
+<p>Steeper slope → bigger acceleration. Vertical slope → free fall.</p>
+<p><strong>With friction?</strong> When the block slides, friction pushes it back up the slope with size $\mu_k N$. The coefficient $\mu_k$ is a number between 0 (ice) and about 1 (rubber on dry road). Then [1]; [2]</p>
+$$a = g(\sin\theta - \mu_k\cos\theta).$$
+<p><strong>Will it slide at all?</strong> If the block isn't moving yet, "static friction" quietly adjusts itself to hold the block, up to a maximum $\mu_s N$. Tilt the ramp more and more. The block starts to slip at the <strong>critical angle</strong> [1]:</p>
+$$\theta_c = \arctan(\mu_s).$$
+<p><strong>Strings and pulleys.</strong> A light string under tension pulls each thing it ties to the same amount. Over a smooth pulley the tension $T$ is the same on both sides [2]. For a two-block system where one hangs and pulls the other through a pulley, you write $F = ma$ for each block and add them — the tension cancels, and you get the acceleration directly [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Forces on an inclined plane</h3>
+            <div>
+<p>A block of mass $m$ sits on a plane tilted at angle $\theta$ above the horizontal. Three forces may act on it: its weight $m\mathbf g$ (straight down), the <strong>normal force</strong> $\mathbf N$ (perpendicular to the surface), and friction (along the surface) [1, Worked Example “Motion on an Inclined Plane and Friction Forces”]; [2, §8.3].</p>
+<p>Choose axes along ($x$) and perpendicular to ($y$) the surface. The weight splits into components [1]:</p>
+$$\begin{gathered}W_x = mg\sin\theta \ \ (\text{down the slope}), \\ W_y = -mg\cos\theta.\end{gathered}$$
+<p>Perpendicular to the slope the block does not accelerate, so $N = mg\cos\theta$ [1].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Frictionless slide</h3>
+            <div>
+<p>Without friction the only force along the slope is $mg\sin\theta$. Newton's second law gives [1]</p>
+$$a_x = \frac{F_{\text{net},x}}{m} = g\sin\theta.$$
+<p>Starting from rest at the top, $v(t) = g\sin\theta\,t$ and $x(t) = \tfrac12g\sin\theta\,t^2$. The acceleration is $g$ when the slope is vertical ($\theta = 90^\circ$) and $0$ when flat ($\theta = 0$) [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Kinetic friction</h3>
+            <div>
+<p>If the block slides and the surface is rough, a <strong>kinetic friction</strong> force acts opposite to the motion. Experimentally its magnitude is [1]; [2, §8.3.2]</p>
+$$f_k = \mu_k N,$$
+<p>where $\mu_k$ is the <strong>coefficient of kinetic friction</strong>, a dimensionless property of the two surfaces. Important: $f_k$ is independent of the contact area and (for ordinary speeds) of the sliding speed [2, §8.3.2].</p>
+<p>Down the slope the net force is $mg\sin\theta - \mu_k mg\cos\theta$, so [1]</p>
+$$a_x = g(\sin\theta - \mu_k\cos\theta).$$
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Static friction and the critical angle</h3>
+            <div>
+<p>When the block does <em>not</em> slide, friction is <strong>static</strong>. It takes whatever value (up to a limit) is needed to keep the block in equilibrium along the surface [1]; [2, §8.3.2]:</p>
+$$f_s \le f_{s,\max} = \mu_s N, \qquad \mu_s \gtrsim \mu_k.$$
+<p>Increase the tilt. The block is on the verge of slipping when $mg\sin\theta_c = \mu_s mg\cos\theta_c$, so [1]</p>
+$$\boxed{\theta_c = \arctan(\mu_s).}$$
+<p>Below $\theta_c$ it stays put; above $\theta_c$ it slides, with acceleration $g(\sin\theta - \mu_k\cos\theta)$.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Tension</h3>
+            <div>
+<p>A string (or rope) under tension pulls each body it connects along its length, toward the opposite end [2, §8.5]. For a <strong>massless</strong>, inextensible string over a <strong>smooth</strong> pulley, the tension $T$ is the same everywhere, and the pull on one body matches the pull on the other [2, §8.5.1].</p>
+<p>Mass-pulley system (one block on a surface, one hanging): if the heavier block hangs and the lighter one lies on a surface with friction coefficient $\mu_k$ [1, Worked Example “Mass-Pulley System”]:</p>
+$$m_1a = T - \mu_k m_1g, \qquad m_2a = m_2g - T.$$
+<p>Adding eliminates $T$: $a = \dfrac{(m_2 - \mu_k m_1)\,g}{m_1 + m_2}$.</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Pick axes along the direction of motion. On the incline the perpendicular direction is a bookkeeping check ($N = mg\cos\theta$); only the parallel direction holds the equation of motion [1].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Static friction is not a fixed number. It equals whatever balances the applied force up to a maximum $\mu_s N$. Only kinetic friction has the fixed magnitude $f_k = \mu_k N$ [1]; [2, §8.3.2].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="incline">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A block of mass $m$ on a plane tilted at angle $\theta$, with kinetic friction coefficient $\mu_k$. The arrows show the three forces: gravity $mg$ (down), the normal force $N$ (perpendicular to the slope, up and out), and friction (dashed, along the slope opposite to the motion). The block's acceleration along the slope is $a = g(\sin\theta - \mu_k\cos\theta)$ (shown live). Try $\theta &lt; \arctan(\mu_k)$: the kinetic prediction $a$ is non-positive and the block doesn't slide.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +128,45 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Normal force on an incline [1]</span></figcaption>
+              <div class="formula-body">$$N = mg\cos\theta$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Frictionless slide [1]</span></figcaption>
+              <div class="formula-body">$$a = g\sin\theta$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Kinetic friction force [1, 2]</span></figcaption>
+              <div class="formula-body">$$f_k = \mu_k N$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Sliding with friction [1]</span></figcaption>
+              <div class="formula-body">$$a = g(\sin\theta - \mu_k\cos\theta)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Static friction range [1, 2]</span></figcaption>
+              <div class="formula-body">$$0 \le f_s \le \mu_s N$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Critical angle [1]</span></figcaption>
+              <div class="formula-body">$$\theta_c = \arctan(\mu_s)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Massless string, smooth pulley [2]</span></figcaption>
+              <div class="formula-body">$$T_{\text{everywhere}} = T$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Atwood with friction [1]</span></figcaption>
+              <div class="formula-body">$$a = \frac{(m_2 - \mu_k m_1)\,g}{m_1 + m_2}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +175,100 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A block is released from rest at the top of a frictionless incline of angle $\theta$. Find the acceleration and the velocity after it has slid a distance $d$. (From [1], Worked Example “Motion on an Inclined Plane and Friction Forces”, part (a).)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Along the slope: $F_{\text{net}} = mg\sin\theta$, so $a = g\sin\theta$.</p>
+              </div></li>
+              <li><div>
+<p>From rest: $x(t) = \tfrac12 g\sin\theta\,t^2$ and $v(t) = g\sin\theta\,t$.</p>
+              </div></li>
+              <li><div>
+<p>Eliminate $t$: $v = \sqrt{2(g\sin\theta)\,d} = \sqrt{2gd\sin\theta}$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>If the drop height is $h = d\sin\theta$, this is $v = \sqrt{2gh}$ — the same as free fall from height $h$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Repeat with kinetic friction $\mu_k$. For what range of $\theta$ does the block actually accelerate? (From [1], part (b).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Normal force: $N = mg\cos\theta$, so the friction force is $f_k = \mu_k mg\cos\theta$, up the slope.</p>
+              </div></li>
+              <li><div>
+<p>Net force along slope: $mg\sin\theta - \mu_k mg\cos\theta$, so $a = g(\sin\theta - \mu_k\cos\theta)$.</p>
+              </div></li>
+              <li><div>
+<p>$a &gt; 0$ requires $\tan\theta &gt; \mu_k$. If $\tan\theta \le \mu_k$ the kinetic model predicts the block decelerates or stays at rest.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Setting $\mu_k = 0$ gives $a = g\sin\theta$ ✓. Setting $\theta = 90^\circ$: friction vanishes ($\cos90^\circ = 0$), so $a = g$ ✓.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Find the critical angle at which a block just begins to slide on a surface with static-friction coefficient $\mu_s$. (From [1], part (c).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Just before sliding, static friction is maximum: $f_{s,\max} = \mu_s N = \mu_s mg\cos\theta_c$.</p>
+              </div></li>
+              <li><div>
+<p>Along the slope the forces balance: $mg\sin\theta_c = \mu_s mg\cos\theta_c$.</p>
+              </div></li>
+              <li><div>
+<p>Divide: $\tan\theta_c = \mu_s$, so $\theta_c = \arctan(\mu_s)$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$\mu_s = 0$: $\theta_c = 0$ — any tilt lets a frictionless block slide ✓. $\mu_s = 1$: $\theta_c = 45^\circ$ ✓.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Mass $m_2$ hangs from a string over a smooth pulley; $m_1$ sits on a horizontal surface with kinetic friction $\mu_k$. The system is released. Find the acceleration and the tension. (Adapted from [1], Worked Example “Mass-Pulley System”, using [2, §8.5].)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>For $m_1$: along the surface, $m_1a = T - \mu_k m_1g$.</p>
+              </div></li>
+              <li><div>
+<p>For $m_2$: vertically, $m_2a = m_2g - T$.</p>
+              </div></li>
+              <li><div>
+<p>Add: $(m_1 + m_2)\,a = (m_2 - \mu_k m_1)\,g$, so $a = \dfrac{(m_2 - \mu_k m_1)\,g}{m_1 + m_2}$.</p>
+              </div></li>
+              <li><div>
+<p>Substitute back: $T = m_2(g - a) = \dfrac{m_1m_2(1 + \mu_k)\,g}{m_1 + m_2}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$\mu_k = 0$: the Atwood answer $a = m_2g/(m_1+m_2)$, $T = m_1m_2g/(m_1+m_2)$ ✓. The system accelerates only if $m_2 &gt; \mu_k m_1$ ✓.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +276,8 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. Worked Examples “Motion on an Inclined Plane and Friction Forces” and “Mass-Pulley System”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 8 "Applications of Newton’s Second Law", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §8.3 Constraint Forces, §8.3.2 Kinetic and Static Friction, §8.5 Tension in a Rope. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter8.pdf">PDF</a></span></li>
           </ol>
         </section>
 
