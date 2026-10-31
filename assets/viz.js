@@ -425,6 +425,250 @@
     }
   });
 
+  V.register('riemann', {
+    params: {
+      b: { label: 'b', min: 1, max: 3, value: 2, digits: 2 }
+    },
+    duration: 9,
+    draw: function (c, w, h, s, p, t) {
+      var f = function (x) { return x * x; }, b = p.b, top = b * b;
+      var ox = 40, oy = h - 34, sx = (w - ox - 24) / b, sy = (h - 70) / top;
+      var X = function (x) { return ox + x * sx; }, Y = function (y) { return oy - y * sy; };
+      var k = Math.min(6, Math.floor(t / 1.2)), n = Math.pow(2, k), dx = b / n, sum = 0;
+      D.grid(c, w, h, 32);
+      D.line(c, ox, oy, w - 12, oy, FAINT, 1);
+      D.line(c, ox, oy, ox, 16, FAINT, 1);
+      for (var i = 0; i < n; i++) {
+        var xl = i * dx, hgt = f(xl + dx);
+        sum += hgt * dx;
+        c.fillStyle = 'rgba(20,20,20,0.10)';
+        c.fillRect(X(xl), Y(hgt), dx * sx, hgt * sy);
+        c.strokeStyle = MUTED; c.lineWidth = 1; c.strokeRect(X(xl), Y(hgt), dx * sx, hgt * sy);
+      }
+      D.plot(c, f, 0, b, X, Y, INK, 2);
+      D.label(c, 'b', X(b), oy + 14, 'center');
+      D.label(c, 'n = ' + n + '   sum = ' + sum.toFixed(3), ox + 6, 20);
+      D.label(c, 'exact b³/3 = ' + (b * b * b / 3).toFixed(3), ox + 6, 40, 'left', INK);
+    }
+  });
+
+  V.register('dotcross', {
+    params: {
+      B: { label: '|B|', min: 0.5, max: 2, value: 1.4, digits: 2 },
+      w: { label: 'turn', min: 0.2, max: 1.5, value: 0.6, unit: 'rad/s', digits: 2 }
+    },
+    init: function () { return { th: 0.3 }; },
+    step: function (s, dt, p) { s.th += p.w * dt; },
+    draw: function (c, w, h, s, p) {
+      var u = Math.min(w * 0.19, h * 0.2), ox = w * 0.4, oy = h * 0.6, A = 1.5, th = s.th;
+      var ax = ox + A * u, ay = oy, bx = ox + p.B * u * Math.cos(th), by = oy - p.B * u * Math.sin(th);
+      var dot = A * p.B * Math.cos(th), crs = A * p.B * Math.sin(th);
+      D.grid(c, w, h, 32);
+      c.beginPath(); c.moveTo(ox, oy); c.lineTo(ax, ay); c.lineTo(ax + bx - ox, ay + by - oy); c.lineTo(bx, by); c.closePath();
+      c.fillStyle = 'rgba(20,20,20,0.08)'; c.fill();
+      var px = ox + p.B * u * Math.cos(th);
+      D.line(c, bx, by, px, oy, MUTED, 1, [3, 3]);
+      D.line(c, ox, oy + 10, px, oy + 10, INK, 3);
+      D.arrow(c, ox, oy, ax, ay, INK, 2);
+      D.arrow(c, ox, oy, bx, by, MUTED, 2);
+      D.label(c, 'A', ax + 8, ay - 10);
+      D.label(c, 'B', bx + 8, by - 10);
+      var ang = ((th % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      D.label(c, 'θ = ' + (ang * 180 / Math.PI).toFixed(0) + '°   A·B = AB cos θ = ' + dot.toFixed(2), 12, 14, 'left', INK);
+      D.label(c, '|A×B| = AB|sin θ| = ' + Math.abs(crs).toFixed(2) + (Math.abs(crs) < 0.01 ? '' : crs > 0 ? ' (out of page)' : ' (into page)'), 12, 32);
+    }
+  });
+
+  V.register('motion1d', {
+    params: {
+      v0: { label: 'v₀', min: -4, max: 4, value: 3, unit: 'm/s' },
+      a: { label: 'a', min: -2, max: 2, value: -1, unit: 'm/s²' }
+    },
+    resetOnChange: true,
+    duration: 6.5,
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var T = 6, tt = Math.min(t, T), x = function (q) { return p.v0 * q + 0.5 * p.a * q * q; }, v = function (q) { return p.v0 + p.a * q; };
+      var xm = 1, vm = 1;
+      for (var q = 0; q <= T; q += 0.1) { xm = Math.max(xm, Math.abs(x(q))); vm = Math.max(vm, Math.abs(v(q))); }
+      D.grid(c, w, h, 32);
+      var ly = 26, lx0 = 24, lx1 = w - 24, lc = (lx0 + lx1) / 2, ls = (lx1 - lx0) / 2 / xm;
+      D.line(c, lx0, ly, lx1, ly, FAINT, 1);
+      D.line(c, lc, ly - 6, lc, ly + 6, MUTED, 1);
+      var px = lc + x(tt) * ls;
+      D.arrow(c, px, ly, px + v(tt) * 10, ly, INK, 1.75);
+      D.dot(c, px, ly, 6, INK);
+      var gx0 = 40, gx1 = w - 16, T2 = function (q) { return gx0 + q / T * (gx1 - gx0); };
+      var g1 = h * 0.42, g2 = h * 0.8, gh = h * 0.15;
+      D.line(c, gx0, g1, gx1, g1, FAINT, 1); D.line(c, gx0, g2, gx1, g2, FAINT, 1);
+      D.label(c, 'x(t)', 8, g1 - gh);
+      D.label(c, 'v(t)', 8, g2 - gh);
+      D.plot(c, x, 0, Math.max(tt, 0.01), T2, function (y) { return g1 - y / xm * gh; }, INK, 1.75);
+      D.plot(c, v, 0, Math.max(tt, 0.01), T2, function (y) { return g2 - y / vm * gh; }, MUTED, 1.75);
+      var sl = v(tt) / xm * gh / ((gx1 - gx0) / T), X0 = T2(tt), Y0 = g1 - x(tt) / xm * gh;
+      D.line(c, X0 - 30, Y0 + 30 * sl, X0 + 30, Y0 - 30 * sl, MUTED, 1, [3, 3]);
+      D.dot(c, X0, Y0, 3.5, INK);
+      D.dot(c, X0, g2 - v(tt) / vm * gh, 3.5, MUTED);
+      D.label(c, 'x = ' + x(tt).toFixed(2) + ' m   v = ' + v(tt).toFixed(2) + ' m/s', w - 16, h - 14, 'right', INK);
+    }
+  });
+
+  V.register('components', {
+    params: {
+      w: { label: 'ω', min: 0.3, max: 2, value: 0.8, unit: 'rad/s', digits: 2 }
+    },
+    init: function () { return { th: 0 }; },
+    step: function (s, dt, p) { s.th += p.w * dt; },
+    draw: function (c, w, h, s, p) {
+      var A = Math.min(w * 0.3, 150), B = h * 0.28, ox = w / 2 + 10, oy = h / 2 - 6, th = s.th;
+      var X = function (q) { return ox + A * Math.sin(q); }, Y = function (q) { return oy - B * Math.sin(2 * q); };
+      var x = X(th), y = Y(th), vx = A * p.w * Math.cos(th), vy = -2 * B * p.w * Math.cos(2 * th), k = 0.45;
+      D.grid(c, w, h, 32);
+      var axY = oy + B + 22, axX = ox - A - 26;
+      D.line(c, ox - A - 10, axY, ox + A + 10, axY, FAINT, 1);
+      D.line(c, axX, oy - B - 10, axX, oy + B + 10, FAINT, 1);
+      c.beginPath(); for (var i = 0; i <= 200; i++) { var q = i / 200 * 2 * Math.PI; c.lineTo(X(q), Y(q)); }
+      c.strokeStyle = FAINT; c.lineWidth = 1; c.stroke();
+      D.line(c, x, y, x, axY, FAINT, 1, [2, 4]);
+      D.line(c, x, y, axX, y, FAINT, 1, [2, 4]);
+      D.arrow(c, x, axY, x + vx * k, axY, MUTED, 1.75);
+      D.arrow(c, axX, y, axX, y + vy * k, MUTED, 1.75);
+      D.dot(c, x, axY, 4, MUTED);
+      D.dot(c, axX, y, 4, MUTED);
+      D.arrow(c, x, y, x + vx * k, y, MUTED, 1.25);
+      D.arrow(c, x, y, x, y + vy * k, MUTED, 1.25);
+      D.arrow(c, x, y, x + vx * k, y + vy * k, INK, 2);
+      D.dot(c, x, y, 6, INK);
+      D.label(c, 'vx', x + vx * k / 2, axY + 14, 'center');
+      D.label(c, 'vy', axX - 4, y + vy * k / 2, 'right');
+      D.label(c, '|v| = √(vx² + vy²)', 16, 18, 'left', INK);
+    }
+  });
+
+  V.register('frames', {
+    params: {
+      u: { label: 'u', min: 0, max: 6, value: 3, unit: 'm/s' }
+    },
+    resetOnChange: true,
+    duration: 2.6,
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var v0 = 9.81, T = 2 * v0 / 9.81, tt = Math.min(t, T), sc = Math.min((h / 2 - 34) / (v0 * v0 / 19.62), (w - 60) / (6 * T + 2));
+      var yb = function (q) { return v0 * q - 4.905 * q * q; };
+      D.grid(c, w, h, 32);
+      [[0, 'ground frame S'], [1, "train frame S′"]].forEach(function (f) {
+        var base = f[0] ? h - 22 : h / 2 - 12, x0 = 40;
+        D.line(c, 12, base, w - 12, base, FAINT, 1);
+        D.label(c, f[1], 16, base - (h / 2 - 34) - 4);
+        var shift = f[0] ? 0 : p.u * tt, trainX = x0 + shift * sc;
+        c.strokeStyle = MUTED; c.lineWidth = 1.25; c.strokeRect(trainX - 14, base - 16, 28, 16);
+        c.beginPath();
+        for (var q = 0; q <= tt; q += 0.02) c.lineTo(x0 + ((f[0] ? 0 : p.u * q)) * sc, base - 16 - yb(q) * sc);
+        c.strokeStyle = INK; c.lineWidth = 1.5; c.stroke();
+        var bx = x0 + (f[0] ? 0 : p.u * tt) * sc, by = base - 16 - yb(tt) * sc;
+        var vxs = f[0] ? 0 : p.u, vys = v0 - 9.81 * tt;
+        if (t <= T) D.arrow(c, bx, by, bx + vxs * 5, by - vys * 5, INK, 1.5);
+        D.dot(c, bx, by, 5, INK);
+      });
+      D.label(c, 'v (ground) = v′ (train) + u', w - 16, 18, 'right', INK);
+    }
+  });
+
+  V.register('carts', {
+    params: {
+      m1: { label: 'm₁', min: 0.5, max: 3, value: 1, unit: 'kg', digits: 1 },
+      m2: { label: 'm₂', min: 0.5, max: 3, value: 2, unit: 'kg', digits: 1 },
+      v1: { label: 'v₁', min: 0.5, max: 3, value: 2, unit: 'm/s', digits: 1 }
+    },
+    resetOnChange: true,
+    duration: function (p) { return (6.5 - 1.2 - (0.5 + 0.25 * p.m1)) / p.v1 + 3; },
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var sc = (w - 40) / 12, top = h * 0.36, x10 = 1.2, x20 = 6.5;
+      var w1 = 0.5 + 0.25 * p.m1, w2 = 0.5 + 0.25 * p.m2;
+      var tc = (x20 - (x10 + w1)) / p.v1, vf = p.m1 * p.v1 / (p.m1 + p.m2);
+      var stuck = t >= tc, x1 = stuck ? x10 + p.v1 * tc + vf * (t - tc) : x10 + p.v1 * t, x2 = stuck ? x20 + vf * (t - tc) : x20;
+      var va = stuck ? vf : p.v1, vb = stuck ? vf : 0;
+      D.grid(c, w, h, 32);
+      D.line(c, 12, top + 22, w - 12, top + 22, FAINT, 1);
+      var P = function (x) { return 20 + x * sc; };
+      c.fillStyle = INK; c.fillRect(P(x1), top + 22 - 22 * w1, w1 * sc, 22 * w1);
+      c.fillStyle = MUTED; c.fillRect(P(x2), top + 22 - 22 * w2, w2 * sc, 22 * w2);
+      if (va > 0) D.arrow(c, P(x1 + w1 / 2), top + 12 - 22 * w1, P(x1 + w1 / 2) + va * 18, top + 12 - 22 * w1, INK, 1.5);
+      if (vb > 0) D.arrow(c, P(x2 + w2 / 2), top + 12 - 22 * w2, P(x2 + w2 / 2) + vb * 18, top + 12 - 22 * w2, MUTED, 1.5);
+      var p1 = p.m1 * va, p2 = p.m2 * vb, ptot = p.m1 * p.v1, bs = (w - 150) / (3 * 3), by = h * 0.68;
+      [[p1, 'p₁', INK], [p2, 'p₂', MUTED], [p1 + p2, 'p₁+p₂', 'rgba(20,20,20,0.35)']].forEach(function (b, j) {
+        var y = by + j * 18;
+        c.fillStyle = 'rgba(0,0,0,0.06)'; c.fillRect(70, y - 6, ptot * bs, 12);
+        c.fillStyle = b[2]; c.fillRect(70, y - 6, b[0] * bs, 12);
+        D.label(c, b[1], 60, y, 'right');
+        D.label(c, b[0].toFixed(2) + ' kg·m/s', 76 + ptot * bs, y);
+      });
+    }
+  });
+
+  V.register('cycloid', {
+    params: {
+      w: { label: 'ω', min: 0.3, max: 2, value: 0.9, unit: 'rad/s', digits: 2 }
+    },
+    duration: function (p) { return 2 * Math.PI * 2 / p.w; },
+    init: function () { return { th: 0 }; },
+    step: function (s, dt, p) { s.th += p.w * dt; },
+    draw: function (c, w, h, s, p) {
+      var R = Math.min(h * 0.2, (w - 40) / (4 * Math.PI + 2)), base = h * 0.72, ox = 20 + R, th = s.th;
+      var cx = ox + R * th, cy = base - R, px = cx - R * Math.sin(th), py = cy + R * Math.cos(th);
+      D.grid(c, w, h, 32);
+      D.line(c, 12, base, w - 12, base, FAINT, 1);
+      c.beginPath(); for (var q = 0; q <= th; q += 0.03) c.lineTo(ox + R * (q - Math.sin(q)), cy + R * Math.cos(q));
+      c.strokeStyle = INK; c.lineWidth = 1.75; c.stroke();
+      D.ring(c, cx, cy, R, MUTED, 1.25);
+      D.line(c, cx, cy, px, py, MUTED, 1, [3, 3]);
+      var k = 12;
+      D.arrow(c, px, py, px + k * 1.6, py, MUTED, 1.5);
+      D.arrow(c, px, py, px - k * 1.6 * Math.cos(th), py - k * 1.6 * Math.sin(th), MUTED, 1.5);
+      var vx = 1 - Math.cos(th), vy = -Math.sin(th);
+      D.arrow(c, px, py, px + k * 1.6 * vx, py + k * 1.6 * vy, INK, 2);
+      D.dot(c, cx, cy, 3, MUTED);
+      D.dot(c, px, py, 5, INK);
+      D.label(c, 'v = v(centre) + v(spin)', 16, 18, 'left', INK);
+      D.label(c, 'speed of point = ' + Math.sqrt(vx * vx + vy * vy).toFixed(2) + ' × ωR', 16, h - 16);
+    }
+  });
+
+  V.register('approach', {
+    params: {
+      ang: { label: 'v₂ dir', min: 90, max: 270, value: 150, unit: '°', digits: 0 }
+    },
+    resetOnChange: true,
+    duration: 7,
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var r1 = [-3, 0], v1 = [1, 0.4], r2 = [3, -1.5], a = p.ang * Math.PI / 180, v2 = [1.1 * Math.cos(a), 1.1 * Math.sin(a) + 0.6];
+      var R0 = [r2[0] - r1[0], r2[1] - r1[1]], V = [v2[0] - v1[0], v2[1] - v1[1]], VV = V[0] * V[0] + V[1] * V[1];
+      var tc = VV > 1e-6 ? Math.max(0, -(R0[0] * V[0] + R0[1] * V[1]) / VV) : 0;
+      var dist = function (q) { return Math.hypot(R0[0] + V[0] * q, R0[1] + V[1] * q); };
+      var sc = Math.min(w / 12, h / 7), ox = w / 2, oy = h * 0.4, P = function (r) { return [ox + r[0] * sc, oy - r[1] * sc]; };
+      var at = function (r, v, q) { return [r[0] + v[0] * q, r[1] + v[1] * q]; };
+      D.grid(c, w, h, 32);
+      [[r1, v1, INK], [r2, v2, MUTED]].forEach(function (o) {
+        var A = P(at(o[0], o[1], -1)), B = P(at(o[0], o[1], 7)); D.line(c, A[0], A[1], B[0], B[1], FAINT, 1, [3, 4]);
+      });
+      var p1 = P(at(r1, v1, t)), p2 = P(at(r2, v2, t));
+      if (t >= tc) { var c1 = P(at(r1, v1, tc)), c2 = P(at(r2, v2, tc)); D.line(c, c1[0], c1[1], c2[0], c2[1], INK, 1.5); D.dot(c, c1[0], c1[1], 3, INK); D.dot(c, c2[0], c2[1], 3, MUTED); }
+      D.line(c, p1[0], p1[1], p2[0], p2[1], MUTED, 1, [2, 3]);
+      D.arrow(c, p1[0], p1[1], p1[0] + v1[0] * 22, p1[1] - v1[1] * 22, INK, 1.5);
+      D.arrow(c, p2[0], p2[1], p2[0] + v2[0] * 22, p2[1] - v2[1] * 22, MUTED, 1.5);
+      D.dot(c, p1[0], p1[1], 6, INK); D.dot(c, p2[0], p2[1], 6, MUTED);
+      var gx0 = 40, gx1 = w - 16, gy = h - 22, gh = h * 0.2, dm = Math.max(dist(0), dist(7)) * 1.1, T = 7;
+      D.line(c, gx0, gy, gx1, gy, FAINT, 1);
+      D.label(c, '|R(t)|', 8, gy - gh - 6);
+      D.plot(c, dist, 0, Math.max(t, 0.01), function (q) { return gx0 + q / T * (gx1 - gx0); }, function (d) { return gy - d / dm * gh; }, INK, 1.5);
+      var tx = gx0 + tc / T * (gx1 - gx0);
+      D.line(c, tx, gy, tx, gy - gh, FAINT, 1, [2, 3]);
+      D.label(c, 't_c = ' + tc.toFixed(2) + ' s   d_min = ' + dist(tc).toFixed(2) + ' m', w - 16, 18, 'right', INK);
+    }
+  });
+
   function start() { document.querySelectorAll('.viz[data-viz]').forEach(mount); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
