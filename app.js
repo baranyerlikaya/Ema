@@ -51,7 +51,7 @@
     try { localStorage.setItem(STORE_KEY, JSON.stringify(ids)); } catch (e) { /* storage unavailable */ }
   }
 
-  var ICON_CHEVRON = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var ICON_CHEVRON = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var ICON_MENU = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
   var ICON_CLOSE = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
   var ICON_ARROW = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -86,21 +86,91 @@
 
   // ---------- sidebar ----------
 
-  var sidebarEl, scrollEl, overlayEl, searchInput, clearBtn, emptyMsg;
+  var sidebarEl, scrollEl, treeEl, glideEl, overlayEl, searchInput, clearBtn, emptyMsg;
   var SCROLL_KEY = 'physref.sidebar-scroll';
-
-  function setSectionOpen(sec, open) {
-    sec.classList.toggle('is-open', open);
-    sec.querySelector('.tree-toggle').setAttribute('aria-expanded', String(open));
-    // Closed panels stay in the DOM for the collapse animation, but out of tab order.
-    var panel = sec.querySelector('.tree-panel');
-    if (open) panel.removeAttribute('inert'); else panel.setAttribute('inert', '');
-  }
+  // One curve for every sidebar motion: fast start, long soft landing.
+  var SMOOTH = 'cubic-bezier(0.32, 0.72, 0, 1)';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   function isRemembered(sectionId) {
     var current = findCurrent();
     return loadOpen().indexOf(sectionId) !== -1 || !!(current && current.section.id === sectionId);
   }
+
+  // Open or close a section. With animate, the panel eases between its real
+  // heights (measured, so an interrupted toggle reverses from where it is)
+  // and the topics fade and drift in one after another.
+  function setSectionOpen(sec, open, animate) {
+    var panel = sec.querySelector('.tree-panel');
+    var wasOpen = sec.classList.contains('is-open');
+    var from = panel.getBoundingClientRect().height;
+    if (panel._anim) { panel._anim.cancel(); panel._anim = null; }
+
+    sec.classList.toggle('is-open', open);
+    sec.querySelector('.tree-toggle').setAttribute('aria-expanded', String(open));
+    if (open) panel.removeAttribute('inert'); else panel.setAttribute('inert', '');
+
+    if (!animate || reduceMotion || !panel.animate || wasOpen === open) return;
+    var to = open ? panel.scrollHeight : 0;
+    panel._anim = panel.animate(
+      [{ height: from + 'px' }, { height: to + 'px' }],
+      { duration: 460, easing: SMOOTH }
+    );
+    panel._anim.onfinish = function () { panel._anim = null; };
+
+    if (open) {
+      var rows = panel.querySelectorAll('li:not([hidden])');
+      for (var i = 0; i < rows.length; i++) {
+        rows[i].animate(
+          [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }],
+          { duration: 420, delay: Math.min(i * 22, 220), easing: SMOOTH, fill: 'backwards' }
+        );
+      }
+    } else {
+      panel.firstChild.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: SMOOTH });
+    }
+    hideGlide();
+  }
+
+  // ---------- hover glide: one highlight that slides between rows ----------
+
+  var glideTarget = null, glideFrame = 0;
+
+  function placeGlide(target, instant) {
+    var r = target.getBoundingClientRect(), t = treeEl.getBoundingClientRect();
+    if (instant) glideEl.classList.add('is-instant');
+    glideEl.style.transform = 'translate(' + (r.left - t.left) + 'px,' + (r.top - t.top) + 'px)';
+    glideEl.style.width = r.width + 'px';
+    glideEl.style.height = r.height + 'px';
+    if (instant) { glideEl.getBoundingClientRect(); glideEl.classList.remove('is-instant'); }
+    glideEl.classList.add('is-on');
+  }
+
+  function hideGlide() {
+    glideTarget = null;
+    if (glideEl) glideEl.classList.remove('is-on');
+  }
+
+  function onPointerOver(e) {
+    var target = e.target.closest('a.tree-link:not(.is-active), .tree-toggle');
+    if (!target || !treeEl.contains(target)) { hideGlide(); return; }
+    if (target === glideTarget) return;
+    var wasOn = glideEl.classList.contains('is-on');
+    glideTarget = target;
+    placeGlide(target, !wasOn);
+  }
+
+  function followGlide() {
+    // Rows move while sections open or close; keep the highlight on its row.
+    if (!glideTarget || glideFrame) return;
+    glideFrame = requestAnimationFrame(function () {
+      glideFrame = 0;
+      if (glideTarget) placeGlide(glideTarget, true);
+    });
+  }
+
+  // ---------- build ----------
 
   function buildSidebar() {
     var mount = document.getElementById('site-sidebar');
@@ -113,50 +183,54 @@
     });
     clearBtn = el('button', { class: 'search-clear', type: 'button', 'aria-label': 'Clear search', hidden: '', html: ICON_CLOSE });
 
-    var tree = el('div', { class: 'tree' });
-    NAV.forEach(function (section) {
+    glideEl = el('div', { class: 'tree-glide', 'aria-hidden': 'true' });
+    treeEl = el('div', { class: 'tree' }, [glideEl]);
+
+    NAV.forEach(function (section, si) {
       var listId = 'tree-' + section.id;
       var ready = section.topics.filter(function (t) { return t.status === 'ready'; }).length;
       var toggle = el('button', { class: 'tree-toggle', type: 'button', 'aria-controls': listId }, [
-        el('span', { class: 'tree-chevron', html: ICON_CHEVRON }),
+        el('span', { class: 'tree-num', text: String(si + 1) }),
         el('span', { class: 'tree-title', text: section.title }),
-        el('span', { class: 'tree-count', 'aria-label': ready + ' of ' + section.topics.length + ' ready', text: ready + '/' + section.topics.length })
+        el('span', { class: 'tree-count', 'aria-label': ready + ' of ' + section.topics.length + ' ready', text: ready + '/' + section.topics.length }),
+        el('span', { class: 'tree-chevron', html: ICON_CHEVRON })
       ]);
       var list = el('ul', { class: 'tree-list', id: listId });
 
-      section.topics.forEach(function (t) {
+      section.topics.forEach(function (t, ti) {
+        var num = el('span', { class: 'tree-num', text: (si + 1) + '.' + (ti + 1) });
         var label = el('span', { class: 'tree-link-text', text: t.title });
         var item;
         if (t.status === 'ready') {
-          item = el('a', { class: 'tree-link', href: href(t.file) }, [label]);
+          item = el('a', { class: 'tree-link', href: href(t.file) }, [num, label]);
           if (t.id === CURRENT) { item.classList.add('is-active'); item.setAttribute('aria-current', 'page'); }
         } else {
-          item = el('span', { class: 'tree-link is-soon', 'aria-disabled': 'true' }, [label, el('span', { class: 'badge', text: 'soon' })]);
+          item = el('span', { class: 'tree-link is-soon', 'aria-disabled': 'true' }, [num, label, el('span', { class: 'tree-soon', text: 'soon' })]);
         }
         list.appendChild(el('li', { 'data-title': t.title }, [item]));
       });
 
       var sec = el('div', { class: 'tree-section', 'data-section': section.id }, [
         toggle,
-        el('div', { class: 'tree-panel' }, [el('div', { class: 'tree-panel-inner' }, [list])])
+        el('div', { class: 'tree-panel' }, [list])
       ]);
-      setSectionOpen(sec, isRemembered(section.id));
+      setSectionOpen(sec, isRemembered(section.id), false);
 
       toggle.addEventListener('click', function () {
         var nowOpen = !sec.classList.contains('is-open');
-        setSectionOpen(sec, nowOpen);
+        setSectionOpen(sec, nowOpen, true);
         if (searchInput.value) return; // don't remember choices made while filtering
         var ids = loadOpen().filter(function (id) { return id !== section.id; });
         if (nowOpen) ids.push(section.id);
         saveOpen(ids);
       });
 
-      tree.appendChild(sec);
+      treeEl.appendChild(sec);
     });
 
     emptyMsg = el('p', { class: 'tree-empty', hidden: '', text: 'No matching topics' });
 
-    scrollEl = el('div', { class: 'sidebar-scroll' }, [tree, emptyMsg]);
+    scrollEl = el('div', { class: 'sidebar-scroll' }, [treeEl, emptyMsg]);
     sidebarEl = el('aside', { class: 'sidebar', id: 'sidebar', 'aria-label': 'Topics' }, [
       el('div', { class: 'sidebar-inner' }, [
         el('div', { class: 'sidebar-head' }, [
@@ -176,6 +250,13 @@
 
     mount.replaceWith(sidebarEl);
     sidebarEl.after(overlayEl);
+
+    if (canHover) {
+      treeEl.addEventListener('pointerover', onPointerOver);
+      treeEl.addEventListener('pointerleave', hideGlide);
+      treeEl.addEventListener('pointermove', followGlide);
+      scrollEl.addEventListener('scroll', followGlide, { passive: true });
+    }
 
     searchInput.addEventListener('input', function () { filterTree(searchInput.value); });
     searchInput.addEventListener('keydown', function (e) {
@@ -205,7 +286,7 @@
       try { sessionStorage.setItem(SCROLL_KEY, String(scrollEl.scrollTop)); } catch (e) { /* storage unavailable */ }
     });
 
-    // Enable transitions only after the first paint, so nothing animates on load.
+    // Enable CSS transitions only after the first paint, so nothing animates on load.
     requestAnimationFrame(function () { requestAnimationFrame(function () { sidebarEl.classList.add('is-ready'); }); });
   }
 
@@ -223,11 +304,16 @@
     span.appendChild(document.createTextNode(text.slice(i + q.length)));
   }
 
+  function fadeIn(node) {
+    if (reduceMotion || !node.animate) return;
+    node.animate([{ opacity: 0, transform: 'translateY(-4px)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: SMOOTH });
+  }
+
   function filterTree(query) {
     var q = query.trim().toLowerCase();
     var anyVisible = false;
     clearBtn.hidden = !query;
-    sidebarEl.classList.toggle('is-searching', !!q);
+    hideGlide();
     sidebarEl.querySelectorAll('.tree-section').forEach(function (sec) {
       var title = sec.querySelector('.tree-title');
       var sectionMatch = !!q && title.textContent.toLowerCase().indexOf(q) !== -1;
@@ -237,12 +323,17 @@
         var text = li.getAttribute('data-title');
         var own = !!q && text.toLowerCase().indexOf(q) !== -1;
         var match = !q || sectionMatch || own;
+        var appearing = match && li.hidden;
         li.hidden = !match;
         highlight(li.querySelector('.tree-link-text'), text, own ? q : '');
+        if (appearing && sec.classList.contains('is-open')) fadeIn(li);
         if (match) hits++;
       });
+      var secAppearing = sec.hidden && !(q && hits === 0);
       sec.hidden = !!q && hits === 0;
-      setSectionOpen(sec, q ? hits > 0 : isRemembered(sec.getAttribute('data-section')));
+      if (secAppearing) fadeIn(sec);
+      // While typing, sections snap open or shut; the rows themselves fade.
+      setSectionOpen(sec, q ? hits > 0 : isRemembered(sec.getAttribute('data-section')), !q);
       if (hits) anyVisible = true;
     });
     emptyMsg.hidden = anyVisible;
