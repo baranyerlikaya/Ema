@@ -24,30 +24,73 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Basic Integrals (power rule, trig)</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Integration as the reverse of differentiation: antiderivatives, the basic table (powers, eˣ, sin, cos), definite integrals and the fundamental theorem of calculus.</p>
         </header>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Antiderivatives</h3>
+            <div>
+<p>An <strong>antiderivative</strong> of $f(x)$ is any function $F(x)$ whose derivative is $f(x)$: $F'(x) = f(x)$ [1, §Antiderivatives]. For example, $x^3$ is an antiderivative of $3x^2$.</p>
+<p>Antiderivatives are never unique, because adding a constant does not change the derivative: $x^3 + 5$ also has derivative $3x^2$. The converse is also true. If $F' = f$ and $G' = f$, then $(G-F)' = 0$, so $G - F$ is a constant [2]. Every antiderivative of $f$ is therefore $F(x) + C$ for some constant $C$.</p>
+<p>The <strong>indefinite integral</strong> is the notation for this whole family. Here $F$ is any antiderivative of $f$ [1, §Indefinite Integrals]:</p>
+$$\int f(x)\,dx = F(x) + C.$$
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The basic table</h3>
+            <div>
+<p>Each entry comes from reading a derivative formula backwards, and each can be checked by differentiating the right-hand side [1]; [2]:</p>
+$$\begin{gathered} \int x^n\,dx = \frac{x^{n+1}}{n+1} + C \quad (n \ne -1), \\ \int \frac{dx}{x} = \ln|x| + C, \qquad \int e^x\,dx = e^x + C, \\ \int \cos x\,dx = \sin x + C, \\ \int \sin x\,dx = -\cos x + C. \end{gathered}$$
+<p>The power rule fails for $n = -1$ because it would divide by zero; that case is covered by $\ln|x|$. The absolute value makes the formula work for negative $x$ too: for $x &lt; 0$, $\frac{d}{dx}\ln(-x) = \frac{1}{-x}\cdot(-1) = \frac{1}{x}$ [2].</p>
+<p>Integrals of sums and constant multiples split term by term, just like derivatives: $\int(af + bg)\,dx = a\int f\,dx + b\int g\,dx$.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Linear inner functions: guess and check</h3>
+            <div>
+<p>When the argument is $kx$ instead of $x$, guess the obvious answer and correct it with the chain rule [2]. For example, $\frac{d}{dx}e^{kx} = k\,e^{kx}$, so the guess $e^{kx}$ is too big by a factor $k$:</p>
+$$\begin{gathered} \int e^{kx}\,dx = \frac{1}{k}e^{kx} + C, \\ \int \sin(kx)\,dx = -\frac{1}{k}\cos(kx) + C, \\ \int \cos(kx)\,dx = \frac{1}{k}\sin(kx) + C. \end{gathered}$$
+<p>The same idea works whenever the integrand contains the derivative of an inner function, for example $\int x\,e^{-x^2}dx = -\frac12 e^{-x^2} + C$ [2].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> The definite integral</h3>
+            <div>
+<p>To find the area under $y = f(x)$ between $x = a$ and $x = b$, divide $[a,b]$ into $n$ strips of width $\Delta x = (b-a)/n$, pick a point $c_i$ in each strip, and add up the rectangles $f(c_i)\,\Delta x$. Letting the strips become infinitely thin defines the <strong>definite integral</strong> [3]:</p>
+$$\int_a^b f(x)\,dx = \lim_{n\to\infty}\sum_{i=1}^{n} f(c_i)\,\Delta x.$$
+<p>Unlike an indefinite integral, this is a number. It is a <strong>signed</strong> area: parts of the graph below the $x$-axis count as negative [1, §Definite Integrals]; [4].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> The fundamental theorem of calculus</h3>
+            <div>
+<p>Computing Riemann sums directly is hard. The fundamental theorem replaces it with an antiderivative: if $f$ is continuous and $F' = f$, then [4]; [1]</p>
+$$\int_a^b f(x)\,dx = F(b) - F(a) = \Big[F(x)\Big]_a^b.$$
+<p>The constant $C$ cancels in the difference, so any antiderivative will do.</p>
+<p>In mechanics the most important case is velocity. Since $v = \dot x$, the theorem says $\int_{t_1}^{t_2} v\,dt = x(t_2) - x(t_1)$: integrating velocity over time gives the <strong>displacement</strong> [4]. In the same way, integrating acceleration gives the change in velocity.</p>
+<p>Two useful properties: integrals over adjacent intervals add, $\int_a^b f\,dx + \int_b^c f\,dx = \int_a^c f\,dx$, and swapping the limits changes the sign, $\int_b^a f\,dx = -\int_a^b f\,dx$ [4].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>$\int_a^b v\,dt$ is the <em>net</em> displacement, not the distance travelled. If the particle turns around, the backward part has $v &lt; 0$ and cancels part of the forward motion. For a round trip the integral is zero, even though the odometer shows a positive distance [4].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Don't forget the constant $C$ in an indefinite integral. In mechanics it is not a detail: it is fixed by the initial condition, such as $v(0)$ or $x(0)$. Dropping it gives the wrong motion (see Example 3) [1, Worked Example 7].</p>
+            </div>
           </aside>
         </section>
 
@@ -56,14 +99,46 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Indefinite integral [1, 2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\int f(x)\,dx = F(x) + C \\ \text{where } F'(x) = f(x)\end{gathered}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Power rule for integrals, $n 
+e -1$ [1, 2]</span></figcaption>
+              <div class="formula-body">$$\int x^n\,dx = \frac{x^{n+1}}{n+1} + C$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>The case $n = -1$ [1, 2]</span></figcaption>
+              <div class="formula-body">$$\int \frac{dx}{x} = \ln|x| + C$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Exponential [1, 2]</span></figcaption>
+              <div class="formula-body">$$\int e^{kx}\,dx = \frac{1}{k}e^{kx} + C$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Sine and cosine [1]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\int \sin x\,dx = -\cos x + C \\ \int \cos x\,dx = \sin x + C\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Definite integral as a limit of sums [3]</span></figcaption>
+              <div class="formula-body">$$\int_a^b f(x)\,dx = \lim_{n\to\infty}\sum_{i=1}^{n} f(c_i)\,\Delta x$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Fundamental theorem of calculus [1, 4]</span></figcaption>
+              <div class="formula-body">$$\int_a^b f(x)\,dx = F(b) - F(a)$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Displacement from velocity [4]</span></figcaption>
+              <div class="formula-body">$$x(t_2) - x(t_1) = \int_{t_1}^{t_2} v(t)\,dt$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -72,15 +147,100 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Evaluate $\displaystyle\int(3x^2 - 4x + 5)\,dx$, $\displaystyle\int\left(\frac{2}{x} + e^x\right)dx$ and $\displaystyle\int\sin(2x)\,dx$. (From [1], Worked Example 7(a).)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Term by term with the power rule:</p>
+$$\begin{aligned} &\int(3x^2 - 4x + 5)\,dx \\ &\quad= x^3 - 2x^2 + 5x + C. \end{aligned}$$
+              </div></li>
+              <li><div>
+<p>Use $\int dx/x = \ln|x|$ and $\int e^x dx = e^x$:</p>
+$$\int\left(\frac{2}{x} + e^x\right)dx = 2\ln|x| + e^x + C.$$
+              </div></li>
+              <li><div>
+<p>Linear inner function with $k = 2$:</p>
+$$\int\sin(2x)\,dx = -\frac12\cos(2x) + C.$$
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Differentiate the last answer: $\frac{d}{dx}\left(-\frac12\cos 2x\right) = -\frac12\cdot(-\sin 2x)\cdot 2 = \sin 2x$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Evaluate $\displaystyle\int_0^3(2x+1)\,dx$, $\displaystyle\int_0^\pi\sin x\,dx$ and $\displaystyle\int_{-1}^{1}x^3\,dx$. (From [1], Worked Example 7(b).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$\displaystyle\int_0^3(2x+1)\,dx = \Big[x^2 + x\Big]_0^3 = 12.$</p>
+              </div></li>
+              <li><div>
+<p>$\displaystyle\int_0^\pi\sin x\,dx = \Big[-\cos x\Big]_0^\pi = 1 + 1 = 2.$</p>
+              </div></li>
+              <li><div>
+<p>$\displaystyle\int_{-1}^{1}x^3\,dx = \Big[\tfrac{x^4}{4}\Big]_{-1}^{1} = \tfrac14 - \tfrac14 = 0.$ The negative area on $[-1, 0]$ exactly cancels the positive area on $[0, 1]$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The first integral is the area of a trapezoid with parallel sides $f(0) = 1$ and $f(3) = 7$ and width $3$: $\frac{1+7}{2}\cdot 3 = 12$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle has acceleration $a(t) = 6t\ \text{m/s}^2$, with $v(0) = 2\ \text{m/s}$ and $x(0) = 0$. Find $v(t)$, $x(t)$ and the displacement during the first $2\ \text{s}$. (From [1], Worked Example 7(c).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Integrate the acceleration: $v(t) = \int 6t\,dt = 3t^2 + C_1$. The initial condition $v(0) = 2$ gives $C_1 = 2$, so $v(t) = 3t^2 + 2$.</p>
+              </div></li>
+              <li><div>
+<p>Integrate again: $x(t) = \int(3t^2+2)\,dt = t^3 + 2t + C_2$. From $x(0) = 0$, $C_2 = 0$, so $x(t) = t^3 + 2t$.</p>
+              </div></li>
+              <li><div>
+<p>Displacement by the fundamental theorem:</p>
+$$\begin{aligned} \Delta x &= \int_0^2(3t^2+2)\,dt \\ &= \Big[t^3 + 2t\Big]_0^2 = 12\ \text{m}. \end{aligned}$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$x(2) - x(0) = (8 + 4) - 0 = 12\ \text{m}$, the same answer. Differentiating $x(t)$ twice gives back $a = 6t$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Find $\displaystyle\int e^{6x}\,dx$ and $\displaystyle\int x\,e^{-x^2}\,dx$ by guessing and checking. (From [2], Examples 3 and 4.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Guess $e^{6x}$. Its derivative is $6e^{6x}$, six times too big, so divide by 6:</p>
+$$\int e^{6x}\,dx = \frac16 e^{6x} + C.$$
+              </div></li>
+              <li><div>
+<p>Guess $e^{-x^2}$. Its derivative is $-2x\,e^{-x^2}$, which is $-2$ times the integrand, so divide by $-2$:</p>
+$$\int x\,e^{-x^2}\,dx = -\frac12 e^{-x^2} + C.$$
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$\frac{d}{dx}\left(-\frac12 e^{-x^2}\right) = -\frac12\cdot(-2x)\,e^{-x^2} = x\,e^{-x^2}$. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -88,8 +248,10 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 1: Mathematical Tools</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Antiderivatives, Indefinite Integrals, Definite Integrals; Worked Example 7. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/mathematical-tools/main.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 15: "Differentials, antiderivatives", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec15.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 18: "Definite integrals", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec18.pdf">PDF</a></span></li>
+            <li><span>D. Jerison, <em>18.01 Single Variable Calculus</em>, Lecture 19: "First fundamental theorem of calculus", MIT OpenCourseWare, Fall 2006. <a href="https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/lec19.pdf">PDF</a></span></li>
           </ol>
         </section>
 

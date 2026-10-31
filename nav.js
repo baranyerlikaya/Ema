@@ -5,7 +5,7 @@ window.PHYSREF_NAV = [
     topics: [
       { id: 'limits-derivatives',  title: 'Limits & Derivatives (power rule, chain rule)',        file: 'topics/mechanics/limits-derivatives.html',  status: 'ready' },
       { id: 'elementary-derivatives', title: 'Derivatives of sin, cos, eˣ, ln',                   file: 'topics/mechanics/elementary-derivatives.html', status: 'ready' },
-      { id: 'basic-integrals',     title: 'Basic Integrals (power rule, trig)',                   file: 'topics/mechanics/basic-integrals.html',     status: 'soon' },
+      { id: 'basic-integrals',     title: 'Basic Integrals (power rule, trig)',                   file: 'topics/mechanics/basic-integrals.html',     status: 'ready' },
       { id: 'coordinates',         title: 'Cartesian & Polar Coordinates',                        file: 'topics/mechanics/coordinates.html',         status: 'soon' },
       { id: 'complex-numbers',     title: "Complex Numbers, Polar Form, Euler's Formula",          file: 'topics/mechanics/complex-numbers.html',     status: 'soon' },
       { id: 'exponential-lambda',  title: 'e^(λt) for real and complex λ',                        file: 'topics/mechanics/exponential-lambda.html',  status: 'soon' },
