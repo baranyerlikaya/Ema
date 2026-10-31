@@ -21,7 +21,7 @@ window.PHYSREF_NAV = [
       { id: 'vector-components',   title: 'Vector Components of Motion',                          file: 'topics/mechanics/vector-components.html',   status: 'ready' },
       { id: 'projectile-motion',   title: 'Projectile Motion',                                    file: 'topics/mechanics/projectile-motion.html',   status: 'ready' },
       { id: 'reference-frames',    title: 'Reference Frames, Speed vs Average Speed',             file: 'topics/mechanics/reference-frames.html',    status: 'ready' },
-      { id: 'momentum-intro',      title: 'Momentum (Intro)',                                     file: 'topics/mechanics/momentum-intro.html',      status: 'soon' },
+      { id: 'momentum-intro',      title: 'Momentum (Intro)',                                     file: 'topics/mechanics/momentum-intro.html',      status: 'ready' },
       { id: 'superposition',       title: 'Superposition of Motions',                             file: 'topics/mechanics/superposition.html',       status: 'soon' },
       { id: 'closest-approach',    title: 'Two Particles: Closest Approach',                      file: 'topics/mechanics/closest-approach.html',    status: 'ready' }
     ]

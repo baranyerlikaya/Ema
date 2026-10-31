@@ -26,45 +26,93 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Momentum (Intro)</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Momentum p = mv, the 'quantity of motion': how forces change it, what impulse is, and why the total momentum of an isolated system never changes.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Momentum is "how hard it is to stop something".</strong> A slow truck and a fast bicycle can both be hard to stop. Momentum combines how heavy something is and how fast it goes [1]; [2]:</p>
+$$\mathbf p = m\mathbf v.$$
+<p>It has a direction (the same as the velocity) and units of kg·m/s.</p>
+<p><strong>Forces change momentum.</strong> Newton's second law really says: force = how quickly momentum changes, $\mathbf F = d\mathbf p/dt$. For a fixed mass that's the familiar $\mathbf F = m\mathbf a$ [1].</p>
+<p><strong>Impulse = push × time.</strong> A push that lasts longer changes momentum more. The total effect of a force over time is the <strong>impulse</strong>, $\mathbf I = \int\mathbf F\,dt = \Delta\mathbf p$: the area under the force–time graph [2].</p>
+<p><strong>The big rule: momentum is conserved.</strong> When two things bump into each other, they push each other equally hard in opposite directions, so whatever one gains the other loses. If nothing from outside pushes the group, the <em>total</em> momentum never changes [1]; [2]:</p>
+$$m_1\mathbf v_{1,\text{before}} + m_2\mathbf v_{2,\text{before}} = m_1\mathbf v_{1,\text{after}} + m_2\mathbf v_{2,\text{after}}.$$
+<p>Careful: total momentum stays the same, but movement energy (kinetic energy) can be lost. When two things crash and stick together, some of it turns into heat and bending [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Definition</h3>
+            <div>
+<p>The <strong>momentum</strong> of a particle of mass $m$ moving with velocity $\mathbf v$ is [1, §Newton's Axioms of Motion]; [2, §10.2]</p>
+$$\mathbf p = m\mathbf v.$$
+<p>It is a vector pointing in the direction of the velocity, with magnitude $mv$, measured in $\text{kg·m/s}$. Because velocity depends on the reference frame, so does momentum [2, §10.2].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Newton's second law in momentum form</h3>
+            <div>
+<p>Newton's second axiom says that the net force equals the rate of change of momentum [1, §Newton's Axioms of Motion]:</p>
+$$\mathbf F = \frac{d\mathbf p}{dt}.$$
+<p>If the mass is constant this becomes $\mathbf F = m\,d\mathbf v/dt = m\mathbf a$ [1]; [2, §10.2]. The momentum form is the more general one.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Impulse</h3>
+            <div>
+<p>Integrating $\mathbf F = d\mathbf p/dt$ over a time interval gives the <strong>impulse</strong>, which equals the change in momentum [2, §10.2]:</p>
+$$\mathbf I = \int_{t_1}^{t_2} \mathbf F\,dt = \mathbf p(t_2) - \mathbf p(t_1) = \Delta\mathbf p.$$
+<p>The impulse is the area under the $F$–$t$ graph. The average force over the interval satisfies $\mathbf F_{\text{avg}}\,\Delta t = \Delta\mathbf p$ [2, §10.2].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Conservation of linear momentum</h3>
+            <div>
+<p>For a system of particles, the total momentum is the vector sum $\mathbf p_{\text{sys}} = m_1\mathbf v_1 + m_2\mathbf v_2 + \cdots$ [2, §10.7]. Internal forces come in action–reaction pairs and cancel, so only <em>external</em> forces change the total [2, §10.3]. Hence [1, §Conservation of Linear Momentum]; [2, §10.7]:</p>
+$$\dot{\mathbf p}_{\text{sys}} = \mathbf F_{\text{ext}} = 0 \quad\Longrightarrow\quad \mathbf p_{\text{sys}} = \text{constant}.$$
+<p>The law also works one component at a time: if the external force has no component along some direction $\hat{\mathbf s}$, then the momentum component $p_s$ is conserved, even if other components change [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Collisions</h3>
+            <div>
+<p>During a short collision, external impulses are usually negligible, so the total momentum just before equals the total momentum just after [1, Worked Example “Inelastic collision of two hockey pucks”]:</p>
+$$m_1\mathbf v_{1i} + m_2\mathbf v_{2i} = m_1\mathbf v_{1f} + m_2\mathbf v_{2f}.$$
+<p>Kinetic energy, on the other hand, need not be conserved. When the bodies stick together (a <strong>perfectly inelastic</strong> collision), some kinetic energy turns into heat and deformation [1].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Momentum conservation is a vector law. In two dimensions it gives two equations, one for each component; don't add the magnitudes of the momenta [1]; [2, §10.7].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Momentum is conserved only for the <em>whole</em> isolated system, not for each body separately. In a collision each body's momentum changes; only the sum stays fixed [2, §10.7].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="carts">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">Cart 1 (dark, mass $m_1$) rolls at $v_1$ into cart 2 (grey, mass $m_2$), which is at rest; they stick together. The bars show $p_1 = m_1v_1$, $p_2 = m_2v_2$ and their sum. At the collision momentum passes from cart 1 to cart 2, but the total bar never changes. Afterwards both move at $v_f = m_1v_1/(m_1+m_2)$. Change the masses: a heavy cart hitting a light one keeps most of its speed, while a light one hitting a heavy one slows down a lot.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +120,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Momentum [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf p = m\mathbf v$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Second law, momentum form [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F = \frac{d\mathbf p}{dt} \;\overset{m=\text{const}}{=}\; m\mathbf a$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Impulse [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf I = \int_{t_1}^{t_2}\mathbf F\,dt = \Delta\mathbf p$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Average force [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F_{\text{avg}}\,\Delta t = \Delta\mathbf p$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Conservation (isolated system) [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf F_{\text{ext}} = 0 \;\Rightarrow\; \mathbf p_{\text{sys}} = \text{const}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Two-body collision [1, 2]</span></figcaption>
+              <div class="formula-body">$$m_1\mathbf v_{1i} + m_2\mathbf v_{2i} = m_1\mathbf v_{1f} + m_2\mathbf v_{2f}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Perfectly inelastic, body 2 at rest [1]</span></figcaption>
+              <div class="formula-body">$$v_f = \frac{m_1 v_1}{m_1 + m_2}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +162,70 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A puck of mass $m_1 = 2\ \text{kg}$ moving at $5\ \text{m/s}$ hits a resting puck of mass $m_2 = 3\ \text{kg}$ and they stick together. Find the final velocity and the kinetic energy lost. (From [1], Worked Example “Inelastic collision of two hockey pucks”, (a)–(b).)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Momentum conservation: $m_1v_1 + 0 = (m_1 + m_2)v_f$, so $v_f = \dfrac{2 \times 5}{5} = 2\ \text{m/s}$, in the original direction.</p>
+              </div></li>
+              <li><div>
+<p>Kinetic energy before: $\tfrac12(2)(5^2) = 25\ \text{J}$. After: $\tfrac12(5)(2^2) = 10\ \text{J}$.</p>
+              </div></li>
+              <li><div>
+<p>Lost: $25 - 10 = 15\ \text{J}$, converted into heat and deformation.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Momentum before: $2 \times 5 = 10\ \text{kg·m/s}$; after: $5 \times 2 = 10\ \text{kg·m/s}$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>The same two pucks collide but separate afterwards, with half the initial kinetic energy lost. Find their final velocities. (From [1], Worked Example “Inelastic collision of two hockey pucks”, (c).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Momentum: $2v_{1f} + 3v_{2f} = 10$, so $v_{2f} = (10 - 2v_{1f})/3$.</p>
+              </div></li>
+              <li><div>
+<p>Energy: $\tfrac12(2)v_{1f}^2 + \tfrac12(3)v_{2f}^2 = 12.5\ \text{J}$. Substituting and completing the square gives $10 + \tfrac53(v_{1f} - 2)^2 = 12.5$, so $v_{1f} = 2 \pm \tfrac{\sqrt6}{2}$ and $v_{2f} = 2 \mp \tfrac{\sqrt6}{3}$ (m/s).</p>
+              </div></li>
+              <li><div>
+<p>After the collision the pucks must move apart, $v_{2f} &gt; v_{1f}$. That selects $v_{1f} \approx 0.78\ \text{m/s}$ and $v_{2f} \approx 2.82\ \text{m/s}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$2(0.775) + 3(2.816) \approx 10.0\ \text{kg·m/s}$ ✓, and $\tfrac12(2)(0.775^2) + \tfrac12(3)(2.816^2) \approx 12.5\ \text{J}$ ✓.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>You push an object for $\Delta t = 1.0\ \text{s}$: the force rises linearly from $0$ to $10\ \text{N}$ in the first half and falls linearly back to $0$ in the second half. What impulse do you give it? (From [2], Example 10.1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>The impulse is the area under the $F$–$t$ graph, here a triangle with base $1.0\ \text{s}$ and height $10\ \text{N}$.</p>
+              </div></li>
+              <li><div>
+<p>$I = \tfrac12 \times 1.0\ \text{s} \times 10\ \text{N} = 5.0\ \text{N·s}$, so the object's momentum increases by $5.0\ \text{kg·m/s}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The average force is $I/\Delta t = 5.0\ \text{N}$, half the peak force, as expected for a triangle. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +233,8 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Newton's Axioms of Motion, §Conservation of Linear Momentum; Worked Example “Inelastic collision of two hockey pucks”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 10 "Momentum, System of Particles, and Conservation of Momentum", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §10.2 Momentum and Average Impulse, §10.3, §10.7 Constancy of Momentum and Isolated Systems; Example 10.1. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter10.pdf">PDF</a></span></li>
           </ol>
         </section>
 
