@@ -26,45 +26,97 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Projectile Motion</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">A body thrown near the Earth's surface, with air resistance neglected: uniform motion sideways plus uniformly accelerated motion up and down, giving a parabola.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Throw a ball</strong> and, if we ignore the air, only one thing pulls on it: gravity, straight down. So the ball's motion splits into two easy pieces [1]; [2]:</p>
+<ul>
+<li><strong>Sideways:</strong> nothing pushes it, so it keeps the same sideways speed the whole time: $x = v_0\cos\theta\;t$.</li>
+<li><strong>Up and down:</strong> gravity slows it on the way up, stops it at the top, and speeds it up on the way down: $y = v_0\sin\theta\;t - \tfrac12gt^2$.</li>
+</ul>
+<p>Here $v_0$ is how fast you throw and $\theta$ is the angle above the ground. Splitting $v_0$ into $v_0\cos\theta$ (sideways) and $v_0\sin\theta$ (up) gives the starting speeds of the two pieces [1].</p>
+<p><strong>At the very top</strong> the ball isn't moving up or down at all for a moment ($v_y = 0$). It is still moving sideways. That happens at $t = v_0\sin\theta/g$, at height $v_0^2\sin^2\theta/2g$ [1].</p>
+<p><strong>Coming down</strong> takes as long as going up (on flat ground), so the whole flight is $2v_0\sin\theta/g$. In that time it travels sideways a distance (the <strong>range</strong>) $v_0^2\sin2\theta/g$. The longest throw is at $45^\circ$, and angles like $30^\circ$ and $60^\circ$ land at the same spot [1].</p>
+<p><strong>The shape</strong> of the path is a <strong>parabola</strong>, like an upside-down U [1]; [2]. Real air makes the path shorter, so these formulas are the "no-air" version [2].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The model</h3>
+            <div>
+<p>Take the $x$-axis horizontal (in the direction of the throw) and the $y$-axis vertically up. If we neglect everything except gravity, the only force is $\mathbf F = -mg\,\hat\jmath$, so by Newton's second law [2, §5.2]; [1, Worked Example “Projectile Motion”]:</p>
+$$a_x = 0, \qquad a_y = -g.$$
+<p>The acceleration is the same for every mass, and it is constant. Horizontally nothing changes the velocity; vertically the body falls freely [2, §5.2].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Initial conditions</h3>
+            <div>
+<p>A body launched with speed $v_0$ at angle $\theta$ above the horizontal has initial velocity components [1]; [2, §5.2]</p>
+$$v_{0x} = v_0\cos\theta, \qquad v_{0y} = v_0\sin\theta.$$
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Position and velocity</h3>
+            <div>
+<p>Integrate each direction separately (constant acceleration in each) [2, §5.2]; [1]. With the launch point at $(x_0, y_0)$:</p>
+$$\begin{aligned} x(t) &= x_0 + v_{0x}t, & v_x(t) &= v_{0x}, \\ y(t) &= y_0 + v_{0y}t - \tfrac12gt^2, & v_y(t) &= v_{0y} - gt. \end{aligned}$$
+<p>The horizontal velocity never changes; the vertical velocity decreases by $g$ every second, passes through zero at the top, and then becomes negative [2, Example 5.1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Time of flight, maximum height, range</h3>
+            <div>
+<p>For a launch from the ground ($x_0 = y_0 = 0$) back to the ground [1, Worked Example “Projectile Motion”]:</p>
+<ul>
+<li>the top is reached when $v_y = 0$, at $t_{\text{up}} = v_0\sin\theta/g$;</li>
+<li>the flight lasts twice as long, $t_{\text{flight}} = 2v_0\sin\theta/g$;</li>
+<li>the maximum height is $y_{\max} = \dfrac{v_0^2\sin^2\theta}{2g}$;</li>
+<li>the range is $x_{\max} = v_{0x}t_{\text{flight}} = \dfrac{v_0^2\sin2\theta}{g}$.</li>
+</ul>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> The trajectory is a parabola</h3>
+            <div>
+<p>Eliminate $t$ using $t = x/(v_0\cos\theta)$ (launch from the origin) [1]; [2, §5.2.1]:</p>
+$$y(x) = x\tan\theta - \frac{g\,x^2}{2v_0^2\cos^2\theta}.$$
+<p>This is a quadratic in $x$, so the path is a parabola that opens downward [1].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Real projectiles feel air resistance, which can shorten the path a lot. In MIT's example (a ball at $30\ \text{m/s}$, $21^\circ$, with quadratic drag) the actual range is only about $72\%$ of the parabolic one [2, §5.2]. The formulas here are for the idealized, drag-free case.</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>The range formula $v_0^2\sin2\theta/g$ and the doubled time of flight only hold when the projectile lands at the same height it was launched from. If it starts at a height $d$, solve $y(t) = 0$ directly [2, Example 5.1].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="projectile">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A projectile launched with speed $v_0$ at angle $\theta$, with gravity $g$ and no air resistance. The grey arrows are the velocity components: the horizontal one $v_x = v_0\cos\theta$ stays the same length the whole time, while the vertical one $v_y = v_0\sin\theta - gt$ shrinks, vanishes at the top and grows downward. The dark arrow is the full velocity, tangent to the dashed parabola. The labels show the maximum height $h = v_0^2\sin^2\theta/2g$ and the range $R = v_0^2\sin2\theta/g$. Try $\theta = 30^\circ$ and $60^\circ$: same range.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +124,45 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Acceleration (no air resistance) [1, 2]</span></figcaption>
+              <div class="formula-body">$$a_x = 0, \qquad a_y = -g$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Initial velocity components [1, 2]</span></figcaption>
+              <div class="formula-body">$$v_{0x} = v_0\cos\theta, \qquad v_{0y} = v_0\sin\theta$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Horizontal motion [1, 2]</span></figcaption>
+              <div class="formula-body">$$x = x_0 + v_{0x}t, \qquad v_x = v_{0x}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Vertical motion [1, 2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}y = y_0 + v_{0y}t - \tfrac12gt^2 \\ v_y = v_{0y} - gt\end{gathered}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Time of flight (level ground) [1]</span></figcaption>
+              <div class="formula-body">$$t_{\text{flight}} = \frac{2v_0\sin\theta}{g}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Maximum height [1]</span></figcaption>
+              <div class="formula-body">$$y_{\max} = \frac{v_0^2\sin^2\theta}{2g}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Range (level ground) [1]</span></figcaption>
+              <div class="formula-body">$$x_{\max} = \frac{v_0^2\sin2\theta}{g}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Trajectory [1, 2]</span></figcaption>
+              <div class="formula-body">$$y = x\tan\theta - \frac{g x^2}{2v_0^2\cos^2\theta}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +171,70 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A particle is launched from the ground with speed $v_0$ at angle $\theta$. Find the time of flight, the maximum height, the range and the trajectory $y(x)$. (From [1], Worked Example “Projectile Motion”.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Vertical: $v_y = v_0\sin\theta - gt$ is zero at $t_{\text{up}} = v_0\sin\theta/g$. By symmetry $t_{\text{flight}} = 2t_{\text{up}} = 2v_0\sin\theta/g$.</p>
+              </div></li>
+              <li><div>
+<p>Height at $t_{\text{up}}$: $y_{\max} = v_0\sin\theta\,t_{\text{up}} - \tfrac12gt_{\text{up}}^2 = \dfrac{v_0^2\sin^2\theta}{2g}$.</p>
+              </div></li>
+              <li><div>
+<p>Horizontal: $x_{\max} = v_0\cos\theta\cdot\dfrac{2v_0\sin\theta}{g} = \dfrac{v_0^2\sin2\theta}{g}$, using $2\sin\theta\cos\theta = \sin2\theta$.</p>
+              </div></li>
+              <li><div>
+<p>Substitute $t = x/(v_0\cos\theta)$ into $y(t)$: $y = x\tan\theta - \dfrac{gx^2}{2v_0^2\cos^2\theta}$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Put $x = x_{\max}$ into $y(x)$: $\tan\theta\cdot\frac{2v_0^2\sin\theta\cos\theta}{g} - \frac{g}{2v_0^2\cos^2\theta}\cdot\frac{4v_0^4\sin^2\theta\cos^2\theta}{g^2} = \frac{2v_0^2\sin^2\theta}{g} - \frac{2v_0^2\sin^2\theta}{g} = 0$. The path lands at the range. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A stone is thrown at $45^\circ$ with $v_0 = 20\ \text{m/s}$ from a height $d = 2\ \text{m}$. When does it reach its highest point, and how high is it? Use $g = 9.8\ \text{m/s}^2$. (From [2], Example 5.1.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>At the top $v_y = 0$: $t_1 = \dfrac{v_0\sin45^\circ}{g} = \dfrac{20 \times 0.707}{9.8} \approx 1.44\ \text{s}$.</p>
+              </div></li>
+              <li><div>
+<p>Height: $y_{\max} = d + \dfrac{v_0^2\sin^2 45^\circ}{2g} = 2 + \dfrac{400 \times 0.5}{19.6} \approx 12.2\ \text{m}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The launch height only adds $d$ to the maximum height; the time to the top doesn't depend on $d$ at all, since it only depends on $v_y$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Using the range formula, which launch angle gives the longest range on level ground? Show that $\theta$ and $90^\circ - \theta$ give the same range. (Adapted from [1], Worked Example “Projectile Motion”, part (c).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$x_{\max} = v_0^2\sin2\theta/g$ is largest when $\sin2\theta = 1$, i.e. $2\theta = 90^\circ$: $\theta = 45^\circ$, with $x_{\max} = v_0^2/g$.</p>
+              </div></li>
+              <li><div>
+<p>For $90^\circ - \theta$: $\sin(2(90^\circ - \theta)) = \sin(180^\circ - 2\theta) = \sin2\theta$. Same range.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The steeper throw goes higher and stays in the air longer ($t_{\text{flight}} \propto \sin\theta$) but moves more slowly sideways ($v_{0x} \propto \cos\theta$); the two effects exactly compensate. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +242,8 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. Worked Examples “Projectile Motion”, “Free fall Motion” and “Motion of a Particle under a Constant Force”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 5 "Two Dimensional Kinematics", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §5.2 Projectile Motion, §5.2.1 Orbit equation; Example 5.1. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter5.pdf">PDF</a></span></li>
           </ol>
         </section>
 
