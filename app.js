@@ -690,34 +690,22 @@
   function buildFooter() {
     var mount = document.getElementById('site-footer');
     if (!mount) return;
-    var sections = el('ul', {});
-    NAV.forEach(function (s) {
-      sections.appendChild(el('li', {}, [el('a', { href: ROOT + 'index.html#section-' + s.id, text: s.title })]));
-    });
     var footer = el('footer', { class: 'footer' }, [
       el('div', { class: 'footer-inner' }, [
-        el('div', { class: 'footer-brand' }, [
-          el('a', { class: 'logo', href: ROOT + 'index.html', text: 'Ema' })
+        el('a', { class: 'footer-logo', href: ROOT + 'index.html', text: 'Ema' }),
+        el('nav', { class: 'footer-links', 'aria-label': 'Footer' }, [
+          el('a', { href: ROOT + 'index.html#sections', text: 'Mechanics' }),
+          el('a', { href: ROOT + 'sources.html', text: 'Sources' }),
+          el('a', { href: REPO_URL, text: 'GitHub' })
         ]),
-        el('div', { class: 'footer-col' }, [el('p', { class: 'footer-label', text: 'Mechanics' }), sections]),
-        el('div', { class: 'footer-col' }, [
-          el('p', { class: 'footer-label', text: 'Site' }),
-          el('ul', {}, [
-            el('li', {}, [el('a', { href: ROOT + 'sources.html', text: 'Sources' })]),
-            el('li', {}, [el('a', { href: REPO_URL, text: 'GitHub' })])
-          ])
-        ]),
-        el('div', { class: 'footer-col' }, [
-          el('p', { class: 'footer-label', text: 'Built with' }),
-          el('ul', {}, [
-            el('li', {}, [el('a', { href: 'https://katex.org', text: 'KaTeX' })]),
-            el('li', {}, [el('a', { href: 'https://github.com/Instrument/instrument-sans', text: 'Instrument Sans' })])
-          ])
+        el('p', { class: 'footer-credit' }, [
+          document.createTextNode('Built with '),
+          el('a', { href: 'https://katex.org', text: 'KaTeX' }),
+          document.createTextNode(' and '),
+          el('a', { href: 'https://github.com/Instrument/instrument-sans', text: 'Instrument Sans' })
         ])
       ])
     ]);
-    var above = mount.previousElementSibling;
-    if (above) above.classList.add('page-end');
     mount.replaceWith(footer);
   }
 
@@ -778,7 +766,6 @@
       ['.pn-card', 50],
       ['.src-topic'],
       ['.src-work', 30],
-      ['.footer-inner > *', 50]
     ];
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
