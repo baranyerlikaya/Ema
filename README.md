@@ -40,6 +40,44 @@ Each empty slot is an element with `class="slot"` and a label like `[Theory]` or
 - The example's **Check** block is optional; delete it if you don't need it.
 - Breadcrumb, prev/next links, sidebar, header and footer are generated from `nav.js` by `app.js`. You don't edit them per page.
 
+## Basic mode
+
+Every topic page has a **Full / Basic** switch next to the breadcrumb. Basic mode inverts the page to a dark scheme with a liquid transition and shows a simpler version:
+
+- `data-level="basic"` blocks appear only in Basic mode. The template has one: the **In short** section with a `[Basic explanation]` slot.
+- `data-level="full"` blocks appear only in Full mode (Theory and Worked examples by default).
+- Anything without `data-level` (Visualization, Key formulas, References) shows in both.
+
+Put `data-level` on any section, paragraph or table-of-contents item to control where it appears. The choice is remembered across pages.
+
+## Visualizations
+
+Each topic page has a **Visualization** section. To turn it on, set `data-viz` on the figure to a registered simulation and replace the `[Caption]` slot:
+
+```html
+<figure class="viz" data-viz="projectile">
+  <div class="viz-stage"></div>
+  <figcaption class="viz-bar"></figcaption>
+</figure>
+```
+
+Built in: `projectile`, `pendulum`, `spring`, `circular`, `phasor`, `tangent`. Each gets play/pause, restart, sliders for its parameters and a time readout, and pauses when scrolled off screen.
+
+Add your own in `assets/viz.js` (or a script loaded after it):
+
+```js
+EmaViz.register('my-sim', {
+  params: { k: { label: 'k', min: 1, max: 10, value: 4, unit: 'N/m' } },
+  resetOnChange: false,          // restart when a slider moves
+  duration: 8,                   // optional loop length in seconds
+  init: function (p) { return { y: [1, 0] }; },
+  step: function (state, dt, p, t) { /* advance state */ },
+  draw: function (ctx, w, h, state, p, t) { /* EmaViz.draw.line / dot / arrow / plot / label ... */ }
+});
+```
+
+Leave `data-viz=""` to keep the empty `[Visualization]` slot.
+
 ## Files
 
 ```
@@ -50,6 +88,7 @@ app.js                      header, sidebar, search, drawer, breadcrumb, prev/ne
 nav.js                      topic tree (single source of truth)
 lib/                        KaTeX 0.16.22 + render-math.js (auto-render setup)
 assets/hero-field.js        animated pendulum phase portrait behind the home hero
+assets/viz.js               visualization engine and built-in simulations
 assets/fonts/               Instrument Sans and Geist Mono (SIL OFL 1.1)
 topics/mechanics/           one page per topic; _template.html is the template
 tools/new-pages.mjs         optional helper that creates missing pages from the template
@@ -61,10 +100,10 @@ GitHub Pages, deployed from the `main` branch, root folder (`/`). Settings → P
 
 All paths are relative, so the site works under `https://<user>.github.io/<repo>/`.
 
-CSS and JS links carry a version tag (`style.css?v=13`) so browsers don't mix a cached old stylesheet with new HTML. After changing `style.css` or a script, bump it everywhere:
+CSS and JS links carry a version tag (`style.css?v=15`) so browsers don't mix a cached old stylesheet with new HTML. After changing `style.css` or a script, bump it everywhere:
 
 ```bash
-sed -i 's/?v=13"/?v=14"/g' index.html sources.html topics/mechanics/*.html
+sed -i 's/?v=15"/?v=16"/g' index.html sources.html topics/mechanics/*.html
 ```
 
 ## Credits

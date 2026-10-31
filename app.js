@@ -352,6 +352,72 @@
     nav.appendChild(el('span', { 'aria-current': 'page', text: current.topic.title }));
   }
 
+  var MODE_KEY = 'ema.mode';
+
+  function setMode(mode) {
+    var root = document.documentElement;
+    if (mode === 'basic') root.setAttribute('data-mode', 'basic'); else root.removeAttribute('data-mode');
+    try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
+    document.querySelectorAll('.mode-switch button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === mode));
+    });
+  }
+
+  function liquidPolygon(cx, cy, radius, wobble, phase) {
+    var pts = [], n = 72;
+    for (var i = 0; i < n; i++) {
+      var a = (i / n) * Math.PI * 2;
+      var k = 1 + wobble * (
+        0.5 * Math.sin(3 * a + phase * 1.3) +
+        0.3 * Math.sin(5 * a - phase * 1.7 + 1.1) +
+        0.2 * Math.sin(8 * a + phase * 2.1 + 2.3));
+      pts.push((cx + Math.cos(a) * radius * k).toFixed(1) + 'px ' + (cy + Math.sin(a) * radius * k).toFixed(1) + 'px');
+    }
+    return 'polygon(' + pts.join(',') + ')';
+  }
+
+  function liquidSwitch(origin, apply) {
+    var root = document.documentElement;
+    if (reduceMotion || !document.startViewTransition) { apply(); return; }
+    var r = origin.getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    var far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy)) * 1.4;
+    root.classList.add('vt-liquid');
+    var vt = document.startViewTransition(apply);
+    vt.ready.then(function () {
+      var frames = [];
+      for (var f = 0; f <= 24; f++) {
+        var p = f / 24;
+        frames.push({ clipPath: liquidPolygon(cx, cy, far * p, 0.28 * Math.sin(Math.PI * Math.min(p * 1.4, 1)), p * 6) });
+      }
+      root.animate(frames, { duration: 1300, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', pseudoElement: '::view-transition-new(root)' });
+    }).catch(function () {});
+    vt.finished.finally(function () { root.classList.remove('vt-liquid'); });
+  }
+
+  function buildModeSwitch() {
+    var header = document.querySelector('.doc-header');
+    var crumbs = header && header.querySelector('.breadcrumb');
+    if (!crumbs) return;
+    var current = document.documentElement.getAttribute('data-mode') === 'basic' ? 'basic' : 'full';
+    var group = el('div', { class: 'mode-switch', role: 'group', 'aria-label': 'Reading level' }, [
+      el('span', { class: 'mode-thumb', 'aria-hidden': 'true' })
+    ]);
+    [['full', 'Full'], ['basic', 'Basic']].forEach(function (m) {
+      var b = el('button', { type: 'button', 'data-mode': m[0], 'aria-pressed': String(current === m[0]), text: m[1] });
+      b.addEventListener('click', function () {
+        var now = document.documentElement.getAttribute('data-mode') === 'basic' ? 'basic' : 'full';
+        if (now === m[0]) return;
+        liquidSwitch(b, function () { setMode(m[0]); });
+      });
+      group.appendChild(b);
+    });
+    var top = el('div', { class: 'doc-topline' });
+    header.insertBefore(top, crumbs);
+    top.appendChild(crumbs);
+    top.appendChild(group);
+  }
+
   function buildPrevNext() {
     var nav = document.querySelector('.prevnext');
     if (!nav) return;
@@ -539,6 +605,7 @@
       ['.subsection'],
       ['.callout', 50],
       ['.formula', 50],
+      ['.viz'],
       ['.example'],
       ['.steps > li', 50],
       ['.example-check'],
@@ -601,6 +668,7 @@
   buildHeader();
   buildSidebar();
   buildBreadcrumb();
+  buildModeSwitch();
   buildPrevNext();
   buildHome();
   buildFooter();

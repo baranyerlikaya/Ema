@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>try{if(self===top&&localStorage.getItem('ema.mode')==='basic')document.documentElement.setAttribute('data-mode','basic')}catch(e){}</script>
   <title>{{TITLE}} · Ema</title>
   <link rel="stylesheet" href="../../lib/katex.min.css">
-  <link rel="stylesheet" href="../../style.css?v=13">
+  <link rel="stylesheet" href="../../style.css?v=15">
   <script defer src="../../lib/katex.min.js"></script>
   <script defer src="../../lib/auto-render.min.js"></script>
-  <script defer src="../../lib/render-math.js?v=13"></script>
-  <script defer src="../../nav.js?v=13"></script>
-  <script defer src="../../app.js?v=13"></script>
+  <script defer src="../../lib/render-math.js?v=15"></script>
+  <script defer src="../../nav.js?v=15"></script>
+  <script defer src="../../app.js?v=15"></script>
+  <script defer src="../../assets/viz.js?v=15"></script>
 </head>
 <body class="layout-doc" data-root="../../" data-topic="{{ID}}">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -27,7 +29,12 @@
           <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
         </header>
 
-        <section class="doc-section" id="theory" aria-labelledby="theory-h">
+        <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
+          <h2 id="basics-h">In short</h2>
+          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+        </section>
+
+        <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
@@ -51,6 +58,15 @@
           </aside>
         </section>
 
+        <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
+          <h2 id="visualization-h">Visualization</h2>
+          <figure class="viz" data-viz="">
+            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+            <figcaption class="viz-bar"></figcaption>
+          </figure>
+          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+        </section>
+
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
           <h2 id="formulas-h">Key formulas</h2>
 
@@ -67,7 +83,7 @@
           </div>
         </section>
 
-        <section class="doc-section" id="examples" aria-labelledby="examples-h">
+        <section class="doc-section" id="examples" aria-labelledby="examples-h" data-level="full">
           <h2 id="examples-h">Worked examples</h2>
 
           <div class="example">
@@ -99,9 +115,11 @@
       <aside class="toc" aria-label="On this page">
         <p class="toc-label">On this page</p>
         <ul>
-          <li><a href="#theory">Theory</a></li>
+          <li data-level="basic"><a href="#basics">In short</a></li>
+          <li data-level="full"><a href="#theory">Theory</a></li>
+          <li><a href="#visualization">Visualization</a></li>
           <li><a href="#formulas">Key formulas</a></li>
-          <li><a href="#examples">Worked examples</a></li>
+          <li data-level="full"><a href="#examples">Worked examples</a></li>
           <li><a href="#references">References</a></li>
         </ul>
       </aside>
