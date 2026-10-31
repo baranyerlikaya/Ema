@@ -31,7 +31,21 @@
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>A differential equation is a riddle.</strong> "Find a function whose derivatives fit this rule." The <strong>order</strong> is the highest derivative in the rule. The answer always has some free numbers in it: one for first order, two for second order. You choose them from how things start, such as where something was and how fast it was moving [1]; [2].</p>
+<p><strong>First order: $\dot x = \lambda x$.</strong> "Things change in proportion to how much there is", like money earning interest. The answer is $x = x(0)\,e^{\lambda t}$: growth if $\lambda &gt; 0$, decay if $\lambda &lt; 0$ [2].</p>
+<p><strong>Second order: $\ddot x + b\dot x + cx = 0$.</strong> The trick is to guess $x = e^{\lambda t}$. Each derivative just multiplies by $\lambda$, so the riddle turns into an ordinary quadratic equation, the <strong>characteristic equation</strong> [1]; [2]:</p>
+$$\lambda^2 + b\lambda + c = 0.$$
+<p>Its two answers decide the motion [1]; [2]:</p>
+<ul>
+<li><strong>two different real roots</strong>: two exponentials, $x = Ae^{\lambda_1 t} + Be^{\lambda_2 t}$, no wiggling;</li>
+<li><strong>complex roots $\alpha \pm i\omega$</strong>: a wiggle with a growing or shrinking size, $x = e^{\alpha t}(C\cos\omega t + D\sin\omega t)$;</li>
+<li><strong>one repeated root</strong>: $x = (A + Bt)\,e^{\lambda t}$.</li>
+</ul>
+<p><strong>The spring.</strong> A mass on a spring follows $\ddot x + \omega_0^2 x = 0$ with $\omega_0 = \sqrt{k/m}$. It swings forever: $x = R\cos(\omega_0 t + \phi)$. Stiffer spring or lighter mass means faster swinging. How big the swing is ($R$) and where it starts ($\phi$) come from the start; $\omega_0$ doesn't [1].</p>
+<p><strong>Add friction</strong> ($\ddot x + 2\gamma\dot x + \omega_0^2 x = 0$, $\gamma = b/2m$). A little friction ($\gamma &lt; \omega_0$): it swings, but the swings get smaller. Just enough ($\gamma = \omega_0$, critical): it slides back to the middle without swinging, sooner than with more friction. Too much ($\gamma &gt; \omega_0$): it creeps back slowly, still without swinging [1].</p>
+<p>Remember: second order needs <strong>two</strong> starting facts, the start position and the start velocity [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
@@ -107,11 +121,11 @@ $$\ddot x + \omega_0^2 x = 0, \qquad \omega_0 = \sqrt{k/m}.$$
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="spring">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A mass $m$ on a spring of stiffness $k$, with friction $b$, released from $x = 1$ at rest. The graph shows $x(t)$, which solves $\ddot x + 2\gamma\dot x + \omega_0^2 x = 0$ with $\gamma = b/2m$ and $\omega_0 = \sqrt{k/m}$ (shown at the top right). $b = 0$: undamped, steady oscillation. Small $b$: underdamped, the swings shrink. Try $k = 2\ \text{N/m}$ and $m = 0.2\ \text{kg}$: then critical damping $\gamma = \omega_0$ is at $b = 2\sqrt{km} \approx 1.26\ \text{kg/s}$. Above that the motion is overdamped and the mass creeps back without oscillating.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
