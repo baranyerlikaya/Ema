@@ -1538,7 +1538,12 @@ html.vt-liquid::view-transition-old(root),
 html.vt-liquid::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 html.vt-liquid .topbar,
 html.vt-liquid .sidebar,
-html.vt-liquid .tree-link.is-active { view-transition-name: none !important; }
+html.vt-liquid .tree-link.is-active,
+html[data-mode='basic'] .topbar,
+html[data-mode='basic'] .sidebar,
+html[data-mode='basic'] .tree-link.is-active { view-transition-name: none !important; }
+html[data-mode='basic']::view-transition-new(root) { animation: vt-fade var(--dur-panel) var(--smooth) both; }
+@keyframes vt-fade { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
