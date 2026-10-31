@@ -668,6 +668,97 @@
     }
   });
 
+  V.register('accframe', {
+    params: {
+      A: { label: 'A', min: 0, max: 8, value: 4, unit: 'm/s²', digits: 1 }
+    },
+    resetOnChange: true,
+    duration: 3.2,
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var g = 9.81, phi = Math.atan2(p.A, g), sc = Math.min(1, (w - 150) / Math.max(1, 0.5 * 8 * 9));
+      var base = h - 30, carW = 120, carH = Math.min(96, h - 70), x0 = 24 + 0.5 * p.A * t * t * 10 * sc;
+      D.grid(c, w, h, 32);
+      D.line(c, 8, base, w - 8, base, FAINT, 1);
+      c.strokeStyle = INK; c.lineWidth = 1.5; c.strokeRect(x0, base - carH - 8, carW, carH);
+      D.dot(c, x0 + 24, base - 4, 6, MUTED); D.dot(c, x0 + carW - 24, base - 4, 6, MUTED);
+      var px = x0 + carW / 2, py = base - carH - 8, L = carH * 0.62;
+      var bx = px - L * Math.sin(phi), by = py + L * Math.cos(phi);
+      D.line(c, px, py, px, py + L + 10, FAINT, 1, [2, 3]);
+      D.line(c, px, py, bx, by, INK, 1.5);
+      var k = 2.6;
+      D.arrow(c, bx, by, bx, by + g * k, MUTED, 1.5);
+      if (p.A > 0.05) D.arrow(c, bx, by, bx - p.A * k, by, MUTED, 1.5);
+      D.arrow(c, bx, by, bx + (px - bx) / L * Math.hypot(g, p.A) * k, by + (py - by) / L * Math.hypot(g, p.A) * k, INK, 1.5);
+      D.dot(c, bx, by, 7, INK);
+      D.arrow(c, x0 + carW + 10, base - carH / 2, x0 + carW + 10 + 6 + p.A * 4, base - carH / 2, INK, 1.75);
+      D.label(c, 'A', x0 + carW + 18 + p.A * 4, base - carH / 2 - 12);
+      D.label(c, 'mg', bx + 6, by + g * k + 4);
+      if (p.A > 0.05) D.label(c, '−mA', bx - p.A * k - 4, by - 12, 'right');
+      D.label(c, 'tilt = arctan(A/g) = ' + (phi * 180 / Math.PI).toFixed(1) + '°', 12, 16, 'left', INK);
+    }
+  });
+
+  V.register('forcep', {
+    params: {
+      F: { label: 'F', min: 0.5, max: 4, value: 2, unit: 'N', digits: 1 },
+      m: { label: 'm', min: 0.5, max: 4, value: 1, unit: 'kg', digits: 1 }
+    },
+    resetOnChange: true,
+    duration: 6.5,
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var T = 6, Ton = 3, tt = Math.min(t, T);
+      var pm = function (q) { return p.F * Math.min(q, Ton); }, x = function (q) { return q < Ton ? 0.5 * p.F / p.m * q * q : 0.5 * p.F / p.m * Ton * Ton + p.F * Ton / p.m * (q - Ton); };
+      var xmax = x(T), on = tt < Ton;
+      D.grid(c, w, h, 32);
+      var ly = 20, lx0 = 24, lx1 = w - 40, X = function (v) { return lx0 + v / xmax * (lx1 - lx0); };
+      D.line(c, 8, ly + 14, w - 8, ly + 14, FAINT, 1);
+      var bx = X(x(tt)), bs = 14 + 4 * p.m;
+      c.fillStyle = INK; c.fillRect(bx - bs / 2, ly + 14 - bs, bs, bs);
+      if (on) D.arrow(c, bx - bs / 2 - 30 - p.F * 6, ly + 14 - bs / 2, bx - bs / 2 - 2, ly + 14 - bs / 2, MUTED, 2);
+      var gx0 = 44, gx1 = w - 16, gy = h - 26, gh = h - ly - 80, Tx = function (q) { return gx0 + q / T * (gx1 - gx0); }, pmax = 4 * Ton;
+      D.line(c, gx0, gy, gx1, gy, FAINT, 1); D.line(c, gx0, gy, gx0, gy - gh, FAINT, 1);
+      D.line(c, Tx(Ton), gy, Tx(Ton), gy - gh, FAINT, 1, [2, 3]);
+      D.label(c, 'p(t)', 8, gy - gh);
+      D.label(c, 'F on', Tx(Ton / 2), gy + 12, 'center'); D.label(c, 'F off', Tx((Ton + T) / 2), gy + 12, 'center');
+      D.plot(c, pm, 0, Math.max(tt, 0.01), Tx, function (v) { return gy - v / pmax * gh; }, INK, 2);
+      D.label(c, 'slope dp/dt = ' + (on ? p.F.toFixed(1) : '0.0') + ' N', gx0 + 6, gy - gh + 2, 'left', INK);
+      D.label(c, 'p = ' + pm(tt).toFixed(2) + ' kg·m/s   v = p/m = ' + (pm(tt) / p.m).toFixed(2) + ' m/s', gx0 + 6, gy - gh + 20);
+    }
+  });
+
+  V.register('massratio', {
+    params: {
+      m1: { label: 'm₁', min: 0.5, max: 3, value: 1, unit: 'kg', digits: 1 },
+      m2: { label: 'm₂', min: 0.5, max: 3, value: 2, unit: 'kg', digits: 1 }
+    },
+    resetOnChange: true,
+    duration: 5,
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var F = 2, Tp = 0.6, sc = (w / 2 - 50) / 4.2;
+      var xs = function (m, q) { var a = F / m; return q < Tp ? 0.5 * a * q * q : 0.5 * a * Tp * Tp + a * Tp * (q - Tp); };
+      var x1 = xs(p.m1, t), x2 = xs(p.m2, t), cx = w / 2, top = h * 0.42;
+      var w1 = 16 + 6 * p.m1, w2 = 16 + 6 * p.m2;
+      D.grid(c, w, h, 32);
+      D.line(c, 8, top + 1, w - 8, top + 1, FAINT, 1);
+      D.line(c, cx, top - 50, cx, top + 6, FAINT, 1, [2, 3]);
+      var L1 = cx - 4 - x1 * sc, R2 = cx + 4 + x2 * sc;
+      if (t < Tp) {
+        c.beginPath(); var n = 10, st = (R2 - L1) / (n * 2); c.moveTo(L1, top - 10);
+        for (var j = 1; j < n * 2; j++) c.lineTo(L1 + j * st, top - 10 + (j % 2 ? -5 : 5)); c.lineTo(R2, top - 10);
+        c.strokeStyle = MUTED; c.lineWidth = 1.25; c.stroke();
+      }
+      c.fillStyle = INK; c.fillRect(L1 - w1, top - w1, w1, w1);
+      c.fillStyle = MUTED; c.fillRect(R2, top - w2, w2, w2);
+      var a1 = F / p.m1, a2 = F / p.m2;
+      D.label(c, 'push lasts ' + Tp + ' s, same force on both (third law)', 12, 16);
+      D.label(c, 'a₁/a₂ = ' + (a1 / a2).toFixed(2) + '   m₂/m₁ = ' + (p.m2 / p.m1).toFixed(2), 12, h - 40, 'left', INK);
+      D.label(c, 'v₁ = ' + (a1 * Math.min(t, Tp)).toFixed(2) + ' m/s   v₂ = ' + (a2 * Math.min(t, Tp)).toFixed(2) + ' m/s', 12, h - 20);
+    }
+  });
+
   function start() { document.querySelectorAll('.viz[data-viz]').forEach(mount); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
