@@ -219,8 +219,14 @@ button { font: inherit; color: inherit; }
   top: 0;
   z-index: 40;
   height: var(--topbar-h);
-  background: var(--white);
+  background: rgba(255, 255, 255, 1);
+  /* Blur is always on (invisible over plain white); scrolling fades the white
+     to translucent so the page shows through as frosted glass. */
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  transition: background-color var(--dur-panel) var(--smooth);
 }
+.is-scrolled .topbar { background: rgba(255, 255, 255, 0.72); }
 .topbar::after {
   content: '';
   position: absolute;
