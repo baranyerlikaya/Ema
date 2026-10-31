@@ -759,6 +759,108 @@
     }
   });
 
+  V.register('incline', {
+    params: {
+      th: { label: 'θ', min: 5, max: 70, value: 30, unit: '°', digits: 0 },
+      mu: { label: 'μ_k', min: 0, max: 0.8, value: 0.2, digits: 2 }
+    },
+    resetOnChange: true,
+    duration: function (p) { var th = p.th * Math.PI / 180, a = 9.81 * (Math.sin(th) - p.mu * Math.cos(th)); return a > 0.01 ? Math.sqrt(12 / a) + 0.8 : 3.5; },
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var th = p.th * Math.PI / 180, g = 9.81, a = g * (Math.sin(th) - p.mu * Math.cos(th));
+      var sliding = a > 0.01, Lmax = 6, pos = sliding ? Math.min(Lmax, 0.5 * a * t * t) : 0;
+      var pad = 24, bl = 24;
+      var L = Math.min((w - 2 * pad) / Math.cos(th), (h - 70) / Math.sin(th));
+      var ox = pad, oy = h - 28, tx = ox + L * Math.cos(th), ty = oy - L * Math.sin(th);
+      var sc = L / Lmax, cx1 = Math.cos(th), sn1 = Math.sin(th);
+      D.grid(c, w, h, 32);
+      D.line(c, 8, oy, w - 8, oy, FAINT, 1);
+      c.beginPath(); c.moveTo(ox, oy); c.lineTo(tx, ty); c.lineTo(tx, oy); c.closePath();
+      c.fillStyle = 'rgba(20,20,20,0.06)'; c.fill(); c.strokeStyle = INK; c.lineWidth = 1.5; c.stroke();
+      var nx = -sn1, ny = -cx1;
+      var sx = tx + (-pos * sc) * cx1, sy = ty + (-pos * sc) * (-sn1);
+      sx += nx * (bl / 2); sy += ny * (bl / 2);
+      c.save(); c.translate(sx, sy); c.rotate(-th);
+      c.fillStyle = INK; c.fillRect(-bl / 2, -bl / 2, bl, bl); c.restore();
+      var N = g * cx1, F = g * sn1, fk = p.mu * N, k = 2.0;
+      D.arrow(c, sx, sy, sx, sy + g * k, MUTED, 1.4);
+      D.arrow(c, sx, sy, sx + N * k * (-nx), sy + N * k * (-ny), MUTED, 1.4);
+      D.arrow(c, sx, sy, sx + F * k * cx1, sy + F * k * sn1, INK, 1.5);
+      if (p.mu > 0.01 && sliding) D.arrow(c, sx, sy, sx - fk * k * cx1, sy - fk * k * sn1, MUTED, 1.4, [3, 3]);
+      D.label(c, 'mg', sx + 6, sy + g * k + 2);
+      D.label(c, 'a = g(sinθ − μ cosθ) = ' + a.toFixed(2) + ' m/s²', 10, 14, 'left', INK);
+      if (!sliding) D.label(c, 'static: tan θ ≤ μ, block does not slide', 10, 30);
+      D.label(c, 'θ_c = arctan(μ) = ' + (Math.atan(p.mu) * 180 / Math.PI).toFixed(1) + '°', 10, h - 12);
+    }
+  });
+
+  V.register('drag', {
+    params: {
+      m: { label: 'm', min: 0.2, max: 5, value: 1, unit: 'kg', digits: 1 },
+      k: { label: 'k', min: 0.1, max: 4, value: 1, unit: 'kg/s', digits: 2 }
+    },
+    duration: 12,
+    init: function () { return {}; },
+    step: function () {},
+    draw: function (c, w, h, s, p, t) {
+      var g = 9.81, vt = p.m * g / p.k, tau = p.m / p.k;
+      var v = function (q) { return vt * (1 - Math.exp(-q / tau)); };
+      D.grid(c, w, h, 32);
+      var ox = 44, oy = h - 30, gx1 = w - 16, gy1 = 36;
+      D.line(c, ox, oy, gx1, oy, FAINT, 1); D.line(c, ox, oy, ox, gy1, FAINT, 1);
+      var T = 12, vmax = Math.max(vt * 1.1, 1);
+      D.line(c, ox, oy - vt / vmax * (oy - gy1), gx1, oy - vt / vmax * (oy - gy1), FAINT, 1, [3, 3]);
+      D.label(c, 'v_∞ = mg/k = ' + vt.toFixed(2) + ' m/s', ox + 6, oy - vt / vmax * (oy - gy1) - 10);
+      var X = function (q) { return ox + q / T * (gx1 - ox); }, Y = function (vv) { return oy - vv / vmax * (oy - gy1); };
+      D.plot(c, v, 0, Math.max(t, 0.01), X, Y, INK, 2);
+      D.dot(c, X(Math.min(t, T)), Y(v(Math.min(t, T))), 4, INK);
+      D.label(c, 't', gx1 - 10, oy + 14);
+      D.label(c, 'v(t)', 10, gy1 + 8);
+      D.label(c, 'τ = m/k = ' + tau.toFixed(2) + ' s   v = ' + v(Math.min(t, T)).toFixed(2) + ' m/s', 12, 16, 'left', INK);
+    }
+  });
+
+  V.register('kinemf', {
+    params: {
+      ty: { label: 'F(t)', min: 0, max: 2, value: 1, step: 1, digits: 0 }
+    },
+    duration: 7,
+    resetOnChange: true,
+    init: function () { return {}; },
+    draw: function (c, w, h, s, p, t) {
+      var m = 1, T = 7, Ft, va, xa;
+      var choice = Math.round(p.ty);
+      if (choice === 0) {
+        Ft = function (q) { return 2 * Math.cos(q); };
+        va = function (q) { return 2 * Math.sin(q); };
+        xa = function (q) { return 2 * (1 - Math.cos(q)); };
+      } else if (choice === 1) {
+        Ft = function (q) { return 2 * Math.exp(-q / 2); };
+        va = function (q) { return 4 * (1 - Math.exp(-q / 2)); };
+        xa = function (q) { return 4 * q - 8 * (1 - Math.exp(-q / 2)); };
+      } else {
+        Ft = function (q) { return q < 2 ? 2 : q < 4 ? -1 : 0; };
+        var vmap = { 0: 0 };
+        va = function (q) { return q < 2 ? 2 * q : q < 4 ? 2 * 2 - (q - 2) : 2 * 2 - 2; };
+        xa = function (q) { return q < 2 ? q * q : q < 4 ? 4 + 4 * (q - 2) - 0.5 * (q - 2) * (q - 2) : 4 + 4 * 2 - 0.5 * 2 * 2 + 2 * (q - 4); };
+      }
+      var fm = 2.2, vm = 5, xm = 14;
+      for (var q = 0; q <= T; q += 0.2) { fm = Math.max(fm, Math.abs(Ft(q)) * 1.1); vm = Math.max(vm, Math.abs(va(q)) * 1.1); xm = Math.max(xm, Math.abs(xa(q)) * 1.1); }
+      D.grid(c, w, h, 32);
+      var gx0 = 40, gx1 = w - 12, Tx = function (q) { return gx0 + q / T * (gx1 - gx0); };
+      var hh = (h - 60) / 3, labels = ['F(t) = a(t)', 'v(t)', 'x(t)'], fns = [Ft, va, xa], mx = [fm, vm, xm];
+      labels.forEach(function (lb, i) {
+        var cy = 20 + hh * (i + 0.5);
+        D.line(c, gx0, cy, gx1, cy, FAINT, 1);
+        D.label(c, lb, 8, cy - hh * 0.4);
+        D.plot(c, fns[i], 0, Math.max(t, 0.01), Tx, function (y) { return cy - y / mx[i] * hh * 0.42; }, INK, 1.75);
+        D.dot(c, Tx(Math.min(t, T)), cy - fns[i](Math.min(t, T)) / mx[i] * hh * 0.42, 3.5, INK);
+      });
+      D.label(c, ['cos', 'exp decay', 'piecewise'][choice], w - 12, 14, 'right', INK);
+    }
+  });
+
   function start() { document.querySelectorAll('.viz[data-viz]').forEach(mount); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
