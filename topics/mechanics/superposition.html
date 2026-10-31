@@ -26,45 +26,89 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Superposition of Motions</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Complicated motions built by adding simple ones: a projectile as sideways plus vertical motion, a helix as circle plus straight line, a rolling wheel as sliding plus spinning.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Big motions are made of small ones.</strong> Many motions that look complicated are just two simple motions happening at the same time. Add the positions and you get the real path. Velocities and accelerations simply add too [1]; [2].</p>
+<p><strong>Throwing a ball</strong> = sliding sideways at a steady speed <em>plus</em> going up and down like a ball tossed straight up. Each part follows its own simple rule [3]; [4].</p>
+<p><strong>A spiral staircase path (helix)</strong> = going round in a circle <em>plus</em> going steadily up [2].</p>
+<p><strong>A circle</strong> = a back-and-forth swing left–right <em>plus</em> a back-and-forth swing up–down, a quarter-swing apart [2].</p>
+<p><strong>A rolling wheel.</strong> Put a dot of paint on a bicycle tyre and roll it. The dot traces a curve of arches called a <strong>cycloid</strong> [2]. Its motion is the wheel sliding forward <em>plus</em> the dot spinning around the centre. At the bottom the two cancel, so the dot touching the ground is momentarily <em>still</em>. At the top they add up, so the dot moves twice as fast as the bike.</p>
+<p><strong>Moving floors.</strong> Walking on a moving walkway: your speed relative to the ground = your walking speed + the walkway's speed, added as arrows [5]; [4].</p>
+<p>Always add as <strong>arrows</strong> (vectors), at the <strong>same moment</strong>, never just the sizes.</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> The idea</h3>
+            <div>
+<p>If a position can be written as a sum of simpler motions, $\mathbf r(t) = \mathbf r_A(t) + \mathbf r_B(t)$, then because the derivative of a sum is the sum of the derivatives [1, §Derivatives of Common Functions],</p>
+$$\mathbf v = \mathbf v_A + \mathbf v_B, \qquad \mathbf a = \mathbf a_A + \mathbf a_B.$$
+<p>So you can study each piece on its own and add the results. The same linearity holds for integration, component by component [2, §Connecting position, velocity, and acceleration].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Independent directions</h3>
+            <div>
+<p>The most common split is into perpendicular directions. Each component of the motion obeys its own one-dimensional law [3, §5.1]. For a projectile, the motion "can be divided into horizontal and vertical components": uniform motion sideways plus uniformly accelerated motion vertically [4, Worked Example “Projectile Motion”]; [3, §5.2]:</p>
+$$\mathbf r(t) = \underbrace{(v_0\cos\theta)\,t\,\hat\imath}_{\text{uniform}} + \underbrace{\left(v_0\sin\theta\,t - \tfrac12gt^2\right)\hat\jmath}_{\text{free fall}}.$$
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Circle plus line, oscillation plus oscillation</h3>
+            <div>
+<p><strong>Spiral (helical) motion</strong> is circular motion in the $xy$-plane combined with linear motion along $z$ [2, §Spiral Motion]:</p>
+$$\mathbf r(t) = R\cos\theta(t)\,\hat\imath + R\sin\theta(t)\,\hat\jmath + z(t)\,\hat k.$$
+<p>Conversely, two perpendicular simple harmonic oscillations of equal amplitude and frequency, $x = r\cos(\omega t + \phi)$ and $y = r\sin(\omega t + \phi)$, add up to uniform circular motion [2, §Oscillatory Motion].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Rolling: translation plus rotation</h3>
+            <div>
+<p>A point on the rim of a wheel of radius $R$ rolling without slipping traces a <strong>cycloid</strong> [2, §Cycloidal Motion]:</p>
+$$\mathbf r = R(\phi - \sin\phi)\,\hat\imath + R(1 - \cos\phi)\,\hat\jmath,$$
+<p>where $\phi$ is the angle the wheel has turned. This is the sum of two simple motions: the centre slides forward, $R\phi\,\hat\imath + R\,\hat\jmath$, and the point turns around the centre, $-R\sin\phi\,\hat\imath - R\cos\phi\,\hat\jmath$.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Moving frames</h3>
+            <div>
+<p>Motion seen from a moving frame is also a superposition. If a body has velocity $\mathbf v'$ in a frame that itself moves at $\mathbf V$, its velocity relative to the ground is the sum $\mathbf v = \mathbf v' + \mathbf V$ [5, §11.3]; [4, §Galilean Invariance and Inertial Frames].</p>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Superposition of motions is pure kinematics: you can always add position vectors. Whether the pieces are physically independent depends on the forces. For a projectile they are, because gravity acts only vertically [3, §5.2].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Add the pieces as <em>vectors</em>, at the <em>same time</em> $t$. Speeds don't add as numbers: a point on a rolling wheel has speed $0$ at the bottom and $2v_{\text{centre}}$ at the top, even though the centre's speed and the rim's turning speed are equal in size (Example 2).</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="cycloid">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A wheel rolls to the right without slipping, and a point on its rim draws a cycloid. At the point, the two grey arrows are the two motions being added: the forward motion of the centre and the turning motion around the centre, both of size $\omega R$. The dark arrow is their sum, the real velocity. At the bottom the two cancel and the point is momentarily at rest; at the top they add to $2\omega R$. The label shows the speed in units of $\omega R$.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +116,30 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Superposition [1, 2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}\mathbf r = \mathbf r_A + \mathbf r_B \\ \Rightarrow\; \mathbf v = \mathbf v_A + \mathbf v_B, \quad \mathbf a = \mathbf a_A + \mathbf a_B\end{gathered}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Projectile [3, 4]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}x = v_0\cos\theta\,t \\ y = v_0\sin\theta\,t - \tfrac12gt^2\end{gathered}$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Helix [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf r = R\cos\theta\,\hat\imath + R\sin\theta\,\hat\jmath + z\,\hat k$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Cycloid [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf r = R(\phi - \sin\phi)\,\hat\imath + R(1-\cos\phi)\,\hat\jmath$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Velocities in a moving frame [4, 5]</span></figcaption>
+              <div class="formula-body">$$\mathbf v = \mathbf v' + \mathbf V$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +148,73 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>Show that a projectile launched from the origin with speed $v_0$ at angle $\theta$ is the sum of a uniform horizontal motion and a free fall, and write $\mathbf v(t)$. (From [4], Worked Example “Projectile Motion”.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>Horizontal: no force, so $x = v_0\cos\theta\,t$ and $v_x = v_0\cos\theta$, a uniform motion.</p>
+              </div></li>
+              <li><div>
+<p>Vertical: constant acceleration $-g$, so $y = v_0\sin\theta\,t - \tfrac12gt^2$ and $v_y = v_0\sin\theta - gt$, a vertical throw.</p>
+              </div></li>
+              <li><div>
+<p>Add: $\mathbf v(t) = v_0\cos\theta\,\hat\imath + (v_0\sin\theta - gt)\,\hat\jmath$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>$\mathbf a = \dot{\mathbf v} = -g\,\hat\jmath$: only the vertical piece accelerates. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A wheel of radius $R$ rolls without slipping, and a rim point follows $\mathbf r = R(\phi - \sin\phi)\,\hat\imath + R(1-\cos\phi)\,\hat\jmath$. Find the point's velocity when the wheel turns at a steady rate, $\phi = \omega t$, and its speed at the bottom and the top. (Adapted from [2], §Cycloidal Motion.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>With $\dot\phi = \omega$: $\mathbf v = R\omega(1 - \cos\phi)\,\hat\imath + R\omega\sin\phi\,\hat\jmath$.</p>
+              </div></li>
+              <li><div>
+<p>Split: the centre moves at $R\omega\,\hat\imath$; the turning part is $-R\omega\cos\phi\,\hat\imath + R\omega\sin\phi\,\hat\jmath$. Their sum is the result above.</p>
+              </div></li>
+              <li><div>
+<p>Bottom ($\phi = 0$): $\mathbf v = 0$, the contact point is momentarily at rest. Top ($\phi = \pi$): $\mathbf v = 2R\omega\,\hat\imath$, twice the speed of the centre.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Speed: $|\mathbf v| = R\omega\sqrt{(1-\cos\phi)^2 + \sin^2\phi} = R\omega\sqrt{2 - 2\cos\phi} = 2R\omega|\sin(\phi/2)|$, which is $0$ at $\phi = 0$ and $2R\omega$ at $\phi = \pi$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle moves on the helix $\mathbf r = R\cos(\omega t)\,\hat\imath + R\sin(\omega t)\,\hat\jmath + ut\,\hat k$. Find its speed and acceleration. (Adapted from [2], §Spiral Motion.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$\mathbf v = -R\omega\sin(\omega t)\,\hat\imath + R\omega\cos(\omega t)\,\hat\jmath + u\,\hat k$: circular velocity plus a constant upward velocity.</p>
+              </div></li>
+              <li><div>
+<p>Speed: $v = \sqrt{R^2\omega^2 + u^2}$, constant.</p>
+              </div></li>
+              <li><div>
+<p>$\mathbf a = -R\omega^2\left(\cos\omega t\,\hat\imath + \sin\omega t\,\hat\jmath\right)$: only the circular part accelerates, toward the axis, with size $R\omega^2$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Setting $u = 0$ gives uniform circular motion ($v = R\omega$); setting $\omega = 0$ gives uniform straight-line motion ($v = u$). ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +222,11 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 1: Mathematical Tools</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Derivatives of Common Functions (sum rule). <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/mathematical-tools/main.pdf">PDF</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 2: Kinematics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Connecting position, velocity, and acceleration, §Spiral Motion, §Oscillatory Motion, §Cycloidal Motion. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/kinematics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 5 "Two Dimensional Kinematics", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §5.1, §5.2 Projectile Motion. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter5.pdf">PDF</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Galilean Invariance and Inertial Frames; Worked Example “Projectile Motion”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 11 "Reference Frames", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §11.3 Law of Addition of Velocities. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter11.pdf">PDF</a></span></li>
           </ol>
         </section>
 
