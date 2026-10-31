@@ -69,10 +69,16 @@
 
   --ease: cubic-bezier(0.32, 0.72, 0, 1);        /* same soft curve as --smooth, used site-wide */
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* for things leaving */
-  --smooth: cubic-bezier(0.32, 0.72, 0, 1);       /* sidebar and drawer: quick start, soft landing */
-  --t-fast: 280ms;
-  --t-med: 420ms;
-  --t-slow: 600ms;
+  --smooth: cubic-bezier(0.32, 0.72, 0, 1);       /* entering: quick start, soft landing */
+  --ease-leave: cubic-bezier(0.4, 0, 1, 1);        /* leaving: gathers speed on the way out */
+  --ease-move: cubic-bezier(0.65, 0, 0.35, 1);     /* on-screen change */
+  --dur-hover: 240ms;      /* colour/state feedback */
+  --dur-small: 360ms;      /* small moves, < 100px */
+  --dur-panel: 480ms;      /* panels, drawer, sections */
+  --dur-hero: 900ms;       /* hero and first-view entrances only */
+  --t-fast: 240ms;
+  --t-med: 360ms;
+  --t-slow: 480ms;
   --t-drawer: 420ms;
   --t-drawer-out: 280ms;
 }
@@ -214,11 +220,20 @@ button { font: inherit; color: inherit; }
   z-index: 40;
   height: var(--topbar-h);
   background: var(--white);
-  box-shadow: 0 1px 0 transparent;
-  transition: box-shadow var(--t-med) var(--ease);
 }
-.is-scrolled .topbar,
-.layout-doc .topbar { box-shadow: 0 1px 0 var(--line); }
+.topbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--line);
+  opacity: 0;
+  transition: opacity var(--dur-small) var(--smooth);
+}
+.is-scrolled .topbar::after,
+.layout-doc .topbar::after { opacity: 1; }
 .topbar-inner {
   display: flex;
   align-items: center;
@@ -555,15 +570,15 @@ a.tree-link:active { background: rgba(0, 0, 0, 0.08); }
   -webkit-backdrop-filter: blur(28px) saturate(160%);
   backdrop-filter: blur(28px) saturate(160%);
   border-right: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
   transform: translateX(-104%);
   visibility: hidden;
-  transition: transform 380ms var(--smooth), visibility 0s linear 380ms;
+  transition: transform 320ms var(--ease-leave), visibility 0s linear 320ms;
 }
 .drawer-open .sidebar {
   transform: none;
   visibility: visible;
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
-  transition: transform 560ms var(--smooth), visibility 0s, box-shadow 560ms var(--smooth);
+  transition: transform var(--dur-panel) var(--smooth), visibility 0s;
 }
 .drawer-overlay {
   position: fixed;
@@ -574,12 +589,12 @@ a.tree-link:active { background: rgba(0, 0, 0, 0.08); }
   backdrop-filter: blur(6px);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 380ms var(--smooth), visibility 0s linear 380ms;
+  transition: opacity 320ms var(--ease-leave), visibility 0s linear 320ms;
 }
 .drawer-open .drawer-overlay {
   opacity: 1;
   visibility: visible;
-  transition: opacity 560ms var(--smooth), visibility 0s;
+  transition: opacity var(--dur-panel) var(--smooth), visibility 0s;
 }
 .drawer-open { overflow: hidden; }
 
@@ -1273,7 +1288,11 @@ a.pn-card:hover { background: var(--grey-2); }
 
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
-  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ---------- Print ---------- */
@@ -1293,13 +1312,13 @@ a.pn-card:hover { background: var(--grey-2); }
 /* Scroll reveal: added by app.js, so content is visible without JS */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(16px);
   transition:
-    opacity 900ms var(--smooth) var(--reveal-delay, 0ms),
-    transform 1100ms var(--smooth) var(--reveal-delay, 0ms);
+    opacity 700ms var(--smooth) var(--reveal-delay, 0ms),
+    transform var(--dur-hero) var(--smooth) var(--reveal-delay, 0ms);
 }
 .reveal.is-in { opacity: 1; transform: none; }
-.preview-frame.reveal { transform: translateY(40px) scale(0.97); }
+.preview-frame.reveal { transform: translateY(32px); }
 .preview-frame.reveal.is-in { transform: none; }
 
 /* Hero entrance: words rise out of a blur, then the rest follows */
@@ -1311,15 +1330,16 @@ a.pn-card:hover { background: var(--grey-2); }
 }
 .hero-word {
   display: inline-block;
-  animation: word-in 1100ms var(--smooth) both;
+  animation: word-in var(--dur-hero) var(--smooth) both;
+  will-change: transform, opacity, filter;
 }
 .hero-anim .hero-title::before,
-.hero-anim .hero-title::after { animation: fade-rise 1100ms var(--smooth) both; }
+.hero-anim .hero-title::after { animation: fade-rise var(--dur-hero) var(--smooth) both; }
 .hero-anim .hero-title::after { animation-delay: var(--hero-after); }
-.hero-anim .hero-cite { animation: fade-rise 1000ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 100ms); }
-.hero-anim .hero-intro { animation: fade-rise 1000ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 200ms); }
-.hero-anim .hero-actions { animation: fade-rise 1000ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 300ms); }
-.hero-anim .hero-field { animation: field-in 2400ms var(--smooth) both; }
+.hero-anim .hero-cite { animation: fade-rise 800ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 100ms); }
+.hero-anim .hero-intro { animation: fade-rise 800ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 200ms); }
+.hero-anim .hero-actions { animation: fade-rise 800ms var(--smooth) both; animation-delay: calc(var(--hero-after) + 300ms); }
+.hero-anim .hero-field { animation: field-in 1600ms var(--smooth) both; }
 @keyframes field-in { from { opacity: 0; } }
 
 /* Top bar links: a grey underline grows from the left, leaves to the right */
@@ -1350,10 +1370,11 @@ a.pn-card:hover { background: var(--grey-2); }
   position: absolute;
   left: 0;
   bottom: -2px;
+  width: 1px;
   height: 2px;
-  border-radius: 2px;
   background: var(--grey-4);
-  transition: transform 640ms var(--smooth), width 640ms var(--smooth);
+  transform-origin: left;
+  transition: transform var(--dur-panel) var(--ease-move);
 }
 .tabs-indicator.is-instant { transition: none; }
 
@@ -1372,10 +1393,11 @@ a.pn-next:hover .pn-label::after { transform: translateX(4px); }
   top: 0;
   left: 0;
   width: 2px;
-  border-radius: 2px;
+  height: 1px;
   background: var(--grey-4);
   opacity: 0;
-  transition: transform 640ms var(--smooth), height 640ms var(--smooth), opacity var(--t-med) var(--smooth);
+  transform-origin: top;
+  transition: transform var(--dur-panel) var(--ease-move), opacity var(--t-med) var(--smooth);
 }
 .toc-marker.is-on { opacity: 1; }
 .toc a { transition: color var(--t-med) var(--smooth); }
@@ -1385,3 +1407,30 @@ a.pn-next:hover .pn-label::after { transform: translateX(4px); }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Touch: no browser tap flash or double-tap delay; a quick pressed state instead */
+a, button, .tab, .tree-toggle, .tree-link { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+@media (hover: none) {
+  .btn:active, .pn-card:active, .card-list a:active { opacity: 0.7; transition-duration: 60ms; }
+}
+
+/* Pause control for the hero animation (WCAG 2.2.2: moving content can be paused) */
+.field-toggle {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--smooth), color var(--dur-hover) var(--smooth);
+}
+.field-toggle:hover { background: rgba(0, 0, 0, 0.09); color: var(--ink); }
+.field-toggle svg { width: 12px; height: 12px; }

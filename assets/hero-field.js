@@ -133,7 +133,32 @@
   // ---------- loop ----------
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var last = null, running = false, visible = true;
+  var last = null, running = false, visible = true, paused = false;
+  try { paused = localStorage.getItem('physref.field-paused') === '1'; } catch (e) { /* storage unavailable */ }
+
+  // Pause / play button (WCAG 2.2.2). Not shown when motion is reduced, since nothing moves then.
+  var PAUSE = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2v8M8.5 2v8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
+  var PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.2v7.6L10 6z" fill="currentColor"/></svg>';
+  var toggle = null;
+  if (!reduce) {
+    toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'field-toggle';
+    hero.appendChild(toggle);
+    toggle.addEventListener('click', function () {
+      paused = !paused;
+      try { localStorage.setItem('physref.field-paused', paused ? '1' : '0'); } catch (e) { /* storage unavailable */ }
+      syncToggle();
+      update();
+    });
+  }
+  function syncToggle() {
+    if (!toggle) return;
+    toggle.innerHTML = paused ? PLAY : PAUSE;
+    toggle.setAttribute('aria-label', paused ? 'Play background animation' : 'Pause background animation');
+    toggle.setAttribute('aria-pressed', String(paused));
+  }
+  syncToggle();
 
   function tick(now) {
     if (!running) return;
@@ -149,7 +174,7 @@
   }
 
   function update() {
-    var should = visible && !document.hidden && !reduce;
+    var should = visible && !document.hidden && !reduce && !paused;
     if (should && !running) { running = true; last = null; requestAnimationFrame(tick); }
     if (!should) running = false;
   }
