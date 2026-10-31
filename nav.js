@@ -35,7 +35,7 @@ window.PHYSREF_NAV = [
       { id: 'inertial-mass',       title: 'Inertial Mass, Equation of Motion under Constant Force', file: 'topics/mechanics/inertial-mass.html',     status: 'ready' },
       { id: 'inclined-plane',      title: 'Inclined Plane, Tension',                              file: 'topics/mechanics/inclined-plane.html',      status: 'ready' },
       { id: 'friction-drag',       title: 'Friction, Drag, Free Fall, Terminal Speed',            file: 'topics/mechanics/friction-drag.html',       status: 'ready' },
-      { id: 'kinematics-from-force', title: 'Full Kinematics from F(t): a(t), v(t), x(t), Power', file: 'topics/mechanics/kinematics-from-force.html', status: 'soon' }
+      { id: 'kinematics-from-force', title: 'Full Kinematics from F(t): a(t), v(t), x(t), Power', file: 'topics/mechanics/kinematics-from-force.html', status: 'ready' }
     ]
   },
   {

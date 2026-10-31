@@ -26,45 +26,105 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Full Kinematics from F(t): a(t), v(t), x(t), Power</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">Starting from a time-dependent force F(t), find the acceleration, velocity and position by integrating twice, and compute the power delivered by the force.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>If you know the force at every moment, you know the whole motion.</strong> That's the whole story. Just divide by mass, then "add things up" (integrate) twice [1]; [2].</p>
+<p><strong>The three-step recipe:</strong></p>
+<ol>
+<li><strong>Acceleration:</strong> $a(t) = F(t)/m$. Divide out the mass.</li>
+<li><strong>Velocity:</strong> add up acceleration over time (integrate). Start with $v_0$: $v(t) = v_0 + \int_0^t a\,dt'$. Graphically, it's the area under the acceleration curve [2].</li>
+<li><strong>Position:</strong> add up velocity. Start with $x_0$: $x(t) = x_0 + \int_0^t v\,dt'$.</li>
+</ol>
+<p>Each step needs one starting fact. That's why second-order motion needs <em>two</em>: initial position <em>and</em> initial velocity [1].</p>
+<p><strong>Impulse = force × time.</strong> A short, hard kick and a long, gentle push can give the same change in momentum: $J = \int F\,dt = \Delta p$. Soccer, airbags, catching a ball: it's all impulse [1]; [3].</p>
+<p><strong>Power = force × velocity.</strong> How fast energy flows into the thing you're pushing: $P = F\,v$ (or more generally, $P = \mathbf F\cdot\mathbf v$) [1].</p>
+<ul>
+<li>Push a cart twice as fast with the same force: twice the power.</li>
+<li>Climb stairs faster: more power, same energy.</li>
+</ul>
+<p>Units: 1 watt = 1 joule per second. Your body sustains about 100 W; a sprinter can briefly produce over 1 kW. A 200 hp car engine is 147 kW, about 1500 of you [1].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> From force to acceleration</h3>
+            <div>
+<p>For a particle of constant mass, Newton's second law reads [1, §Newton's Axioms of Motion]</p>
+$$\mathbf a(t) = \frac{\mathbf F(t)}{m}.$$
+<p>If $\mathbf F$ depends only on time (not position or velocity), $\mathbf a$ is known as an explicit function of time, so velocity and position follow by direct integration.</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> From a(t) to v(t) to x(t)</h3>
+            <div>
+<p>Integrate the acceleration once to get velocity, and the velocity to get position, using the initial conditions $v(0) = v_0$ and $x(0) = x_0$ [1, §Equations of Motion]; [2, §4.6]:</p>
+$$\begin{gathered}v(t) = v_0 + \int_0^t a(t')\,dt' \\ x(t) = x_0 + \int_0^t v(t')\,dt'.\end{gathered}$$
+<p>Each integration adds a constant of integration, fixed by the initial condition. In 2D or 3D, do this component by component.</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Impulse and the final momentum</h3>
+            <div>
+<p>Integrating $m\dot v = F(t)$ over an interval gives the <strong>impulse</strong>, equal to the change in momentum [1, §Impulse and Power]; [3, §10.2]:</p>
+$$\mathbf J = \int_{t_1}^{t_2}\mathbf F(t)\,dt = \mathbf p(t_2) - \mathbf p(t_1).$$
+<p>Geometrically, $|\mathbf J|$ is the area under the $|F|$-vs-$t$ graph. The average force over the interval is $\mathbf F_{\text{avg}} = \mathbf J/\Delta t$ [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Power</h3>
+            <div>
+<p>The <strong>instantaneous power</strong> delivered by the force to the particle is the rate at which it does work [1, §Impulse and Power]:</p>
+$$P(t) = \frac{dW}{dt} = \mathbf F\cdot\mathbf v.$$
+<p>$P &gt; 0$ when the force and velocity point the same way (energy flows into the particle), and $P &lt; 0$ when they oppose each other (energy leaves). Over an interval, the total work is $W = \int P\,dt$ [1].</p>
+<p>Units: joule per second = <strong>watt</strong> (W). The horsepower comes from history: $1\ \text{hp} \approx 735\ \text{W}$ [1, Worked Example “Horsepower”].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> Worked recipe</h3>
+            <div>
+<p>Given $F(t)$ along a line and the initial state, the full motion is [2, §4.6]:</p>
+<ol>
+<li>$a(t) = F(t)/m$;</li>
+<li>$v(t) = v_0 + \int_0^t a\,dt'$;</li>
+<li>$x(t) = x_0 + \int_0^t v\,dt'$;</li>
+<li>Power: $P(t) = F(t)\,v(t)$.</li>
+</ol>
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>If the force depends on position or velocity rather than time, this direct integration fails and you have to solve a differential equation. The time-dependent case is special because $a(t)$ is given explicitly [1, §Equations of Motion].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Don't integrate $F(t)$ to get $v(t)$ directly; divide by $m$ first. The impulse $\int F\,dt$ gives $\Delta p = m\Delta v$, not $\Delta v$ [1]; [3, §10.2].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="kinemf">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A force $F(t)$ is applied to a 1 kg particle starting from rest. The three graphs show the force (which equals $a$ when $m = 1$), the velocity $v(t)$ (the integral of $a$) and the position $x(t)$ (the integral of $v$). Use the slider to switch between three forces: a cosine $F = 2\cos t$ (periodic push–pull), an exponentially decaying $F = 2e^{-t/2}$ (a diminishing push), and a piecewise constant force (push, then opposite push, then nothing). Each graph is literally the running area of the one above.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +132,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Second law [1]</span></figcaption>
+              <div class="formula-body">$$a(t) = \frac{F(t)}{m}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Velocity from acceleration [1, 2]</span></figcaption>
+              <div class="formula-body">$$v(t) = v_0 + \int_0^t a(t')\,dt'$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Position from velocity [1, 2]</span></figcaption>
+              <div class="formula-body">$$x(t) = x_0 + \int_0^t v(t')\,dt'$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Impulse [1, 3]</span></figcaption>
+              <div class="formula-body">$$J = \int_{t_1}^{t_2} F(t)\,dt = \Delta p$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Average force [1]</span></figcaption>
+              <div class="formula-body">$$F_{\text{avg}} = \frac{J}{\Delta t} = \frac{\Delta p}{\Delta t}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Instantaneous power [1]</span></figcaption>
+              <div class="formula-body">$$P = \mathbf F\cdot\mathbf v$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Work from power [1]</span></figcaption>
+              <div class="formula-body">$$W = \int_{t_1}^{t_2}P\,dt$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +174,103 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A particle of mass $m$ at rest at $x = 0$ is pushed by $F(t) = k\cos(\omega t)$ along a frictionless $x$-axis. Find $a(t)$, $v(t)$, $x(t)$ and the power delivered at time $t$. (Applying the general recipe from [1], §Equations of Motion.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>$a(t) = F(t)/m = (k/m)\cos(\omega t)$.</p>
+              </div></li>
+              <li><div>
+<p>$v(t) = \int_0^t a\,dt' = \dfrac{k}{m\omega}\sin(\omega t)$, using $v(0) = 0$.</p>
+              </div></li>
+              <li><div>
+<p>$x(t) = \int_0^t v\,dt' = \dfrac{k}{m\omega^2}\left[1 - \cos(\omega t)\right]$, using $x(0) = 0$.</p>
+              </div></li>
+              <li><div>
+<p>Power: $P(t) = F\,v = \dfrac{k^2}{m\omega}\sin(\omega t)\cos(\omega t) = \dfrac{k^2}{2m\omega}\sin(2\omega t)$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>Differentiate $v(t)$ once to recover $a(t)$ ✓, and twice to recover $(k/m)\cos\omega t = F/m$ ✓. The average power over a period is zero: the force gives energy back and forth. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Same setup with $F(t) = a + bt$. Find $a(t)$, $v(t)$, $x(t)$ and the power at time $t$. (Applying the general recipe from [1], §Equations of Motion.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>$a_{\text{acc}}(t) = (a + bt)/m$.</p>
+              </div></li>
+              <li><div>
+<p>$v(t) = \dfrac{at}{m} + \dfrac{bt^2}{2m}$.</p>
+              </div></li>
+              <li><div>
+<p>$x(t) = \dfrac{at^2}{2m} + \dfrac{bt^3}{6m}$.</p>
+              </div></li>
+              <li><div>
+<p>$P(t) = F\,v = (a + bt)\left(\dfrac{at}{m} + \dfrac{bt^2}{2m}\right)$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Setting $b = 0$: $F = a$ constant, $v = at/m$, $x = at^2/(2m)$, matching the constant-force result [1, Worked Example “Motion of a Particle under a Constant Force”]. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A soccer ball of mass $0.5\ \text{kg}$ is kicked with a constant force of $200\ \text{N}$ for $0.1\ \text{s}$. Find the impulse and the ball's final speed. (From [1], Worked Example “Impulse — 1”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Impulse: $J = F\Delta t = 200 \times 0.1 = 20\ \text{N·s}$.</p>
+              </div></li>
+              <li><div>
+<p>Change in momentum: $\Delta p = J = 20\ \text{kg·m/s}$.</p>
+              </div></li>
+              <li><div>
+<p>Starting from rest: $v = \Delta p / m = 20 / 0.5 = 40\ \text{m/s}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Check with $F = ma$: $a = F/m = 400\ \text{m/s}^2$, so after $0.1\ \text{s}$, $v = at = 40\ \text{m/s}$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A $70\ \text{kg}$ person climbs stairs of height $20\ \text{m}$ in $10\ \text{s}$. Find the average power output. Compare with a 200 hp car. (From [1], Worked Examples “Power” and “Horsepower”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Work against gravity: $W = mgh = 70 \times 9.8 \times 20 \approx 13.7\ \text{kJ}$.</p>
+              </div></li>
+              <li><div>
+<p>Average power: $P = W/\Delta t = 13.7\ \text{kJ}/10\ \text{s} = 1.37\ \text{kW}$, or about $1.9\ \text{hp}$.</p>
+              </div></li>
+              <li><div>
+<p>200 hp $= 200 \times 735\ \text{W} \approx 147\ \text{kW}$: about 100 times the person's power.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The climb takes only 10 s and 13.7 kJ. A car engine at full throttle delivers that same energy in less than 0.1 s ✓.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +278,9 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Newton's Axioms of Motion, §Equations of Motion, §Impulse and Power; Worked Examples “Motion of a Particle under a Constant Force”, “Impulse — 1”, “Impulse — 2”, “Power” and “Horsepower”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 4 "One Dimensional Kinematics", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §4.6 One Dimensional Kinematics and Integration. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter4.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 10 "Momentum, System of Particles, and Conservation of Momentum", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §10.2 Momentum and Average Impulse. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter10.pdf">PDF</a></span></li>
           </ol>
         </section>
 
