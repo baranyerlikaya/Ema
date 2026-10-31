@@ -652,9 +652,9 @@ a.tree-link:active { background: rgba(0, 0, 0, 0.08); }
 .hero-cite::before { content: '\2014\00a0'; }
 .hero-intro {
   max-width: 560px;
-  margin-top: 20px;
+  margin: 24px 0 0;
   color: var(--ink-2);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.375;
 }
 .hero-actions {
