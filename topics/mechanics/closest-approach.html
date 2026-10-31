@@ -26,81 +26,89 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Two Particles: Closest Approach</h1>
-          <p class="doc-lede">How close two interacting particles get: reduce the pair to one particle of reduced mass, then find where the radial velocity vanishes in the effective potential.</p>
+          <p class="doc-lede">Two particles moving in straight lines at constant velocity: when are they closest, how close do they get, and do they collide? Solved with the separation vector and one derivative.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Two boats on a lake</strong>, each going straight at a steady speed. Will they crash? If not, how close will they get, and when?</p>
+<p><strong>Step 1: look at the gap.</strong> Draw an arrow from boat 1 to boat 2. That's the <strong>separation vector</strong> $\mathbf R = \mathbf r_2 - \mathbf r_1$. Its length is how far apart they are [1].</p>
+<p><strong>Step 2: pretend you're on boat 1.</strong> From there, boat 2 seems to move with the <strong>relative velocity</strong> $\mathbf V = \mathbf v_2 - \mathbf v_1$, in a straight line: $\mathbf R(t) = \mathbf R_0 + \mathbf V t$ [3].</p>
+<p><strong>Step 3: find the closest moment.</strong> The distance shrinks, reaches a smallest value, then grows again. At the smallest point it stops shrinking, so its derivative is zero. It's easier to use the distance <em>squared</em>; that gives [2]</p>
+$$t_c = -\frac{\mathbf R_0\cdot\mathbf V}{|\mathbf V|^2}, \qquad d_{\min} = |\mathbf R_0 + \mathbf V t_c|.$$
+<p>At that moment the gap arrow is exactly <strong>perpendicular</strong> to the relative velocity, like the shortest line from you to a passing road [2].</p>
+<p><strong>Crash or not?</strong> They collide only if the gap becomes exactly zero: same $x$ <em>and</em> same $y$ at the <em>same time</em>. Paths crossing isn't enough; they have to be there at the same moment [1].</p>
+<p>If $t_c$ is negative, the closest moment was in the past and they are already moving apart.</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> Reduction to a one-body problem</h3>
+            <h3><span class="num"></span> The separation vector</h3>
             <div>
-              <p>Take two particles of masses $m_1$ and $m_2$ that interact only with each other, through a potential $U(r)$ that depends only on their separation $r = |\vec r_2 - \vec r_1|$. With no external force, the centre of mass $\vec R = (m_1\vec r_1 + m_2\vec r_2)/M$, where $M = m_1 + m_2$, moves with constant velocity and plays no further role.</p>
-              <p>Everything interesting is in the relative coordinate $\vec r = \vec r_2 - \vec r_1$. Rewriting the kinetic energy in terms of $\vec R$ and $\vec r$ splits it into a centre-of-mass part and a relative part:</p>
-              $$T = \tfrac12 M\dot{\vec R}^{\,2} + \tfrac12 \mu\,\dot{\vec r}^{\,2}, \qquad \mu = \frac{m_1 m_2}{m_1 + m_2}.$$
-              <p>So the relative motion is that of a single fictitious particle of mass $\mu$, the <strong>reduced mass</strong>, moving in the fixed potential $U(r)$. The separation of the two real particles is exactly the distance of this fictitious particle from the origin, so the closest approach of the pair is the minimum of $r$ for the one-body problem [2, §3.1.1].</p>
+<p>For two particles with positions $\mathbf r_1(t)$ and $\mathbf r_2(t)$, define the <strong>separation (relative position) vector</strong> [1, Worked Example “Collision of Two Particles”]</p>
+$$\mathbf R(t) = \mathbf r_2(t) - \mathbf r_1(t).$$
+<p>It points from particle 1 to particle 2, and its length $|\mathbf R(t)|$ is the distance between them at time $t$. Its derivative is the <strong>relative velocity</strong> $\mathbf V = \dot{\mathbf R} = \mathbf v_2 - \mathbf v_1$: the velocity of particle 2 as seen by an observer riding on particle 1 [3, §11.3].</p>
             </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> Effective potential and the centrifugal barrier</h3>
+            <h3><span class="num"></span> Collision</h3>
             <div>
-              <p>Because the force is central, the relative angular momentum $\vec L = \mu\,\vec r \times \dot{\vec r}$ is conserved. The motion therefore stays in a fixed plane, and in polar coordinates $(r, \varphi)$ in that plane $L = \mu r^2 \dot\varphi$ [2, §3.1.2].</p>
-              <p>Using $\dot\varphi = L/(\mu r^2)$, the energy of the relative motion becomes a function of $r$ and $\dot r$ only:</p>
-              $$E = \tfrac12 \mu \dot r^2 + \underbrace{U(r) + \frac{L^2}{2\mu r^2}}_{U_{\text{eff}}(r)}.$$
-              <p>The radial motion is then one-dimensional motion in the <strong>effective potential</strong> $U_{\text{eff}}$. The extra term $L^2/(2\mu r^2)$ is the <strong>centrifugal barrier</strong>: it grows without bound as $r \to 0$, so a particle with $L \neq 0$ cannot reach $r = 0$ unless $U$ is very strongly attractive there [2, §3.1.2, §3.2].</p>
+<p>The particles collide when they are at the same place <em>at the same time</em>, i.e. $\mathbf R(t) = \mathbf 0$. Every component must vanish at one common instant [1]:</p>
+$$\begin{gathered}x_2(t) - x_1(t) = 0, \\ y_2(t) - y_1(t) = 0 \quad (\text{and the same for } z).\end{gathered}$$
+<p>Equal $x$ at one time and equal $y$ at a different time is <em>not</em> a collision: the paths cross, but the particles pass the crossing point at different times [1, Worked Example “Displacement, Average Velocity, Instantaneous Velocity, and Collision”].</p>
             </div>
           </section>
 
           <section class="subsection" id="theory-3">
-            <h3><span class="num"></span> Turning points</h3>
+            <h3><span class="num"></span> Uniform motion: the relative motion is a straight line</h3>
             <div>
-              <p>Since $\tfrac12\mu\dot r^2 \ge 0$, the motion is only possible where $E \ge U_{\text{eff}}(r)$. Solving the energy equation for the radial speed gives</p>
-              $$\dot r = \pm\sqrt{\tfrac{2}{\mu}\bigl(E - U_{\text{eff}}(r)\bigr)}.$$
-              <p>An incoming particle has $\dot r &lt; 0$. It keeps approaching until it reaches the smallest $r$ with $E = U_{\text{eff}}(r)$. There $\dot r = 0$, the radial motion reverses, and $r$ starts to grow again. This radius is a <strong>turning point</strong>, and for a scattering (unbound) motion it is the distance of closest approach $r_{\min}$ [2, §3.2]; [1, §20.2].</p>
-              <p>At $r_{\min}$ the velocity is not zero in general; only its radial component vanishes. The velocity is perpendicular to $\vec r$ there, so $L = \mu v_{\min} r_{\min}$ [1, §20.2].</p>
+<p>If both particles move with constant velocities, $\mathbf r_i(t) = \mathbf r_{i0} + \mathbf v_i t$, then</p>
+$$\begin{gathered}\mathbf R(t) = \mathbf R_0 + \mathbf V t, \\ \mathbf R_0 = \mathbf r_{20} - \mathbf r_{10}, \qquad \mathbf V = \mathbf v_2 - \mathbf v_1.\end{gathered}$$
+<p>Seen from particle 1, particle 2 moves along a straight line with constant velocity $\mathbf V$. So the closest approach is the point of that line nearest to particle 1 [3, §11.3].</p>
             </div>
           </section>
 
           <section class="subsection" id="theory-4">
-            <h3><span class="num"></span> $r_{\min}$ from the initial conditions</h3>
+            <h3><span class="num"></span> Finding the moment of closest approach</h3>
             <div>
-              <p>Suppose the particles start far apart ($r \to \infty$, where $U \to 0$) with relative speed $v_0$, and the line of the initial relative velocity misses the other particle by a perpendicular distance $b$, the <strong>impact parameter</strong>. Then both conserved quantities are fixed by $v_0$ and $b$ [2, §3.5]:</p>
-              $$E = \tfrac12 \mu v_0^2, \qquad L = \mu v_0 b.$$
-              <p>Substituting these into the turning-point condition $E = U_{\text{eff}}(r_{\min})$ gives</p>
-              $$\tfrac12 \mu v_0^2 = U(r_{\min}) + \frac{\tfrac12 \mu v_0^2\, b^2}{r_{\min}^2}, \qquad\text{i.e.}\qquad 1 - \frac{b^2}{r_{\min}^2} = \frac{U(r_{\min})}{\tfrac12\mu v_0^2}.$$
-              <p>Solve this for $r_{\min}$ and take the largest root, which is the first one the incoming particle meets. For $U = 0$ it gives $r_{\min} = b$: a free particle passes at exactly the impact parameter. A repulsive $U$ pushes $r_{\min}$ above $b$, and an attractive $U$ pulls it below.</p>
-              <p>When one mass is much larger, $\mu$ is close to the lighter mass and the heavy particle hardly moves. This is the fixed-target case treated in [1, §20.2–20.4].</p>
+<p>Minimizing the distance is easier through its square, which has its minimum at the same time [2, §Maxima and Minima of Functions]:</p>
+$$\begin{aligned}D^2(t) &= |\mathbf R|^2 = \mathbf R\cdot\mathbf R \\ &= |\mathbf R_0|^2 + 2(\mathbf R_0\cdot\mathbf V)\,t + |\mathbf V|^2 t^2.\end{aligned}$$
+<p>This is a quadratic in $t$. Set its derivative to zero, $\frac{d}{dt}D^2 = 2\,\mathbf R\cdot\mathbf V = 0$:</p>
+$$t_c = -\frac{\mathbf R_0\cdot\mathbf V}{|\mathbf V|^2}, \qquad d_{\min} = |\mathbf R_0 + \mathbf V t_c|.$$
+<p>Since $|\mathbf V|^2 &gt; 0$, this stationary point is a minimum ($\frac{d^2}{dt^2}D^2 = 2|\mathbf V|^2 &gt; 0$) [2]. Geometrically, $\mathbf R\cdot\mathbf V = 0$ says that at closest approach <strong>the separation is perpendicular to the relative velocity</strong> [2, §Dot Product].</p>
+<p>Equivalently, $d_{\min}$ is the distance from a point to a line, which the cross product gives directly [2, §Cross Product]:</p>
+$$d_{\min} = \frac{|\mathbf R_0 \times \mathbf V|}{|\mathbf V|}.$$
+<p>The particles collide exactly when $d_{\min} = 0$.</p>
             </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
             <div>
-              <p>$v_0$ is the <em>relative</em> speed $|\dot{\vec r}_2 - \dot{\vec r}_1|$ at large separation, and $E$ is the energy of the relative motion only. The centre-of-mass kinetic energy $\tfrac12 M \dot{\vec R}^{\,2}$ is conserved separately and cannot be spent on getting closer.</p>
+<p>If $t_c$ comes out negative, the closest approach happened before $t = 0$: the particles are already moving apart. If only $t \ge 0$ matters, the closest distance is the initial one, $|\mathbf R_0|$. If $\mathbf V = \mathbf 0$, the particles move together and their distance never changes.</p>
             </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
             <div>
-              <p>Don't set the whole velocity to zero at closest approach. Only $\dot r = 0$. Unless $b = 0$, the particles still move sideways at $r_{\min}$, and that tangential motion carries the angular momentum $L$.</p>
+<p>Minimize the <em>distance between the particles</em>, $|\mathbf r_2 - \mathbf r_1|$, not the distance of each particle from the origin, and use the same $t$ for both. Finding where the two <em>paths</em> cross does not tell you where the <em>particles</em> are closest [1].</p>
             </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="approach">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">Particle 1 (dark) and particle 2 (grey) move along straight lines (dashed) at constant velocities. The thin dashed segment is the separation $\mathbf R(t)$, and the graph at the bottom draws its length $|\mathbf R(t)|$. The graph reaches its minimum at $t_c = -\mathbf R_0\cdot\mathbf V/|\mathbf V|^2$ (the vertical dashed line). At that moment the solid segment marks the closest approach $d_{\min}$, perpendicular to the relative velocity. Change the direction of $\mathbf v_2$ with the slider to make the particles pass closer, collide, or move apart.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -108,39 +116,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span>Reduced mass [2]</span></figcaption>
-              <div class="formula-body">$$\mu = \frac{m_1 m_2}{m_1 + m_2}$$</div>
+              <figcaption class="formula-label"><span>Separation and relative velocity [1, 3]</span></figcaption>
+              <div class="formula-body">$$\mathbf R = \mathbf r_2 - \mathbf r_1, \qquad \mathbf V = \mathbf v_2 - \mathbf v_1$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span>Effective potential [2]</span></figcaption>
-              <div class="formula-body">$$U_{\text{eff}}(r) = U(r) + \frac{L^2}{2\mu r^2}$$</div>
+              <figcaption class="formula-label"><span>Uniform motion [3]</span></figcaption>
+              <div class="formula-body">$$\mathbf R(t) = \mathbf R_0 + \mathbf V t$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span>Radial energy equation [2]</span></figcaption>
-              <div class="formula-body">$$E = \tfrac12 \mu \dot r^2 + U_{\text{eff}}(r)$$</div>
+              <figcaption class="formula-label"><span>Collision condition [1]</span></figcaption>
+              <div class="formula-body">$$\mathbf R(t) = \mathbf 0 \ \ \text{(all components, same } t)$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span>Turning point ($\dot r = 0$) [1, 2]</span></figcaption>
-              <div class="formula-body">$$E = U_{\text{eff}}(r_{\min})$$</div>
+              <figcaption class="formula-label"><span>Squared distance [2]</span></figcaption>
+              <div class="formula-body">$$\begin{aligned}D^2(t) = {}&|\mathbf R_0|^2 + 2(\mathbf R_0\cdot\mathbf V)\,t \\ &+ |\mathbf V|^2t^2\end{aligned}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span>Initial conditions at $r \to \infty$ [2]</span></figcaption>
-              <div class="formula-body">$$E = \tfrac12 \mu v_0^2, \qquad L = \mu v_0 b$$</div>
+              <figcaption class="formula-label"><span>Time of closest approach [2]</span></figcaption>
+              <div class="formula-body">$$t_c = -\frac{\mathbf R_0\cdot\mathbf V}{|\mathbf V|^2}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span>Repulsive Coulomb, $U = k/r$, $k = \dfrac{q_1 q_2}{4\pi\varepsilon_0} &gt; 0$ [1]</span></figcaption>
-              <div class="formula-body">$$r_{\min} = \frac{k}{\mu v_0^2}\left[1 + \sqrt{1 + \left(\frac{\mu v_0^2\, b}{k}\right)^{2}}\,\right]$$</div>
+              <figcaption class="formula-label"><span>Minimum distance [2]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered}d_{\min} = |\mathbf R_0 + \mathbf V t_c| \\ = \frac{|\mathbf R_0\times\mathbf V|}{|\mathbf V|}\end{gathered}$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span>Head-on, $b = 0$ [1, 3]</span></figcaption>
-              <div class="formula-body">$$r_{\min} = \frac{2k}{\mu v_0^2} = \frac{k}{E}$$</div>
+              <figcaption class="formula-label"><span>Condition at closest approach [2]</span></figcaption>
+              <div class="formula-body">$$\mathbf R(t_c)\cdot\mathbf V = 0$$</div>
             </figure>
+
           </div>
         </section>
 
@@ -150,31 +159,23 @@
           <div class="example">
             <p class="example-label">Example</p>
             <div class="example-problem"><div>
-              <p>Two particles with like charges $q_1$, $q_2$ and masses $m_1$, $m_2$ approach each other from far away with relative speed $v_0$ and impact parameter $b$. Find their distance of closest approach. (Adapted from [1, §20.2 and §20.4], with the fixed target replaced by the reduced mass from [2].)</p>
+<p>Two particles move as $\mathbf r_1(t) = t\,\hat\imath + t\,\hat\jmath$ and $\mathbf r_2(t) = (4 - t)\,\hat\imath + (2t - 2)\,\hat\jmath$. Find their closest approach. Do they collide? (From [1], Worked Example “Collision of Two Particles”, Solution 2.)</p>
             </div></div>
             <ol class="steps">
               <li><div>
-                <p>Reduce to one body. The relative motion is a particle of mass $\mu = m_1 m_2/(m_1+m_2)$ in $U(r) = k/r$ with $k = q_1 q_2/(4\pi\varepsilon_0) &gt; 0$. From the initial conditions, $E = \tfrac12\mu v_0^2$ and $L = \mu v_0 b$.</p>
+<p>Separation: $\mathbf R = \mathbf r_2 - \mathbf r_1 = (4 - 2t)\,\hat\imath + (t - 2)\,\hat\jmath$, so $\mathbf R_0 = 4\hat\imath - 2\hat\jmath$ and $\mathbf V = -2\hat\imath + \hat\jmath$.</p>
               </div></li>
               <li><div>
-                <p>Apply the turning-point condition $\dot r = 0$:</p>
-                $$E = \frac{L^2}{2\mu r_{\min}^2} + \frac{k}{r_{\min}}.$$
-                <p>Multiply by $r_{\min}^2$ to get a quadratic:</p>
-                $$E\, r_{\min}^2 - k\, r_{\min} - \frac{L^2}{2\mu} = 0.$$
+<p>Squared distance: $D^2 = (4-2t)^2 + (t-2)^2 = 5t^2 - 20t + 20 = 5(t-2)^2$.</p>
               </div></li>
               <li><div>
-                <p>Solve the quadratic and keep the positive root:</p>
-                $$r_{\min} = \frac{k}{2E}\left[1 + \sqrt{1 + \frac{2EL^2}{\mu k^2}}\,\right].$$
-              </div></li>
-              <li><div>
-                <p>Insert $E$ and $L$. Since $\dfrac{2EL^2}{\mu k^2} = \left(\dfrac{\mu v_0^2 b}{k}\right)^2$,</p>
-                $$r_{\min} = \frac{k}{\mu v_0^2}\left[1 + \sqrt{1 + \left(\frac{\mu v_0^2\, b}{k}\right)^{2}}\,\right].$$
+<p>The minimum is at $t_c = 2$, where $D = 0$: they collide, at $\mathbf r_1(2) = 2\hat\imath + 2\hat\jmath$.</p>
               </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
               <div>
-                <p>For $k \to 0$ (no force), $\sqrt{1 + (\mu v_0^2 b/k)^2} \approx \mu v_0^2 b/k$, so $r_{\min} \to b$, as for a straight line. For $b = 0$ the bracket is $2$ and $r_{\min} = 2k/(\mu v_0^2)$. In every case $r_{\min} &gt; b$, as it must be for a repulsive force.</p>
+<p>Formula: $\mathbf R_0\cdot\mathbf V = -8 - 2 = -10$ and $|\mathbf V|^2 = 5$, so $t_c = 10/5 = 2$ ✓. Also $\mathbf r_2(2) = 2\hat\imath + 2\hat\jmath = \mathbf r_1(2)$ ✓.</p>
               </div>
             </div>
           </div>
@@ -182,27 +183,47 @@
           <div class="example">
             <p class="example-label">Example</p>
             <div class="example-problem"><div>
-              <p>An alpha particle ($z = 2$) with kinetic energy $K = 7.7\ \text{MeV}$ is fired head-on ($b = 0$) at a gold nucleus ($Z = 79$). How close does it get? Use $e^2/(4\pi\varepsilon_0) = 1.44\ \text{MeV fm}$. (Adapted from [3], which treats the gold nucleus as fixed; the recoil correction uses [2].)</p>
+<p>Same as Example 1, but particle 2 starts one unit higher: $\mathbf r_2(t) = (4 - t)\,\hat\imath + (2t - 1)\,\hat\jmath$. Find the time and distance of closest approach. (Adapted from [1], Worked Example “Collision of Two Particles”.)</p>
             </div></div>
             <ol class="steps">
               <li><div>
-                <p>With $b = 0$ we have $L = 0$, so there is no centrifugal barrier. The particle stops completely at $r_{\min}$, and all of the relative kinetic energy has turned into Coulomb energy: $E = k/r_{\min}$.</p>
+<p>$\mathbf R_0 = 4\hat\imath - \hat\jmath$ and $\mathbf V = -2\hat\imath + \hat\jmath$ (the velocities haven't changed).</p>
               </div></li>
               <li><div>
-                <p>Here $k = zZ\,e^2/(4\pi\varepsilon_0) = 2 \times 79 \times 1.44\ \text{MeV fm} = 227.5\ \text{MeV fm}$.</p>
+<p>$\mathbf R_0\cdot\mathbf V = -8 - 1 = -9$ and $|\mathbf V|^2 = 5$, so $t_c = 9/5 = 1.8$.</p>
               </div></li>
               <li><div>
-                <p>Fixed nucleus ($\mu \approx m_\alpha$, so $E \approx K$):</p>
-                $$r_{\min} = \frac{k}{K} = \frac{227.5}{7.7}\ \text{fm} \approx 29.5\ \text{fm}.$$
-              </div></li>
-              <li><div>
-                <p>With recoil: the gold nucleus starts at rest, so $v_0$ is the alpha's speed and $E = \tfrac12\mu v_0^2 = K\,\dfrac{m_{\text{Au}}}{m_\alpha + m_{\text{Au}}}$. Using mass numbers $4$ and $197$, $E \approx 7.7 \times \tfrac{197}{201} \approx 7.55\ \text{MeV}$, so $r_{\min} \approx 30.1\ \text{fm}$.</p>
+<p>$\mathbf R(1.8) = (4 - 3.6)\,\hat\imath + (1.8 - 1)\,\hat\jmath = 0.4\,\hat\imath + 0.8\,\hat\jmath$, so $d_{\min} = \sqrt{0.16 + 0.64} = \sqrt{0.8} \approx 0.89$.</p>
               </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
               <div>
-                <p>The recoil changes the answer by only about $2\%$, because gold is about 50 times heavier than the alpha particle. For two equal masses $\mu = m/2$, so only half of the lab kinetic energy is available and $r_{\min}$ doubles compared with the fixed-target estimate.</p>
+<p>Cross-product formula: $|\mathbf R_0\times\mathbf V| = |4\cdot1 - (-1)(-2)| = 2$, so $d_{\min} = 2/\sqrt5 \approx 0.89$ ✓. And $\mathbf R(t_c)\cdot\mathbf V = -0.8 + 0.8 = 0$: perpendicular, as it must be ✓.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>Two particles move as $\mathbf r_1 = (t^2+1)\,\hat\imath + 2t\,\hat\jmath$ and $\mathbf r_2 = (5-t)\,\hat\imath + (t^2-1)\,\hat\jmath$. Do they collide? (From [1], Worked Example “Displacement, Average Velocity, Instantaneous Velocity, and Collision”, (e).)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Equal $x$: $t^2 + 1 = 5 - t$, i.e. $t^2 + t - 4 = 0$, so $t = \frac{-1 \pm \sqrt{17}}{2}$ (positive root $\approx 1.56$).</p>
+              </div></li>
+              <li><div>
+<p>Equal $y$: $2t = t^2 - 1$, i.e. $t^2 - 2t - 1 = 0$, so $t = 1 \pm \sqrt2$ (positive root $\approx 2.41$).</p>
+              </div></li>
+              <li><div>
+<p>No single time satisfies both, so the particles never collide.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>The $x$-coordinates match at one moment and the $y$-coordinates at another: the paths come close, but the particles are never in the same place at the same time [1]. ✓</p>
               </div>
             </div>
           </div>
@@ -211,9 +232,9 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span>N. Harnew, <em>Introduction to Classical Mechanics</em>, Lectures 20–29, University of Oxford, Hilary Term 2017. §20.2 "Hyperbolic orbit: the distance of closest approach" and §20.4 "Rutherford scattering". Source of the turning-point condition, the $r_{\min}$ quadratic and Example 1. <a href="https://users.physics.ox.ac.uk/~harnew/lectures/mechanics-lectures-20to29.pdf">PDF</a></span></li>
-            <li><span>J. Shapiro, <em>Classical Mechanics</em>, Ch. 3 "Two Body Central Forces", Rutgers University. §3.1.1 (reduction to a one-body problem, reduced mass), §3.1.2 (effective potential, centrifugal barrier), §3.2 (turning points), §3.5 ($E = \tfrac12\mu v_0^2$, $L = \mu b v_0$). <a href="https://www.physics.rutgers.edu/~shapiro/507/book4.pdf">PDF</a></span></li>
-            <li><span>R. Nave, <em>HyperPhysics</em>: "Rutherford Scattering", Department of Physics and Astronomy, Georgia State University. Head-on closest approach $r_{\min} = 2 \times 1.44\,Z/K$ (MeV fm) for alpha particles, and the 7.7 MeV alpha energy used in Example 2. <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/Nuclear/rutsca2.html">Web page</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 2: Kinematics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. Worked Examples “Collision of Two Particles” and “Displacement, Average Velocity, Instantaneous Velocity, and Collision”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/kinematics/main.pdf">PDF</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 1: Mathematical Tools</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Maxima and Minima of Functions, §Dot Product, §Cross Product. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/mathematical-tools/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 11 "Reference Frames", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §11.3 Law of Addition of Velocities. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter11.pdf">PDF</a></span></li>
           </ol>
         </section>
 
