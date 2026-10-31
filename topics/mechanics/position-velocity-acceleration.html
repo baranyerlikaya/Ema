@@ -26,45 +26,98 @@
         <header class="doc-header">
           <nav class="breadcrumb" aria-label="Breadcrumb"></nav>
           <h1 class="doc-title">Position, Displacement, Velocity, Acceleration</h1>
-          <p class="doc-lede"><span class="slot" data-slot="description">[Description]</span></p>
+          <p class="doc-lede">The basic language of motion: where a particle is, how far it has moved, how fast it moves and how fast that changes. And how to go back from acceleration to position.</p>
         </header>
 
         <section class="doc-section" id="basics" aria-labelledby="basics-h" data-level="basic">
           <h2 id="basics-h">In short</h2>
-          <div class="slot slot-block" data-slot="basic">[Basic explanation]</div>
+          <div>
+<p><strong>Where is it?</strong> Pick a starting spot (the origin). The <strong>position vector</strong> $\mathbf r$ is an arrow from that spot to the object. We treat the object as a tiny dot, a <strong>particle</strong>, when its size doesn't matter [1].</p>
+<p><strong>How far did it get?</strong> The <strong>displacement</strong> $\Delta\mathbf r = \mathbf r_{\text{end}} - \mathbf r_{\text{start}}$ is an arrow from where you started to where you ended. Careful: it's not the same as the distance you walked. If you walk to the shop and back home, your displacement is zero, but your legs walked a lot [1]; [2].</p>
+<p><strong>How fast?</strong> <strong>Velocity</strong> is how quickly position changes, and it has a direction. Average velocity = displacement ÷ time. Instantaneous velocity is the same thing over a tiny, tiny time: the derivative, $\mathbf v = d\mathbf r/dt$. On a position–time graph it's the steepness [1]; [2]. <strong>Speed</strong> is just how big the velocity is, with no direction, so it's never negative [1].</p>
+<p><strong>Speeding up or slowing down?</strong> <strong>Acceleration</strong> is how quickly velocity changes: $\mathbf a = d\mathbf v/dt$. On a line, if $v$ and $a$ have the <em>same</em> sign you speed up; if they have <em>opposite</em> signs you slow down [1].</p>
+<p><strong>Going backwards:</strong> if you know the acceleration, add it up over time (integrate) to get the velocity, and add up the velocity to get the position. Each time you need one starting fact: the starting velocity, then the starting position [1]; [2]. With constant acceleration:</p>
+$$v = v_0 + at, \qquad x = x_0 + v_0t + \tfrac12at^2.$$
+<p>On a graph: the area under the velocity line is the displacement [2].</p>
+          </div>
         </section>
 
         <section class="doc-section" id="theory" aria-labelledby="theory-h" data-level="full">
           <h2 id="theory-h">Theory</h2>
 
           <section class="subsection" id="theory-1">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Particle and position vector</h3>
+            <div>
+<p>A <strong>particle</strong> is a body whose size and shape don't matter for the problem, so we can treat it as a point with a mass. A planet orbiting the Sun can be a particle; the Earth cannot be one when we study its tides [1, §Notion of a Particle].</p>
+<p>Where the particle is at time $t$ is given by its <strong>position vector</strong>, drawn from the origin to the particle [1, §The Position Vector]; [2, §4.2.1]:</p>
+$$\begin{gathered}\mathbf r(t) = x(t)\,\hat\imath + y(t)\,\hat\jmath + z(t)\,\hat k, \\ |\mathbf r| = \sqrt{x^2+y^2+z^2}.\end{gathered}$$
+<p>The curve traced by $\mathbf r(t)$ is the <strong>trajectory</strong>. Eliminating $t$ between the components gives the trajectory equation, e.g. $y(x)$ [1, §The Trajectory of a Particle].</p>
+            </div>
           </section>
 
           <section class="subsection" id="theory-2">
-            <h3><span class="num"></span> <span class="slot" data-slot="subsection-title">[Subsection title]</span></h3>
-            <div class="slot slot-block" data-slot="theory">[Theory]</div>
+            <h3><span class="num"></span> Displacement</h3>
+            <div>
+<p>If the particle goes from $\mathbf r(t_1)$ to $\mathbf r(t_2)$, its <strong>displacement</strong> is the change in position [1, §The Displacement Vector]; [2, §4.2.3]:</p>
+$$\Delta\mathbf r = \mathbf r(t_2) - \mathbf r(t_1).$$
+<p>It is an arrow from the start point to the end point. It depends only on those two points, not on the path. Its length is the straight-line distance between them, which in general is <em>not</em> the distance travelled along the path [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-3">
+            <h3><span class="num"></span> Average and instantaneous velocity</h3>
+            <div>
+<p>The <strong>average velocity</strong> over the interval $\Delta t = t_2 - t_1$ is the displacement per unit time; it points the same way as $\Delta\mathbf r$ [1]; [2, §4.3.1]:</p>
+$$\mathbf v_{\text{avg}} = \frac{\Delta\mathbf r}{\Delta t}.$$
+<p>Making the interval shorter and shorter gives the <strong>instantaneous velocity</strong>, the derivative of position [1, §The Instantaneous Velocity Vector]; [2, §4.3.3]:</p>
+$$\begin{aligned}\mathbf v(t) &= \lim_{\Delta t\to0}\frac{\Delta\mathbf r}{\Delta t} = \frac{d\mathbf r}{dt} \\ &= \dot x\,\hat\imath + \dot y\,\hat\jmath + \dot z\,\hat k.\end{aligned}$$
+<p>On an $x$–$t$ graph, $v_{\text{avg}}$ is the slope of the secant between two points and $v(t)$ is the slope of the tangent at one point [2, §4.3.3]. The <strong>speed</strong> is the magnitude $v = |\mathbf v|$; it is never negative [1].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-4">
+            <h3><span class="num"></span> Average and instantaneous acceleration</h3>
+            <div>
+<p>Acceleration measures how the velocity changes. In the same way [1, §The Average Acceleration Vector, §The Instantaneous Acceleration Vector]; [2, §4.4]:</p>
+$$\begin{gathered}\mathbf a_{\text{avg}} = \frac{\Delta\mathbf v}{\Delta t}, \\ \mathbf a(t) = \frac{d\mathbf v}{dt} = \frac{d^2\mathbf r}{dt^2} = \ddot x\,\hat\imath + \ddot y\,\hat\jmath + \ddot z\,\hat k.\end{gathered}$$
+<p>It is the slope of the $v$–$t$ graph [2, §4.4.2].</p>
+<p>In <strong>one dimension</strong> the vectors reduce to signed numbers $x$, $v = \dot x$, $a = \ddot x$; the sign gives the direction along the axis [1, §Linear Motion]. A particle <em>speeds up</em> when $v$ and $a$ have the same sign and <em>slows down</em> when they have opposite signs [1, Worked Example “Velocity, Acceleration, and the Interpretation of Signs”].</p>
+            </div>
+          </section>
+
+          <section class="subsection" id="theory-5">
+            <h3><span class="num"></span> From acceleration back to position</h3>
+            <div>
+<p>Differentiation takes $\mathbf r \to \mathbf v \to \mathbf a$. Integration goes back, one step at a time, and each step needs one initial condition [1, §Connecting position, velocity, and acceleration]; [2, §4.6]:</p>
+$$\begin{gathered}v(t_2) = v(t_1) + \int_{t_1}^{t_2} a\,dt, \\ x(t_2) = x(t_1) + \int_{t_1}^{t_2} v\,dt.\end{gathered}$$
+<p>Graphically, the change in velocity is the area under the $a$–$t$ graph, and the displacement is the area under the $v$–$t$ graph [2, §4.5].</p>
+<p>For <strong>constant acceleration</strong> this gives the familiar formulas [2, §4.4–4.5]; [3, Worked Example “Motion of a Particle under a Constant Force”]:</p>
+$$v(t) = v_0 + at, \qquad x(t) = x_0 + v_0t + \tfrac12at^2.$$
+            </div>
           </section>
 
           <aside class="callout callout-note" role="note">
             <p class="callout-label">Note</p>
-            <div class="slot slot-block" data-slot="note">[Note]</div>
+            <div>
+<p>Average velocity is displacement divided by time. It equals the mean of the initial and final velocities, $(v_i + v_f)/2$, <em>only</em> when $v$ changes linearly in time, i.e. for constant acceleration [2, Example 4.2].</p>
+            </div>
           </aside>
 
           <aside class="callout callout-warning" role="note">
             <p class="callout-label">Warning</p>
-            <div class="slot slot-block" data-slot="warning">[Warning]</div>
+            <div>
+<p>Displacement is not distance. If a particle moves forward and then back, its displacement can be small or zero while the distance travelled is large. To get the distance, split the motion at every point where $v = 0$ and add the absolute values [1, Worked Example “Velocity, Acceleration, and the Interpretation of Signs”]; [2, §4.3.1].</p>
+            </div>
           </aside>
         </section>
 
         <section class="doc-section" id="visualization" aria-labelledby="visualization-h">
           <h2 id="visualization-h">Visualization</h2>
-          <figure class="viz" data-viz="">
-            <div class="viz-stage"><div class="slot slot-block" data-slot="visualization">[Visualization]</div></div>
+          <figure class="viz" data-viz="motion1d">
+            <div class="viz-stage"></div>
             <figcaption class="viz-bar"></figcaption>
           </figure>
-          <p class="viz-caption"><span class="slot" data-slot="viz-caption">[Caption]</span></p>
+          <p class="viz-caption">A particle moves along a line with constant acceleration: $x(t) = v_0t + \tfrac12at^2$. The top line shows the particle with its velocity arrow. The graphs show $x(t)$ (dark) and $v(t)$ (grey) as they are drawn. The dashed line on the $x$ graph is the tangent; its slope is the current velocity. Choose $v_0 &gt; 0$ and $a &lt; 0$: the particle slows down, stops where $v = 0$ (the top of the $x$ curve), and comes back. Move a slider to restart.</p>
         </section>
 
         <section class="doc-section" id="formulas" aria-labelledby="formulas-h">
@@ -72,14 +125,40 @@
 
           <div class="formula-list">
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Position vector [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf r(t) = x\,\hat\imath + y\,\hat\jmath + z\,\hat k$$</div>
             </figure>
 
             <figure class="formula">
-              <figcaption class="formula-label"><span class="slot" data-slot="formula-label">[Label]</span></figcaption>
-              <div class="formula-body"><span class="slot" data-slot="formula">[Formula]</span></div>
+              <figcaption class="formula-label"><span>Displacement [1, 2]</span></figcaption>
+              <div class="formula-body">$$\Delta\mathbf r = \mathbf r(t_2) - \mathbf r(t_1)$$</div>
             </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Average velocity and acceleration [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf v_{\text{avg}} = \frac{\Delta\mathbf r}{\Delta t}, \qquad \mathbf a_{\text{avg}} = \frac{\Delta\mathbf v}{\Delta t}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Instantaneous velocity and acceleration [1, 2]</span></figcaption>
+              <div class="formula-body">$$\mathbf v = \frac{d\mathbf r}{dt}, \qquad \mathbf a = \frac{d\mathbf v}{dt} = \frac{d^2\mathbf r}{dt^2}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Speed [1]</span></figcaption>
+              <div class="formula-body">$$v = |\mathbf v| = \sqrt{v_x^2 + v_y^2 + v_z^2}$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Velocity from acceleration [1, 2]</span></figcaption>
+              <div class="formula-body">$$v(t) = v(0) + \int_0^t a\,dt'$$</div>
+            </figure>
+
+            <figure class="formula">
+              <figcaption class="formula-label"><span>Constant acceleration [2, 3]</span></figcaption>
+              <div class="formula-body">$$\begin{gathered} v = v_0 + at \\ x = x_0 + v_0 t + \tfrac12 a t^2\end{gathered}$$</div>
+            </figure>
+
           </div>
         </section>
 
@@ -88,15 +167,100 @@
 
           <div class="example">
             <p class="example-label">Example</p>
-            <div class="example-problem"><div class="slot slot-block" data-slot="problem">[Problem]</div></div>
+            <div class="example-problem"><div>
+<p>A particle moves along the $x$-axis with $x(t) = t^3 - 6t^2 + 9t$. Find $v(t)$ and $a(t)$, when it is at rest, when it speeds up or slows down, and compare the distance travelled in $0 \le t \le 4$ with the displacement. (From [1], Worked Example “Velocity, Acceleration, and the Interpretation of Signs”.)</p>
+            </div></div>
             <ol class="steps">
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
-              <li><div class="slot slot-block" data-slot="step">[Step]</div></li>
+              <li><div>
+<p>$v = \dot x = 3t^2 - 12t + 9 = 3(t-1)(t-3)$ and $a = \dot v = 6(t-2)$.</p>
+              </div></li>
+              <li><div>
+<p>At rest when $v = 0$: $t = 1$ and $t = 3$. It moves in $+x$ for $t &lt; 1$, in $-x$ for $1 &lt; t &lt; 3$, and in $+x$ again for $t &gt; 3$.</p>
+              </div></li>
+              <li><div>
+<p>Compare signs of $v$ and $a$: slowing down for $0 &lt; t &lt; 1$ and $2 &lt; t &lt; 3$ (opposite signs), speeding up for $1 &lt; t &lt; 2$ and $t &gt; 3$ (same signs).</p>
+              </div></li>
+              <li><div>
+<p>$x(0) = 0$, $x(1) = 4$, $x(3) = 0$, $x(4) = 4$. Distance $= 4 + 4 + 4 = 12$, but displacement $= x(4) - x(0) = 4$.</p>
+              </div></li>
             </ol>
             <div class="example-check">
               <p class="example-check-label">Check</p>
-              <div class="slot slot-block" data-slot="check">[Check]</div>
+              <div>
+<p>The distance is three times the displacement because the particle turns around twice. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A particle has $a(t) = 6t - 4$, with $x(0) = 2$ and $v(0) = -3$. Find $v(t)$, $x(t)$, and where it turns around. (From [1], Worked Example “Reconstructing Position and Velocity from Acceleration”.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Integrate: $v = 3t^2 - 4t + C_1$; $v(0) = -3$ gives $v = 3t^2 - 4t - 3$.</p>
+              </div></li>
+              <li><div>
+<p>Integrate again: $x = t^3 - 2t^2 - 3t + C_2$; $x(0) = 2$ gives $x = t^3 - 2t^2 - 3t + 2$.</p>
+              </div></li>
+              <li><div>
+<p>It turns around where $v = 0$: $t = \frac{2 \pm \sqrt{13}}{3}$. Only the positive root is in the future: $t = \frac{2+\sqrt{13}}{3} \approx 1.87\ \text{s}$, where $x \approx -4.06$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>Differentiating $x(t)$ twice gives back $\dot x = 3t^2 - 4t - 3$ and $\ddot x = 6t - 4$. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>A car starts from rest, accelerates uniformly over $100\ \text{m}$ to $20\ \text{m/s}$, then keeps that speed for $10\ \text{s}$. How long did it accelerate, with what acceleration, and what was its average velocity for the whole trip? (From [2], Example 4.4.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>From rest: $x = \frac12at^2$ and $v = at$. Eliminating $a$ gives $x = \frac12vt$, so $t_1 = 2x/v = 2(100)/20 = 10\ \text{s}$.</p>
+              </div></li>
+              <li><div>
+<p>$a = v/t_1 = 20/10 = 2.0\ \text{m/s}^2$.</p>
+              </div></li>
+              <li><div>
+<p>In the next $10\ \text{s}$ it covers $20 \times 10 = 200\ \text{m}$. Total: $300\ \text{m}$ in $20\ \text{s}$, so $v_{\text{avg}} = 15\ \text{m/s}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>$v_{\text{avg}}$ lies between $0$ and $20\ \text{m/s}$, closer to $20$ because the car spends half its time at full speed. ✓</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="example">
+            <p class="example-label">Example</p>
+            <div class="example-problem"><div>
+<p>When a light turns green, a car starts from rest with $a = 3.0\ \text{m/s}^2$. At that instant a bus passes it at a constant $16\ \text{m/s}$. Where does the car catch the bus? (From [2], Example 4.5.)</p>
+            </div></div>
+            <ol class="steps">
+              <li><div>
+<p>Car: $x_1 = \frac12at^2$. Bus: $x_2 = v_bt$.</p>
+              </div></li>
+              <li><div>
+<p>Set $x_1 = x_2$ (ignoring $t = 0$): $t = 2v_b/a = 2(16)/3.0 \approx 11\ \text{s}$.</p>
+              </div></li>
+              <li><div>
+<p>Position: $x = v_bt = 2v_b^2/a = 2(16)^2/3.0 \approx 1.7\times10^2\ \text{m}$.</p>
+              </div></li>
+            </ol>
+            <div class="example-check">
+              <p class="example-check-label">Check</p>
+              <div>
+<p>At that moment the car moves at $at = 2v_b = 32\ \text{m/s}$, twice the bus's speed, consistent with having equal average velocities over the same time. ✓</p>
+              </div>
             </div>
           </div>
         </section>
@@ -104,8 +268,9 @@
         <section class="doc-section" id="references" aria-labelledby="references-h">
           <h2 id="references-h">References</h2>
           <ol class="refs">
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
-            <li><span class="slot" data-slot="reference">[Reference]</span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 2: Kinematics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. §Notion of a Particle, §The Position Vector, §The Displacement Vector, §Average and Instantaneous Velocity, §Average and Instantaneous Acceleration, §The Trajectory, §Connecting position, velocity, and acceleration, §Linear Motion; Worked Examples “Velocity, Acceleration, and the Interpretation of Signs” and “Reconstructing Position and Velocity from Acceleration”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/kinematics/main.pdf">PDF</a></span></li>
+            <li><span>P. Dourmashkin, <em>Classical Mechanics: MIT 8.01 Course Notes</em>, Chapter 4 "One Dimensional Kinematics", MIT OpenCourseWare, 8.01SC Classical Mechanics (online textbook, revised 2022). §4.2–4.6; Examples 4.2, 4.4, 4.5. <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/mit8_01scs22_chapter4.pdf">PDF</a></span></li>
+            <li><span>İ. Yalçınkaya, <em>Chapter 3: Dynamics</em> (lecture notes), 02YMECH Mechanics, FJFI, Czech Technical University in Prague, 2026. Worked Example “Motion of a Particle under a Constant Force”. <a href="https://github.com/iyalcinkaya/02YMECH/blob/main/notes/dynamics/main.pdf">PDF</a></span></li>
           </ol>
         </section>
 

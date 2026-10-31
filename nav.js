@@ -17,7 +17,7 @@ window.PHYSREF_NAV = [
     id: 'kinematics',
     title: 'Kinematics',
     topics: [
-      { id: 'position-velocity-acceleration', title: 'Position, Displacement, Velocity, Acceleration', file: 'topics/mechanics/position-velocity-acceleration.html', status: 'soon' },
+      { id: 'position-velocity-acceleration', title: 'Position, Displacement, Velocity, Acceleration', file: 'topics/mechanics/position-velocity-acceleration.html', status: 'ready' },
       { id: 'vector-components',   title: 'Vector Components of Motion',                          file: 'topics/mechanics/vector-components.html',   status: 'soon' },
       { id: 'projectile-motion',   title: 'Projectile Motion',                                    file: 'topics/mechanics/projectile-motion.html',   status: 'soon' },
       { id: 'reference-frames',    title: 'Reference Frames, Speed vs Average Speed',             file: 'topics/mechanics/reference-frames.html',    status: 'soon' },
