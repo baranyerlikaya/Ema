@@ -1,4 +1,4 @@
-/* Ema Playground — parse formula, solve ODE, render. No eval, no deps. */
+/* Newt Playground — parse formula, solve ODE, render. No eval, no deps. */
 (function () {
   'use strict';
 

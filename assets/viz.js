@@ -76,7 +76,7 @@
     colors: { ink: INK, muted: MUTED, faint: FAINT, grid: GRID }
   };
 
-  window.EmaViz = { register: function (name, def) { REG[name] = def; }, draw: draw };
+  window.NewtViz = { register: function (name, def) { REG[name] = def; }, draw: draw };
 
   var ICON_PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z" fill="currentColor"/></svg>';
   var ICON_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.5v9M10.5 3.5v9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
@@ -233,7 +233,7 @@
     for (i = 0; i < n; i++) y[i] += dt / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
   }
 
-  var V = window.EmaViz, D = draw;
+  var V = window.NewtViz, D = draw;
 
   V.register('projectile', {
     params: {

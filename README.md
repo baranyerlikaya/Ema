@@ -1,4 +1,4 @@
-# Ema
+# Newt
 
 A free reference for university-level classical mechanics, laid out like programming-language docs. The first version follows the Mechanics (02MECH) midterm syllabus at FJFI, CTU Prague.
 

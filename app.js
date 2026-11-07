@@ -54,7 +54,7 @@
     var header = el('header', { class: 'topbar' }, [
       el('div', { class: 'topbar-inner' }, [
         menuBtn,
-        el('a', { class: 'logo', href: ROOT + 'index.html', text: 'Ema' }),
+        el('a', { class: 'logo', href: ROOT + 'index.html', text: 'Newt' }),
         el('nav', { class: 'topbar-links', 'aria-label': 'Site' }, [
           el('a', { href: ROOT + 'index.html#sections', text: 'Mechanics' }),
           el('a', { href: ROOT + 'playground.html', text: 'Playground' }),
@@ -209,7 +209,7 @@
     sidebarEl = el('aside', { class: 'sidebar', id: 'sidebar', 'aria-label': 'Topics', tabindex: '-1' }, [
       el('div', { class: 'sidebar-inner' }, [
         el('div', { class: 'sidebar-head' }, [
-          el('a', { class: 'sidebar-brand', href: ROOT + 'index.html', text: 'Ema' }),
+          el('a', { class: 'sidebar-brand', href: ROOT + 'index.html', text: 'Newt' }),
           el('button', { class: 'drawer-close', type: 'button', 'aria-label': 'Close topics', html: ICON_CLOSE })
         ]),
         el('div', { class: 'search' }, [
@@ -353,7 +353,7 @@
     nav.appendChild(el('span', { 'aria-current': 'page', text: current.topic.title }));
   }
 
-  var MODE_KEY = 'ema.mode';
+  var MODE_KEY = 'newt.mode';
 
   function setMode(mode) {
     var root = document.documentElement;
@@ -693,7 +693,7 @@
     if (!mount) return;
     var footer = el('footer', { class: 'footer' }, [
       el('div', { class: 'footer-inner' }, [
-        el('a', { class: 'footer-logo', href: ROOT + 'index.html', text: 'Ema' }),
+        el('a', { class: 'footer-logo', href: ROOT + 'index.html', text: 'Newt' }),
         el('nav', { class: 'footer-links', 'aria-label': 'Footer' }, [
           el('a', { href: ROOT + 'index.html#sections', text: 'Mechanics' }),
           el('a', { href: ROOT + 'playground.html', text: 'Playground' }),

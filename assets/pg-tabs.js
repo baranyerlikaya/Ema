@@ -8,7 +8,7 @@
 
     var hashTab = (location.hash || '').replace('#', '');
     var stored;
-    try { stored = localStorage.getItem('ema.pg.tab'); } catch (e) {}
+    try { stored = localStorage.getItem('newt.pg.tab'); } catch (e) {}
     var active = hashTab || stored || 'graph';
     if (active !== 'graph' && active !== 'sim') active = 'graph';
 
@@ -21,7 +21,7 @@
         var is = p.getAttribute('data-pane') === name;
         p.hidden = !is;
       });
-      try { localStorage.setItem('ema.pg.tab', name); } catch (e) {}
+      try { localStorage.setItem('newt.pg.tab', name); } catch (e) {}
       // Resize/redraw canvases now that the pane is visible
       window.dispatchEvent(new Event('resize'));
     }

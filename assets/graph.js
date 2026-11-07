@@ -1,4 +1,4 @@
-/* Ema Graph — Desmos-style plotter for classical-mechanics formulas.
+/* Newt Graph — Desmos-style plotter for classical-mechanics formulas.
    Own parser (shunting-yard), own render loop. */
 (function () {
   'use strict';
