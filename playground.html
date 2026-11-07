@@ -6,13 +6,16 @@
   <title>Playground · Ema</title>
   <link rel="stylesheet" href="lib/katex.min.css">
   <link rel="stylesheet" href="style.css?v=24">
-  <link rel="stylesheet" href="assets/playground.css?v=1">
+  <link rel="stylesheet" href="assets/playground.css?v=3">
+  <link rel="stylesheet" href="assets/graph.css?v=8">
   <script defer src="lib/katex.min.js"></script>
   <script defer src="lib/auto-render.min.js"></script>
   <script defer src="lib/render-math.js?v=24"></script>
-  <script defer src="nav.js?v=24"></script>
-  <script defer src="app.js?v=24"></script>
-  <script defer src="assets/playground.js?v=1"></script>
+  <script defer src="nav.js?v=25"></script>
+  <script defer src="app.js?v=26"></script>
+  <script defer src="assets/pg-tabs.js?v=1"></script>
+  <script defer src="assets/playground.js?v=2"></script>
+  <script defer src="assets/graph.js?v=8"></script>
 </head>
 <body class="layout-playground" data-root="./">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -21,73 +24,100 @@
   <main id="main" class="pg-page">
     <header class="pg-header">
       <h1 class="pg-title">Playground</h1>
-      <p class="pg-lede">Type any classical-mechanics formula and watch a particle obey it. Pick a template, change parameters, see position, velocity, acceleration and energy update in real time.</p>
+      <p class="pg-lede">Type a formula and see the curve, or build a particle that obeys it and watch it move. Classical mechanics only.</p>
+      <div class="pg-tabs" role="tablist" aria-label="Playground tools">
+        <button type="button" class="pg-tab" role="tab" data-tab="graph" aria-selected="true">Graph</button>
+        <button type="button" class="pg-tab" role="tab" data-tab="sim" aria-selected="false">Simulator</button>
+      </div>
     </header>
 
-    <div class="pg-grid">
-      <aside class="pg-side" aria-label="Setup">
-        <section class="pg-block">
-          <div class="pg-block-label">Template</div>
-          <div class="pg-templates" id="pg-templates"></div>
-        </section>
-
-        <section class="pg-block">
-          <div class="pg-block-label">Mode</div>
-          <div class="pg-modes" role="radiogroup" aria-label="Simulation mode">
-            <button class="pg-mode" type="button" data-mode="force1d" role="radio" aria-checked="true">Force 1D · F(x,v,t)</button>
-            <button class="pg-mode" type="button" data-mode="force2d" role="radio" aria-checked="false">Force 2D · Fx, Fy</button>
-            <button class="pg-mode" type="button" data-mode="explicit" role="radio" aria-checked="false">Explicit · x(t), y(t)</button>
-          </div>
-        </section>
-
-        <section class="pg-block" id="pg-formula-block">
-          <div class="pg-block-label">Formula</div>
-          <div class="pg-formulas" id="pg-formulas"></div>
-        </section>
-
-        <section class="pg-block">
-          <div class="pg-block-label">Initial conditions</div>
-          <div class="pg-ics" id="pg-ics"></div>
-        </section>
-
-        <section class="pg-block">
-          <div class="pg-block-label">Parameters</div>
-          <div class="pg-params" id="pg-params"></div>
-          <button class="pg-add-param" type="button" id="pg-add-param">+ parameter</button>
-        </section>
-
-        <section class="pg-block pg-controls-block">
-          <div class="pg-controls">
-            <button class="pg-btn pg-btn-primary" type="button" id="pg-run">Run</button>
-            <button class="pg-btn" type="button" id="pg-pause">Pause</button>
-            <button class="pg-btn" type="button" id="pg-reset">Reset</button>
-          </div>
-          <div class="pg-speed">
-            <label for="pg-speed-input">Speed</label>
-            <input type="range" id="pg-speed-input" min="0.1" max="3" step="0.1" value="1">
-            <output id="pg-speed-out">1.0×</output>
-          </div>
-        </section>
-      </aside>
-
-      <section class="pg-main" aria-label="Simulation">
-        <div class="pg-stage">
-          <canvas id="pg-canvas" width="900" height="520" aria-label="Particle animation"></canvas>
-          <div class="pg-stage-foot">
-            <div class="pg-clock"><span class="pg-clock-label">t</span><span class="pg-clock-val" id="pg-clock">0.00 s</span></div>
-            <div class="pg-stage-err" id="pg-stage-err" hidden></div>
-          </div>
+    <!-- Tab 1: Graph (Desmos-style text field + plot + mini keypad) -->
+    <section class="pg-pane" data-pane="graph" role="tabpanel" aria-label="Graph">
+      <div class="gr-layout">
+        <div class="gr-field">
+          <div class="gr-exprs" id="gr-exprs"></div>
+          <button type="button" class="gr-add-min" id="gr-add" aria-label="Add formula">+ formula</button>
         </div>
 
-        <div class="pg-plots">
-          <figure class="pg-plot"><figcaption>x(t)</figcaption><canvas data-plot="x" width="600" height="160"></canvas></figure>
-          <figure class="pg-plot"><figcaption>v(t)</figcaption><canvas data-plot="v" width="600" height="160"></canvas></figure>
-          <figure class="pg-plot"><figcaption>a(t)</figcaption><canvas data-plot="a" width="600" height="160"></canvas></figure>
+        <div class="gr-stage">
+          <canvas id="gr-canvas" width="900" height="620" aria-label="Function plot"></canvas>
+          <div class="gr-stage-tools">
+            <button type="button" class="gr-tool" id="gr-zoom-in" aria-label="Zoom in">+</button>
+            <button type="button" class="gr-tool" id="gr-zoom-out" aria-label="Zoom out">−</button>
+            <button type="button" class="gr-tool" id="gr-reset-view" aria-label="Reset view">⌂</button>
+          </div>
         </div>
+      </div>
+      <div class="gr-pop" id="gr-pop" role="group" aria-label="Formula keypad" hidden></div>
+    </section>
 
-        <div class="pg-readouts" id="pg-readouts"></div>
-      </section>
-    </div>
+    <!-- Tab 2: Simulator (particle simulation with sidebar controls) -->
+    <section class="pg-pane" data-pane="sim" role="tabpanel" aria-label="Simulator" hidden>
+      <div class="pg-grid">
+        <aside class="pg-side" aria-label="Setup">
+          <section class="pg-block">
+            <div class="pg-block-label">Template</div>
+            <div class="pg-templates" id="pg-templates"></div>
+          </section>
+
+          <section class="pg-block">
+            <div class="pg-block-label">Mode</div>
+            <div class="pg-modes" role="radiogroup" aria-label="Simulation mode">
+              <button class="pg-mode" type="button" data-mode="force1d" role="radio" aria-checked="true">Force 1D · F(x,v,t)</button>
+              <button class="pg-mode" type="button" data-mode="force2d" role="radio" aria-checked="false">Force 2D · Fx, Fy</button>
+              <button class="pg-mode" type="button" data-mode="explicit" role="radio" aria-checked="false">Explicit · x(t), y(t)</button>
+            </div>
+          </section>
+
+          <section class="pg-block" id="pg-formula-block">
+            <div class="pg-block-label">Formula</div>
+            <div class="pg-formulas" id="pg-formulas"></div>
+          </section>
+
+          <section class="pg-block">
+            <div class="pg-block-label">Initial conditions</div>
+            <div class="pg-ics" id="pg-ics"></div>
+          </section>
+
+          <section class="pg-block">
+            <div class="pg-block-label">Parameters</div>
+            <div class="pg-params" id="pg-params"></div>
+            <button class="pg-add-param" type="button" id="pg-add-param">+ parameter</button>
+          </section>
+
+          <section class="pg-block pg-controls-block">
+            <div class="pg-controls">
+              <button class="pg-btn pg-btn-primary" type="button" id="pg-run">Run</button>
+              <button class="pg-btn" type="button" id="pg-pause">Pause</button>
+              <button class="pg-btn" type="button" id="pg-reset">Reset</button>
+            </div>
+            <div class="pg-speed">
+              <label for="pg-speed-input">Speed</label>
+              <input type="range" id="pg-speed-input" min="0.1" max="3" step="0.1" value="1">
+              <output id="pg-speed-out">1.0×</output>
+            </div>
+          </section>
+        </aside>
+
+        <section class="pg-main" aria-label="Simulation">
+          <div class="pg-stage">
+            <canvas id="pg-canvas" width="900" height="520" aria-label="Particle animation"></canvas>
+            <div class="pg-stage-foot">
+              <div class="pg-clock"><span class="pg-clock-label">t</span><span class="pg-clock-val" id="pg-clock">0.00 s</span></div>
+              <div class="pg-stage-err" id="pg-stage-err" hidden></div>
+            </div>
+          </div>
+
+          <div class="pg-plots">
+            <figure class="pg-plot"><figcaption>x(t)</figcaption><canvas data-plot="x" width="600" height="160"></canvas></figure>
+            <figure class="pg-plot"><figcaption>v(t)</figcaption><canvas data-plot="v" width="600" height="160"></canvas></figure>
+            <figure class="pg-plot"><figcaption>a(t)</figcaption><canvas data-plot="a" width="600" height="160"></canvas></figure>
+          </div>
+
+          <div class="pg-readouts" id="pg-readouts"></div>
+        </section>
+      </div>
+    </section>
   </main>
 
   <div id="site-footer"></div>

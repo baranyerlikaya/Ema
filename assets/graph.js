@@ -570,7 +570,7 @@
       input.addEventListener('input', function () {
         r.src = input.value;
         recompileAll();
-        renderRows(); // info may have changed
+        updateRowHint(el, r); // update in place; do NOT rebuild the list (steals focus)
       });
       input.addEventListener('keydown', function (ev) {
         if (ev.key === 'Enter') {
@@ -601,33 +601,43 @@
       el.appendChild(input);
       el.appendChild(del);
 
-      // Error / suggestion hint
-      var hint = null;
-      if (r.err) hint = { text: r.err, bad: true };
-      else if (r.info && r.info.kind === 'tooMany') {
-        var names = r.info.unknowns.join(', ');
-        hint = { text: 'unknowns: ' + names + ' — define them above with ' +
-                       r.info.unknowns[0] + ' = <value>', bad: false };
-      } else if (r.info && r.info.kind === 'eqConst') {
-        var holds = Math.abs(r.eqResidual) < 1e-9;
-        hint = {
-          text: holds ? '✓ holds (both sides equal)' :
-                        '✗ does not hold · LHS − RHS = ' + fmtNum(r.eqResidual),
-          bad: !holds
-        };
-      } else if (r.info && r.info.eqHint) {
-        hint = { text: r.info.eqHint, bad: false };
-      }
-      if (hint) {
-        var e = document.createElement('div');
-        e.className = 'gr-err';
-        if (!hint.bad) e.classList.add('gr-note');
-        e.textContent = hint.text;
-        el.appendChild(e);
-      }
-
+      updateRowHint(el, r);
       exprHost.appendChild(el);
     });
+  }
+
+  function computeHint(r) {
+    if (r.err) return { text: r.err, bad: true };
+    if (!r.info) return null;
+    if (r.info.kind === 'tooMany') {
+      var names = r.info.unknowns.join(', ');
+      return { text: 'unknowns: ' + names + ' — define them above with ' +
+                     r.info.unknowns[0] + ' = <value>', bad: false };
+    }
+    if (r.info.kind === 'eqConst') {
+      var holds = Math.abs(r.eqResidual) < 1e-9;
+      return {
+        text: holds ? '✓ holds (both sides equal)' :
+                      '✗ does not hold · LHS − RHS = ' + fmtNum(r.eqResidual),
+        bad: !holds
+      };
+    }
+    if (r.info.eqHint) return { text: r.info.eqHint, bad: false };
+    return null;
+  }
+
+  function updateRowHint(el, r) {
+    var existing = el.querySelector('.gr-err');
+    if (existing) existing.remove();
+    // Toggle the row's error outline
+    if (r.err) el.classList.add('is-bad'); else el.classList.remove('is-bad');
+    var hint = computeHint(r);
+    if (!hint) return;
+    var e = document.createElement('div');
+    e.className = 'gr-err';
+    if (!hint.bad) e.classList.add('gr-note');
+    e.textContent = hint.text;
+    el.appendChild(e);
   }
 
   function fmtNum(v) {
