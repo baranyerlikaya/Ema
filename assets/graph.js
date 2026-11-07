@@ -528,6 +528,13 @@
       var mFn = lhs.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\(\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\)$/);
       if (mFn) {
         var axis = mFn[2];
+        var extraVars = freeVars(rhs, knownNames).filter(function (n) {
+          return n !== axis && !knownNames[n];
+        });
+        if (extraVars.length > 0) {
+          return { kind: 'tooMany', unknowns: extraVars, diffSrc: rhs,
+                   lhs: mFn[1] + '(' + axis + ')', rhs: rhs };
+        }
         return { kind: 'yOfAxis', rhs: rhs, axis: axis };
       }
 
