@@ -652,9 +652,18 @@
     catch (e) { lastCaretPos = el.value.length; }
   }
   function trackInputFocus(input) {
-    input.addEventListener('focus', function () { rememberFocus(input); });
-    input.addEventListener('click', function () { rememberFocus(input); });
-    input.addEventListener('keyup', function () { rememberFocus(input); });
+    input.addEventListener('focus', function () { rememberFocus(input); openPopover(input); });
+    input.addEventListener('click', function () { rememberFocus(input); openPopover(input); });
+    input.addEventListener('keyup', function () { rememberFocus(input); positionPopover(input); });
+    input.addEventListener('blur', function () {
+      // Delay so a click on a keypad button doesn't dismiss before the handler runs
+      setTimeout(function () {
+        var ae = document.activeElement;
+        if (ae && ae.classList && ae.classList.contains('gr-input')) return;
+        if (popEl && popEl.contains(ae)) return;
+        closePopover();
+      }, 120);
+    });
   }
 
   function addRow(src, opts) {
@@ -663,39 +672,29 @@
     return r;
   }
 
-  // ---------- 6b. On-screen keyboard ----------------------------------------
-  // Each entry: { text, kind?, span?, insert?, caret?, action? }
-  // - text:   what the button shows and (unless insert set) what it inserts
-  // - insert: text to insert instead of `text` (e.g. 'sin(' with caret inside)
-  // - caret:  offset from end of insert for the caret (default = end)
-  // - kind:   styling class ('num' | 'fn' | 'act' | 'act-primary')
-  // - span:   column span 2 (default) / 3 / 4
-  // - action: 'del' | 'backspace' | 'enter'
+  // ---------- 6b. Floating mini keypad --------------------------------------
+  // 6 columns × 5 rows. Appears beside the focused expression row and
+  // dismisses when focus leaves both the row and the popover.
   var KEYPAD = [
-    // row 1 — digits + close parens + a few functions
+    // row 1
     { text: '7', kind: 'num' }, { text: '8', kind: 'num' }, { text: '9', kind: 'num' },
-    { text: '÷', insert: '/' }, { text: '(' }, { text: ')' },
-    { text: 'sin', insert: 'sin(', caret: 0, kind: 'fn' },
-    { text: 'cos', insert: 'cos(', caret: 0, kind: 'fn' },
+    { text: '(' }, { text: ')' }, { text: '⌫', kind: 'act', action: 'backspace' },
     // row 2
     { text: '4', kind: 'num' }, { text: '5', kind: 'num' }, { text: '6', kind: 'num' },
-    { text: '×', insert: '*' }, { text: 'xⁿ', insert: '^' }, { text: '√', insert: 'sqrt(', caret: 0 },
-    { text: 'tan', insert: 'tan(', caret: 0, kind: 'fn' },
-    { text: 'exp', insert: 'exp(', caret: 0, kind: 'fn' },
+    { text: '+' }, { text: '−', insert: '-' }, { text: '^' },
     // row 3
     { text: '1', kind: 'num' }, { text: '2', kind: 'num' }, { text: '3', kind: 'num' },
-    { text: '−', insert: '-' }, { text: '+' }, { text: '=' },
-    { text: 'ln', insert: 'ln(', caret: 0, kind: 'fn' },
-    { text: '|x|', insert: 'abs(', caret: 0, kind: 'fn' },
-    // row 4 — zero, decimal, variables, constants, actions
+    { text: '×', insert: '*' }, { text: '÷', insert: '/' }, { text: '=' },
+    // row 4
     { text: '0', kind: 'num' }, { text: '.', kind: 'num' },
-    { text: 'x' }, { text: 'y' }, { text: 't' }, { text: 'π', insert: 'pi' },
-    { text: 'e' }, { text: 'g' },
-    // row 5 — common names + actions. Uses span to fit.
-    { text: 'v', span: 2 }, { text: 'm', span: 2 }, { text: 'k', span: 2 },
-    { text: 'space', insert: ' ', kind: 'act', span: 2 },
-    { text: '⌫', kind: 'act', span: 3, action: 'backspace' },
-    { text: 'Enter ↵', kind: 'act-primary', span: 5, action: 'enter' }
+    { text: 'x' }, { text: 't' }, { text: 'π', insert: 'pi' }, { text: 'e' },
+    // row 5
+    { text: 'sin', insert: 'sin(', caret: 0, kind: 'fn' },
+    { text: 'cos', insert: 'cos(', caret: 0, kind: 'fn' },
+    { text: 'ln',  insert: 'ln(',  caret: 0, kind: 'fn' },
+    { text: '√',   insert: 'sqrt(', caret: 0, kind: 'fn' },
+    { text: 'abs', insert: 'abs(', caret: 0, kind: 'fn' },
+    { text: '↵', kind: 'act-primary', action: 'enter' }
   ];
 
   function insertAtCaret(input, text, caretOffset) {
@@ -739,16 +738,16 @@
     insertAtCaret(input, text, caret || 0);
   }
 
+  var popEl = null;
   function renderKeypad() {
-    var host = document.getElementById('gr-kbd-grid');
-    if (!host) return;
-    host.innerHTML = '';
+    popEl = document.getElementById('gr-pop');
+    if (!popEl) return;
+    popEl.innerHTML = '';
     KEYPAD.forEach(function (k) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'gr-key';
       if (k.kind) b.setAttribute('data-kind', k.kind);
-      if (k.span) b.setAttribute('data-span', String(k.span));
       b.textContent = k.text;
       // Prevent the button from stealing focus from the input
       b.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
@@ -756,27 +755,76 @@
         if (k.action) kbdAction(k.action);
         else kbdInsert(k.insert != null ? k.insert : k.text, k.caret || 0);
       });
-      host.appendChild(b);
+      popEl.appendChild(b);
     });
   }
 
-  function wireKeypadToggle() {
-    var kbd = document.getElementById('gr-kbd');
-    var tog = document.getElementById('gr-kbd-toggle');
-    if (!kbd || !tog) return;
-    // load saved state
-    var saved;
-    try { saved = localStorage.getItem('ema.graph.kbd'); } catch (e) {}
-    var open = saved !== 'closed';
-    kbd.setAttribute('data-open', String(open));
-    tog.textContent = open ? 'Hide' : 'Show';
-    tog.setAttribute('aria-pressed', String(open));
-    tog.addEventListener('click', function () {
-      open = !open;
-      kbd.setAttribute('data-open', String(open));
-      tog.textContent = open ? 'Hide' : 'Show';
-      tog.setAttribute('aria-pressed', String(open));
-      try { localStorage.setItem('ema.graph.kbd', open ? 'open' : 'closed'); } catch (e) {}
+  function positionPopover(input) {
+    if (!popEl || !input) return;
+    var r = input.getBoundingClientRect();
+    popEl.hidden = false;
+    // Measure after display
+    var pw = popEl.offsetWidth, ph = popEl.offsetHeight;
+    var pageX = window.pageXOffset || document.documentElement.scrollLeft || 0;
+    var pageY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var vh = window.innerHeight;
+
+    // Prefer right of input; fall back to below
+    var gap = 8;
+    var left = r.right + gap + pageX;
+    var top = r.top + pageY;
+    // If it overflows right, drop below the input
+    if (left + pw > pageX + window.innerWidth - 12) {
+      left = r.left + pageX;
+      top = r.bottom + gap + pageY;
+    }
+    // If it overflows bottom, place above
+    if (top + ph > pageY + vh - 12) {
+      top = Math.max(pageY + 12, r.top + pageY - ph - gap);
+    }
+    popEl.style.left = Math.round(left) + 'px';
+    popEl.style.top = Math.round(top) + 'px';
+  }
+
+  function openPopover(input) {
+    if (!popEl) return;
+    positionPopover(input);
+    popEl.setAttribute('data-open', 'true');
+  }
+
+  function closePopover() {
+    if (!popEl) return;
+    popEl.setAttribute('data-open', 'false');
+    // Keep it in the DOM for the fade-out; hide it once the transition is done.
+    setTimeout(function () {
+      if (popEl.getAttribute('data-open') === 'false') popEl.hidden = true;
+    }, 180);
+  }
+
+  function wirePopoverBehavior() {
+    if (!popEl) return;
+    // Clicks on the popover must not count as leaving the field
+    popEl.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+
+    // Reposition on resize/scroll while open
+    window.addEventListener('resize', function () {
+      if (lastFocusedInput && popEl.getAttribute('data-open') === 'true') {
+        positionPopover(lastFocusedInput);
+      }
+    });
+    window.addEventListener('scroll', function () {
+      if (lastFocusedInput && popEl.getAttribute('data-open') === 'true') {
+        positionPopover(lastFocusedInput);
+      }
+    }, true);
+
+    // Dismiss on outside click
+    document.addEventListener('mousedown', function (ev) {
+      if (!popEl || popEl.hidden) return;
+      var t = ev.target;
+      if (popEl.contains(t)) return;
+      if (t && t.classList && t.classList.contains('gr-input')) return;
+      closePopover();
     });
   }
 
@@ -870,7 +918,7 @@
       focusLastRow();
     });
     renderKeypad();
-    wireKeypadToggle();
+    wirePopoverBehavior();
     wireInteractions();
     requestAnimationFrame(loop);
   }
