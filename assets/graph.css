@@ -94,7 +94,9 @@
   font-size: 11px;
   color: #c04040;
   padding-top: 2px;
+  line-height: 1.45;
 }
+.gr-err.gr-note { color: var(--ink-3, #7a7a7a); }
 
 .gr-stage {
   position: relative;

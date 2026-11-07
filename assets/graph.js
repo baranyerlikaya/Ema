@@ -24,7 +24,8 @@
     while (i < n) {
       var ch = src[i];
       if (ch === ' ' || ch === '\t' || ch === '\n') { i++; continue; }
-      if ((ch >= '0' && ch <= '9') || ch === '.') {
+      // Number (decimal must have a digit on at least one side)
+      if (ch >= '0' && ch <= '9') {
         var j = i;
         while (j < n && (src[j] >= '0' && src[j] <= '9' || src[j] === '.')) j++;
         if (j < n && (src[j] === 'e' || src[j] === 'E')) {
@@ -35,6 +36,14 @@
         tokens.push({ t: 'num', v: parseFloat(src.slice(i, j)) });
         i = j; continue;
       }
+      if (ch === '.' && i + 1 < n && src[i + 1] >= '0' && src[i + 1] <= '9') {
+        var jj = i + 1;
+        while (jj < n && src[jj] >= '0' && src[jj] <= '9') jj++;
+        tokens.push({ t: 'num', v: parseFloat(src.slice(i, jj)) });
+        i = jj; continue;
+      }
+      // Dot between identifiers/numbers means multiplication (physics notation like F.d)
+      if (ch === '.') { tokens.push({ t: 'op', v: '*' }); i++; continue; }
       if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch === '_') {
         var k = i;
         while (k < n && ((src[k] >= 'a' && src[k] <= 'z') || (src[k] >= 'A' && src[k] <= 'Z') ||
@@ -45,7 +54,23 @@
       if ('+-*/^(),='.indexOf(ch) !== -1) { tokens.push({ t: 'op', v: ch }); i++; continue; }
       throw new Error('bad character: ' + ch);
     }
-    return tokens;
+    return insertImplicitMul(tokens);
+  }
+
+  // Insert implicit * between tokens: 2x -> 2*x, 2(x) -> 2*(x), )x -> )*x, )( -> )*(.
+  // Does NOT insert between an identifier and ( because that is a function call.
+  function insertImplicitMul(tokens) {
+    if (tokens.length < 2) return tokens;
+    var out = [tokens[0]];
+    for (var i = 1; i < tokens.length; i++) {
+      var prev = tokens[i - 1], curr = tokens[i];
+      var isPrevClose = (prev.t === 'num') || (prev.t === 'op' && prev.v === ')');
+      var isCurrOpen = (curr.t === 'num') || (curr.t === 'id') ||
+                       (curr.t === 'op' && curr.v === '(');
+      if (isPrevClose && isCurrOpen) out.push({ t: 'op', v: '*' });
+      out.push(curr);
+    }
+    return out;
   }
 
   function parseRpn(tokens) {
@@ -199,23 +224,27 @@
         if (lhs === 'x') return { kind: 'xOfAxis', rhs: rhs, axis: 'y' };
 
         var fv = freeVars(rhs).filter(function (n) { return !knownNames[n]; });
-        // Zero free vars → constant
         if (fv.length === 0) {
           try { var val = compileExpr(rhs)({}); if (isFinite(val)) return { kind: 'slider', name: lhs, val: val }; }
           catch (e) {}
         }
-        // One free var → plot name vs that var (any physics formula like F = -k*x or U = -G*M/r)
-        if (fv.length === 1) {
-          return { kind: 'yOfAxis', rhs: rhs, axis: fv[0], label: lhs };
-        }
-        // Multi-var → definition for later rows
+        if (fv.length === 1) return { kind: 'yOfAxis', rhs: rhs, axis: fv[0], label: lhs };
         return { kind: 'def', name: lhs, rhs: rhs };
       }
+
+      // Both sides are expressions: treat as an equation.
+      // Fold to residual LHS − RHS and plot/evaluate its zeros.
+      var diffSrc = '(' + lhs + ') - (' + rhs + ')';
+      var efv = freeVars(diffSrc).filter(function (n) { return !knownNames[n]; });
+      if (efv.length === 0) return { kind: 'eqConst', diffSrc: diffSrc, lhs: lhs, rhs: rhs };
+      if (efv.length === 1) return { kind: 'yOfAxis', rhs: diffSrc, axis: efv[0], eqHint: 'residual · root is the solution' };
+      return { kind: 'tooMany', unknowns: efv, diffSrc: diffSrc, lhs: lhs, rhs: rhs };
     }
 
     // Bare expression: use its single free variable as axis if any
     var bfv = freeVars(s).filter(function (n) { return !knownNames[n]; });
     if (bfv.length === 1) return { kind: 'yOfAxis', rhs: s, axis: bfv[0] };
+    if (bfv.length >= 2) return { kind: 'tooMany', unknowns: bfv, diffSrc: s, lhs: s, rhs: '' };
     return { kind: 'yOfAxis', rhs: s, axis: 'x' };
   }
 
@@ -272,9 +301,14 @@
     });
     // Compile plotting rows
     state.rows.forEach(function (r) {
-      if (r.err || r.info.kind === 'slider' || r.info.kind === 'def' || r.info.kind === 'empty') return;
+      if (r.err || r.info.kind === 'slider' || r.info.kind === 'def' || r.info.kind === 'empty' ||
+          r.info.kind === 'tooMany') return;
       try {
         if (r.info.kind === 'yOfAxis' || r.info.kind === 'xOfAxis') r.fn = compileExpr(r.info.rhs);
+        else if (r.info.kind === 'eqConst') {
+          var fn = compileExpr(r.info.diffSrc);
+          r.eqResidual = fn(buildScope());
+        }
         else if (r.info.kind === 'parametric') {
           r.fnX = compileExpr(r.info.xSrc);
           r.fnY = compileExpr(r.info.ySrc);
@@ -564,16 +598,39 @@
       el.appendChild(input);
       el.appendChild(del);
 
-      // Error hint
-      if (r.err) {
+      // Error / suggestion hint
+      var hint = null;
+      if (r.err) hint = { text: r.err, bad: true };
+      else if (r.info && r.info.kind === 'tooMany') {
+        var names = r.info.unknowns.join(', ');
+        hint = { text: 'unknowns: ' + names + ' — define them above with ' +
+                       r.info.unknowns[0] + ' = <value>', bad: false };
+      } else if (r.info && r.info.kind === 'eqConst') {
+        var holds = Math.abs(r.eqResidual) < 1e-9;
+        hint = {
+          text: holds ? '✓ holds (both sides equal)' :
+                        '✗ does not hold · LHS − RHS = ' + fmtNum(r.eqResidual),
+          bad: !holds
+        };
+      } else if (r.info && r.info.eqHint) {
+        hint = { text: r.info.eqHint, bad: false };
+      }
+      if (hint) {
         var e = document.createElement('div');
         e.className = 'gr-err';
-        e.textContent = r.err;
+        if (!hint.bad) e.classList.add('gr-note');
+        e.textContent = hint.text;
         el.appendChild(e);
       }
 
       exprHost.appendChild(el);
     });
+  }
+
+  function fmtNum(v) {
+    if (!isFinite(v)) return String(v);
+    if (Math.abs(v) >= 1e4 || (Math.abs(v) < 1e-3 && v !== 0)) return v.toExponential(3);
+    return v.toFixed(3);
   }
 
   function focusLastRow() {
