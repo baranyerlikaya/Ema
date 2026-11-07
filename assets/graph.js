@@ -19,7 +19,144 @@
   };
   var CONSTS = { pi: Math.PI, e: Math.E, g: 9.81, tau: Math.PI * 2 };
 
+  // ---------- 0. Normalize LaTeX-ish input ---------------------------------
+  // Accept common TeX syntax so a formula pasted from a textbook or an AI
+  // reply still parses: \cdot, \sin, \pi, \frac{a}{b}, \sqrt{x}, {…} groups,
+  // \left( \right), and so on.
+
+  var LATEX_CMD_MAP = {
+    cdot: '*', times: '*', ast: '*',
+    div: '/', over: '/',
+    pm: '+',
+    sin: 'sin', cos: 'cos', tan: 'tan',
+    arcsin: 'asin', arccos: 'acos', arctan: 'atan',
+    sinh: 'sinh', cosh: 'cosh', tanh: 'tanh',
+    exp: 'exp', log: 'log', ln: 'ln',
+    sqrt: 'sqrt', abs: 'abs',
+    pi: 'pi', tau: 'tau', theta: 'theta', phi: 'phi',
+    alpha: 'alpha', beta: 'beta', gamma: 'gamma', delta: 'delta',
+    epsilon: 'epsilon', zeta: 'zeta', eta: 'eta', iota: 'iota',
+    kappa: 'kappa', lambda: 'lambda', mu: 'mu', nu: 'nu', xi: 'xi',
+    omicron: 'omicron', rho: 'rho', sigma: 'sigma', upsilon: 'upsilon',
+    chi: 'chi', psi: 'psi', omega: 'omega',
+    Pi: 'Pi', Tau: 'Tau', Theta: 'Theta', Phi: 'Phi', Omega: 'Omega',
+    Gamma: 'Gamma', Delta: 'Delta', Lambda: 'Lambda', Sigma: 'Sigma',
+    Psi: 'Psi', Xi: 'Xi'
+  };
+
+  function matchBrace(s, start) {
+    if (s[start] !== '{') return -1;
+    var depth = 1, i = start + 1;
+    while (i < s.length && depth > 0) {
+      if (s[i] === '{') depth++;
+      else if (s[i] === '}') depth--;
+      i++;
+    }
+    return depth === 0 ? i : -1;
+  }
+
+  function normalizeLatex(src) {
+    if (src.indexOf('\\') === -1 && src.indexOf('{') === -1 && src.indexOf('$') === -1) return src;
+    var s = src;
+    // Strip $ delimiters
+    s = s.replace(/^\s*\$+|\$+\s*$/g, '').replace(/\$/g, '');
+    // Drop \left and \right prefixes (keep their following char)
+    s = s.replace(/\\left\s*/g, '').replace(/\\right\s*/g, '');
+    // \mathrm{foo}, \text{foo}, \operatorname{foo} — unwrap
+    s = unwrapWrapper(s, '\\mathrm');
+    s = unwrapWrapper(s, '\\text');
+    s = unwrapWrapper(s, '\\operatorname');
+
+    // \frac{a}{b} → (a)/(b)
+    s = rewriteTwoArg(s, '\\frac', function (a, b) { return '(' + a + ')/(' + b + ')'; });
+    // \sqrt{x} → sqrt(x)   and   \sqrt[n]{x} → (x)^(1/n)
+    s = rewriteSqrt(s);
+
+    // Generic \name → mapped identifier / operator. Keep any whitespace that
+    // followed the command (so '\\sin x' becomes 'sin x', not 'sinx').
+    s = s.replace(/\\([a-zA-Z]+)/g, function (_m, name) {
+      if (LATEX_CMD_MAP[name] != null) return LATEX_CMD_MAP[name];
+      return name;
+    });
+
+    // Remaining { } become grouping parens
+    s = s.replace(/\{/g, '(').replace(/\}/g, ')');
+    return s;
+  }
+
+  function unwrapWrapper(s, cmd) {
+    var out = '', i = 0;
+    while (i < s.length) {
+      if (s.substr(i, cmd.length) === cmd) {
+        var j = i + cmd.length;
+        while (j < s.length && s[j] === ' ') j++;
+        if (s[j] === '{') {
+          var end = matchBrace(s, j);
+          if (end !== -1) { out += s.slice(j + 1, end - 1); i = end; continue; }
+        }
+      }
+      out += s[i]; i++;
+    }
+    return out;
+  }
+
+  function rewriteTwoArg(s, cmd, build) {
+    var out = '', i = 0;
+    while (i < s.length) {
+      if (s.substr(i, cmd.length) === cmd) {
+        var j = i + cmd.length;
+        while (j < s.length && s[j] === ' ') j++;
+        if (s[j] === '{') {
+          var e1 = matchBrace(s, j);
+          if (e1 !== -1) {
+            var k = e1;
+            while (k < s.length && s[k] === ' ') k++;
+            if (s[k] === '{') {
+              var e2 = matchBrace(s, k);
+              if (e2 !== -1) {
+                var a = rewriteTwoArg(s.slice(j + 1, e1 - 1), cmd, build);
+                var b = rewriteTwoArg(s.slice(k + 1, e2 - 1), cmd, build);
+                out += build(a, b);
+                i = e2;
+                continue;
+              }
+            }
+          }
+        }
+      }
+      out += s[i]; i++;
+    }
+    return out;
+  }
+
+  function rewriteSqrt(s) {
+    var out = '', i = 0;
+    while (i < s.length) {
+      if (s.substr(i, 5) === '\\sqrt') {
+        var j = i + 5;
+        var n = null;
+        if (s[j] === '[') {
+          var cb = s.indexOf(']', j + 1);
+          if (cb !== -1) { n = s.slice(j + 1, cb); j = cb + 1; }
+        }
+        while (j < s.length && s[j] === ' ') j++;
+        if (s[j] === '{') {
+          var end = matchBrace(s, j);
+          if (end !== -1) {
+            var inside = rewriteSqrt(s.slice(j + 1, end - 1));
+            if (n != null) out += '(' + inside + ')^(1/(' + n + '))';
+            else out += 'sqrt(' + inside + ')';
+            i = end; continue;
+          }
+        }
+      }
+      out += s[i]; i++;
+    }
+    return out;
+  }
+
   function tokenize(src) {
+    src = normalizeLatex(src);
     var tokens = [], i = 0, n = src.length;
     while (i < n) {
       var ch = src[i];
