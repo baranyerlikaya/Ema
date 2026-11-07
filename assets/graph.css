@@ -103,6 +103,20 @@
 }
 .gr-err.gr-note { color: var(--ink-3, #7a7a7a); }
 
+/* Live KaTeX preview under the typed formula */
+.gr-latex {
+  grid-column: 1 / -1;
+  padding-top: 6px;
+  margin-top: 6px;
+  border-top: 1px dashed rgba(var(--fg-rgb), 0.08);
+  font-size: 15px;
+  color: var(--ink);
+  min-height: 1em;
+  overflow-x: auto;
+}
+.gr-latex[hidden] { display: none; }
+.gr-latex .katex { font-size: 1em; }
+
 .gr-stage {
   position: relative;
   background: var(--white);

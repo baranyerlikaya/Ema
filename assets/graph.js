@@ -161,6 +161,110 @@
 
   function compileExpr(src) { return compileRpn(parseRpn(tokenize(src))); }
 
+  // ---------- 1b. RPN → LaTeX for live math preview -------------------------
+
+  var LATEX_FUNCS = { sin:1, cos:1, tan:1, asin:1, acos:1, atan:1,
+                      sinh:1, cosh:1, tanh:1, exp:1, ln:1, log:1 };
+  var LATEX_GREEK = {
+    pi: '\\pi', tau: '\\tau', theta: '\\theta', phi: '\\phi', alpha: '\\alpha',
+    beta: '\\beta', gamma: '\\gamma', delta: '\\delta', lambda: '\\lambda',
+    mu: '\\mu', omega: '\\omega', rho: '\\rho', sigma: '\\sigma'
+  };
+
+  function latexVar(name) {
+    if (LATEX_GREEK[name]) return LATEX_GREEK[name];
+    if (name.length === 1) return name;
+    // Multi-letter var: show as plain roman (physics convention: upright vectors
+    // get \mathrm, but for scalars like vx we keep subscript style v_x).
+    var m = name.match(/^([a-zA-Z])([0-9]+|[a-zA-Z]+)$/);
+    if (m) return m[1] + '_{' + m[2] + '}';
+    return '\\mathrm{' + name + '}';
+  }
+
+  function toLatex(rpn) {
+    var st = [];
+    function push(latex, prec) { st.push({ latex: latex, prec: prec }); }
+    function wrap(s, outerPrec) { return s.prec < outerPrec ? '(' + s.latex + ')' : s.latex; }
+    function isPlainNum(s) { return /^-?\d+(?:\.\d+)?$/.test(s.latex); }
+    function isSimpleLetter(s) { return /^[a-zA-Z](?:_\{[^}]+\})?$/.test(s.latex) || /^\\[a-zA-Z]+$/.test(s.latex); }
+
+    for (var i = 0; i < rpn.length; i++) {
+      var tk = rpn[i];
+      if (tk.t === 'num') {
+        var v = tk.v;
+        var str = (v === Math.round(v) && Math.abs(v) < 1e16) ? String(v) : String(+v.toPrecision(6));
+        push(str, 100);
+      } else if (tk.t === 'var') {
+        push(latexVar(tk.v), 100);
+      } else if (tk.t === 'fn') {
+        var a = st.pop();
+        if (tk.v === 'sqrt') push('\\sqrt{' + a.latex + '}', 100);
+        else if (tk.v === 'abs') push('\\left|' + a.latex + '\\right|', 100);
+        else if (LATEX_FUNCS[tk.v]) push('\\' + tk.v + '\\left(' + a.latex + '\\right)', 100);
+        else push('\\mathrm{' + tk.v + '}\\left(' + a.latex + '\\right)', 100);
+      } else if (tk.t === 'op') {
+        if (tk.v === 'u-') {
+          var x = st.pop();
+          push('-' + wrap(x, 3), 3);
+        } else {
+          var b = st.pop(), a = st.pop();
+          if (tk.v === '/') push('\\frac{' + a.latex + '}{' + b.latex + '}', 100);
+          else if (tk.v === '^') {
+            var baseStr = (a.prec <= 4 || /\(/.test(a.latex)) ? '{(' + a.latex + ')}' : '{' + a.latex + '}';
+            if (a.prec >= 100 && !/\(|\s|\\cdot/.test(a.latex)) baseStr = a.latex;
+            push(baseStr + '^{' + b.latex + '}', 4);
+          }
+          else if (tk.v === '*') {
+            // Skip \cdot for number × variable / function (nice "2x" or "3\sin(x)")
+            var skipCdot = (isPlainNum(a) && (isSimpleLetter(b) || /^\\[a-z]+/.test(b.latex) || /^\\sqrt|^\\mathrm|^\\left\|/.test(b.latex)))
+                        || (isSimpleLetter(a) && isSimpleLetter(b));
+            var al = wrap(a, 2), bl = wrap(b, 2);
+            push(skipCdot ? al + ' ' + bl : al + ' \\cdot ' + bl, 2);
+          }
+          else if (tk.v === '+' || tk.v === '-') {
+            var al2 = wrap(a, 1);
+            var bl2 = b.prec <= 1 ? '(' + b.latex + ')' : b.latex;
+            push(al2 + ' ' + tk.v + ' ' + bl2, 1);
+          }
+        }
+      }
+    }
+    return st.length ? st[0].latex : '';
+  }
+
+  function exprToLatex(src) {
+    try { return toLatex(parseRpn(tokenize(src))); } catch (e) { return ''; }
+  }
+
+  function rowToLatex(src) {
+    var s = (src || '').trim();
+    if (!s) return '';
+    // Parametric (fx, fy)
+    if (s.charAt(0) === '(' && s.charAt(s.length - 1) === ')') {
+      var inner = s.slice(1, -1);
+      var parts = splitTopLevel(inner, ',');
+      if (parts.length === 2) {
+        var lx = exprToLatex(parts[0]);
+        var ly = exprToLatex(parts[1]);
+        if (lx && ly) return '\\left(' + lx + ',\\; ' + ly + '\\right)';
+      }
+    }
+    // name(var) = expr
+    var mFn = s.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\(\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\)\s*=\s*(.+)$/);
+    if (mFn) {
+      var rhs = exprToLatex(mFn[3]);
+      if (rhs) return latexVar(mFn[1]) + '\\left(' + latexVar(mFn[2]) + '\\right) = ' + rhs;
+    }
+    // LHS = RHS
+    var eqIdx = s.indexOf('=');
+    if (eqIdx !== -1) {
+      var lhsL = exprToLatex(s.slice(0, eqIdx).trim());
+      var rhsL = exprToLatex(s.slice(eqIdx + 1).trim());
+      if (lhsL && rhsL) return lhsL + ' = ' + rhsL;
+    }
+    return exprToLatex(s);
+  }
+
   function freeVars(src) {
     var tokens;
     try { tokens = tokenize(src); } catch (e) { return []; }
@@ -571,6 +675,7 @@
         r.src = input.value;
         recompileAll();
         updateRowHint(el, r); // update in place; do NOT rebuild the list (steals focus)
+        updateRowLatex(el, r);
       });
       input.addEventListener('keydown', function (ev) {
         if (ev.key === 'Enter') {
@@ -601,9 +706,29 @@
       el.appendChild(input);
       el.appendChild(del);
 
+      // Live math preview (KaTeX-rendered under the input)
+      var preview = document.createElement('div');
+      preview.className = 'gr-latex';
+      preview.setAttribute('aria-hidden', 'true');
+      el.appendChild(preview);
       updateRowHint(el, r);
       exprHost.appendChild(el);
+      // Render after append (katex needs an element in the tree)
+      updateRowLatex(el, r);
     });
+  }
+
+  function updateRowLatex(el, r) {
+    var host = el.querySelector('.gr-latex');
+    if (!host) return;
+    var latex = rowToLatex(r.src);
+    if (!latex || !window.katex) { host.innerHTML = ''; host.hidden = true; return; }
+    try {
+      window.katex.render(latex, host, { throwOnError: false, displayMode: false });
+      host.hidden = false;
+    } catch (e) {
+      host.innerHTML = ''; host.hidden = true;
+    }
   }
 
   function computeHint(r) {
