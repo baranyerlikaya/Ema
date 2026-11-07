@@ -57,6 +57,7 @@
         el('a', { class: 'logo', href: ROOT + 'index.html', text: 'Ema' }),
         el('nav', { class: 'topbar-links', 'aria-label': 'Site' }, [
           el('a', { href: ROOT + 'index.html#sections', text: 'Mechanics' }),
+          el('a', { href: ROOT + 'playground.html', text: 'Playground' }),
           el('a', { href: ROOT + 'sources.html', text: 'Sources' })
         ]),
         el('div', { class: 'topbar-right' }, [
@@ -695,6 +696,7 @@
         el('a', { class: 'footer-logo', href: ROOT + 'index.html', text: 'Ema' }),
         el('nav', { class: 'footer-links', 'aria-label': 'Footer' }, [
           el('a', { href: ROOT + 'index.html#sections', text: 'Mechanics' }),
+          el('a', { href: ROOT + 'playground.html', text: 'Playground' }),
           el('a', { href: ROOT + 'sources.html', text: 'Sources' }),
           el('a', { href: REPO_URL, text: 'GitHub' })
         ]),
