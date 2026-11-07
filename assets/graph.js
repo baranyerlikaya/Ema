@@ -159,7 +159,50 @@
     };
   }
 
-  function compileExpr(src) { return compileRpn(parseRpn(tokenize(src))); }
+  function compileExpr(src, known) {
+    var tokens = tokenize(src);
+    if (known) tokens = splitUnknownIds(tokens, known);
+    return compileRpn(parseRpn(tokens));
+  }
+
+  // If an identifier is not a known name on its own, try to split it into
+  // known pieces (e.g. 'mv' → m * v when both m and v are defined above).
+  function isKnownName(name, known) {
+    return !!(FUNCS[name] || CONSTS[name] || (known && known[name]) ||
+              name === 'x' || name === 'y' || name === 't');
+  }
+  function trySplitName(name, known) {
+    var n = name.length;
+    if (n < 2) return null;
+    var pieces = [];
+    var i = 0;
+    while (i < n) {
+      var found = null;
+      for (var j = n; j > i; j--) {
+        var sub = name.slice(i, j);
+        if (isKnownName(sub, known)) { found = sub; break; }
+      }
+      if (!found) return null;
+      pieces.push(found);
+      i += found.length;
+    }
+    return pieces.length > 1 ? pieces : null;
+  }
+  function splitUnknownIds(tokens, known) {
+    var out = [];
+    for (var i = 0; i < tokens.length; i++) {
+      var t = tokens[i];
+      if (t.t !== 'id' || isKnownName(t.v, known)) { out.push(t); continue; }
+      var pieces = trySplitName(t.v, known);
+      if (pieces) {
+        for (var k = 0; k < pieces.length; k++) {
+          if (k > 0) out.push({ t: 'op', v: '*' });
+          out.push({ t: 'id', v: pieces[k] });
+        }
+      } else out.push(t);
+    }
+    return out;
+  }
 
   // ---------- 1b. RPN → LaTeX for live math preview -------------------------
 
@@ -232,11 +275,15 @@
     return st.length ? st[0].latex : '';
   }
 
-  function exprToLatex(src) {
-    try { return toLatex(parseRpn(tokenize(src))); } catch (e) { return ''; }
+  function exprToLatex(src, known) {
+    try {
+      var tokens = tokenize(src);
+      if (known) tokens = splitUnknownIds(tokens, known);
+      return toLatex(parseRpn(tokens));
+    } catch (e) { return ''; }
   }
 
-  function rowToLatex(src) {
+  function rowToLatex(src, known) {
     var s = (src || '').trim();
     if (!s) return '';
     // Parametric (fx, fy)
@@ -244,30 +291,31 @@
       var inner = s.slice(1, -1);
       var parts = splitTopLevel(inner, ',');
       if (parts.length === 2) {
-        var lx = exprToLatex(parts[0]);
-        var ly = exprToLatex(parts[1]);
+        var lx = exprToLatex(parts[0], known);
+        var ly = exprToLatex(parts[1], known);
         if (lx && ly) return '\\left(' + lx + ',\\; ' + ly + '\\right)';
       }
     }
     // name(var) = expr
     var mFn = s.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\(\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\)\s*=\s*(.+)$/);
     if (mFn) {
-      var rhs = exprToLatex(mFn[3]);
+      var rhs = exprToLatex(mFn[3], known);
       if (rhs) return latexVar(mFn[1]) + '\\left(' + latexVar(mFn[2]) + '\\right) = ' + rhs;
     }
     // LHS = RHS
     var eqIdx = s.indexOf('=');
     if (eqIdx !== -1) {
-      var lhsL = exprToLatex(s.slice(0, eqIdx).trim());
-      var rhsL = exprToLatex(s.slice(eqIdx + 1).trim());
+      var lhsL = exprToLatex(s.slice(0, eqIdx).trim(), known);
+      var rhsL = exprToLatex(s.slice(eqIdx + 1).trim(), known);
       if (lhsL && rhsL) return lhsL + ' = ' + rhsL;
     }
-    return exprToLatex(s);
+    return exprToLatex(s, known);
   }
 
-  function freeVars(src) {
+  function freeVars(src, known) {
     var tokens;
     try { tokens = tokenize(src); } catch (e) { return []; }
+    if (known) tokens = splitUnknownIds(tokens, known);
     var found = {};
     for (var i = 0; i < tokens.length; i++) {
       var tk = tokens[i];
@@ -303,7 +351,7 @@
         var inner = s.slice(1, -1);
         var parts = splitTopLevel(inner, ',');
         if (parts.length === 2) {
-          var vs = freeVars(parts[0]).concat(freeVars(parts[1]));
+          var vs = freeVars(parts[0], knownNames).concat(freeVars(parts[1], knownNames));
           var hasT = vs.indexOf('t') !== -1;
           return { kind: hasT ? 'parametric' : 'point', xSrc: parts[0], ySrc: parts[1] };
         }
@@ -327,9 +375,9 @@
         if (lhs === 'y') return { kind: 'yOfAxis', rhs: rhs, axis: 'x' };
         if (lhs === 'x') return { kind: 'xOfAxis', rhs: rhs, axis: 'y' };
 
-        var fv = freeVars(rhs).filter(function (n) { return !knownNames[n]; });
+        var fv = freeVars(rhs, knownNames).filter(function (n) { return !knownNames[n]; });
         if (fv.length === 0) {
-          try { var val = compileExpr(rhs)({}); if (isFinite(val)) return { kind: 'slider', name: lhs, val: val }; }
+          try { var val = compileExpr(rhs, knownNames)({}); if (isFinite(val)) return { kind: 'slider', name: lhs, val: val }; }
           catch (e) {}
         }
         if (fv.length === 1) return { kind: 'yOfAxis', rhs: rhs, axis: fv[0], label: lhs };
@@ -337,16 +385,23 @@
       }
 
       // Both sides are expressions: treat as an equation.
-      // Fold to residual LHS − RHS and plot/evaluate its zeros.
       var diffSrc = '(' + lhs + ') - (' + rhs + ')';
-      var efv = freeVars(diffSrc).filter(function (n) { return !knownNames[n]; });
+      var efv = freeVars(diffSrc, knownNames).filter(function (n) { return !knownNames[n]; });
       if (efv.length === 0) return { kind: 'eqConst', diffSrc: diffSrc, lhs: lhs, rhs: rhs };
       if (efv.length === 1) return { kind: 'yOfAxis', rhs: diffSrc, axis: efv[0], eqHint: 'residual · root is the solution' };
       return { kind: 'tooMany', unknowns: efv, diffSrc: diffSrc, lhs: lhs, rhs: rhs };
     }
 
+    // Bare single name — no operators, no equals. Prompt the student to define it.
+    if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(s)) {
+      if (s === 'x' || s === 'y' || s === 't' || isKnownName(s, knownNames)) {
+        return { kind: 'yOfAxis', rhs: s, axis: s === 'y' ? 'x' : s };
+      }
+      return { kind: 'bareName', name: s };
+    }
+
     // Bare expression: use its single free variable as axis if any
-    var bfv = freeVars(s).filter(function (n) { return !knownNames[n]; });
+    var bfv = freeVars(s, knownNames).filter(function (n) { return !knownNames[n]; });
     if (bfv.length === 1) return { kind: 'yOfAxis', rhs: s, axis: bfv[0] };
     if (bfv.length >= 2) return { kind: 'tooMany', unknowns: bfv, diffSrc: s, lhs: s, rhs: '' };
     return { kind: 'yOfAxis', rhs: s, axis: 'x' };
@@ -390,6 +445,7 @@
       var info = classify(r.src, known);
       if (info.kind === 'slider' || info.kind === 'def') known[info.name] = true;
     });
+    state.knownSet = known;
     // Second pass: classify properly with known-names context
     state.rows.forEach(function (r) {
       r.info = classify(r.src, known);
@@ -399,26 +455,26 @@
       if (r.info.kind === 'slider') {
         state.sliders[r.info.name] = { val: r.info.val };
       } else if (r.info.kind === 'def') {
-        try { state.defs[r.info.name] = compileExpr(r.info.rhs); }
+        try { state.defs[r.info.name] = compileExpr(r.info.rhs, known); }
         catch (e) { r.err = e.message; }
       }
     });
     // Compile plotting rows
     state.rows.forEach(function (r) {
       if (r.err || r.info.kind === 'slider' || r.info.kind === 'def' || r.info.kind === 'empty' ||
-          r.info.kind === 'tooMany') return;
+          r.info.kind === 'tooMany' || r.info.kind === 'bareName') return;
       try {
-        if (r.info.kind === 'yOfAxis' || r.info.kind === 'xOfAxis') r.fn = compileExpr(r.info.rhs);
+        if (r.info.kind === 'yOfAxis' || r.info.kind === 'xOfAxis') r.fn = compileExpr(r.info.rhs, known);
         else if (r.info.kind === 'eqConst') {
-          var fn = compileExpr(r.info.diffSrc);
+          var fn = compileExpr(r.info.diffSrc, known);
           r.eqResidual = fn(buildScope());
         }
         else if (r.info.kind === 'parametric') {
-          r.fnX = compileExpr(r.info.xSrc);
-          r.fnY = compileExpr(r.info.ySrc);
+          r.fnX = compileExpr(r.info.xSrc, known);
+          r.fnY = compileExpr(r.info.ySrc, known);
         } else if (r.info.kind === 'point') {
-          r.px = compileExpr(r.info.xSrc)({});
-          r.py = compileExpr(r.info.ySrc)({});
+          r.px = compileExpr(r.info.xSrc, known)({});
+          r.py = compileExpr(r.info.ySrc, known)({});
         }
       } catch (e) { r.err = e.message; }
     });
@@ -721,7 +777,7 @@
   function updateRowLatex(el, r) {
     var host = el.querySelector('.gr-latex');
     if (!host) return;
-    var latex = rowToLatex(r.src);
+    var latex = rowToLatex(r.src, state.knownSet);
     if (!latex || !window.katex) { host.innerHTML = ''; host.hidden = true; return; }
     try {
       window.katex.render(latex, host, { throwOnError: false, displayMode: false });
@@ -734,6 +790,10 @@
   function computeHint(r) {
     if (r.err) return { text: r.err, bad: true };
     if (!r.info) return null;
+    if (r.info.kind === 'bareName') {
+      return { text: 'what is ' + r.info.name + '? define it with ' + r.info.name +
+                     ' = <value>, e.g. ' + r.info.name + ' = 2', bad: true };
+    }
     if (r.info.kind === 'tooMany') {
       var names = r.info.unknowns.join(', ');
       return { text: 'unknowns: ' + names + ' — define them above with ' +
