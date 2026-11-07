@@ -57,17 +57,23 @@
     return insertImplicitMul(tokens);
   }
 
-  // Insert implicit * between tokens: 2x -> 2*x, 2(x) -> 2*(x), )x -> )*x, )( -> )*(.
-  // Does NOT insert between an identifier and ( because that is a function call.
+  // Insert implicit * between tokens. Covers all the physics-friendly cases:
+  //   2x, 2(x), (x+1)x, (x+1)(x-1), A exp(...), gamma t, A B, 3 sin(x), etc.
+  // Does NOT insert between an identifier and '(' because that is a function call.
   function insertImplicitMul(tokens) {
     if (tokens.length < 2) return tokens;
     var out = [tokens[0]];
     for (var i = 1; i < tokens.length; i++) {
       var prev = tokens[i - 1], curr = tokens[i];
-      var isPrevClose = (prev.t === 'num') || (prev.t === 'op' && prev.v === ')');
-      var isCurrOpen = (curr.t === 'num') || (curr.t === 'id') ||
-                       (curr.t === 'op' && curr.v === '(');
-      if (isPrevClose && isCurrOpen) out.push({ t: 'op', v: '*' });
+      // Function call: id directly before '(' — keep as a call, do NOT split with *
+      if (prev.t === 'id' && curr.t === 'op' && curr.v === '(') {
+        out.push(curr); continue;
+      }
+      var isPrevValue = prev.t === 'num' || prev.t === 'id' ||
+                        (prev.t === 'op' && prev.v === ')');
+      var isCurrValue = curr.t === 'num' || curr.t === 'id' ||
+                        (curr.t === 'op' && curr.v === '(');
+      if (isPrevValue && isCurrValue) out.push({ t: 'op', v: '*' });
       out.push(curr);
     }
     return out;
@@ -211,7 +217,13 @@
   var LATEX_GREEK = {
     pi: '\\pi', tau: '\\tau', theta: '\\theta', phi: '\\phi', alpha: '\\alpha',
     beta: '\\beta', gamma: '\\gamma', delta: '\\delta', lambda: '\\lambda',
-    mu: '\\mu', omega: '\\omega', rho: '\\rho', sigma: '\\sigma'
+    mu: '\\mu', omega: '\\omega', rho: '\\rho', sigma: '\\sigma',
+    epsilon: '\\epsilon', eta: '\\eta', kappa: '\\kappa', nu: '\\nu',
+    xi: '\\xi', psi: '\\psi', zeta: '\\zeta', chi: '\\chi',
+    // Capital Greek (upright by LaTeX convention)
+    Pi: '\\Pi', Tau: 'T', Theta: '\\Theta', Phi: '\\Phi', Omega: '\\Omega',
+    Gamma: '\\Gamma', Delta: '\\Delta', Lambda: '\\Lambda', Sigma: '\\Sigma',
+    Psi: '\\Psi', Xi: '\\Xi'
   };
 
   function latexVar(name) {
@@ -736,6 +748,9 @@
       input.className = 'gr-input';
       input.spellcheck = false;
       input.autocomplete = 'off';
+      input.setAttribute('autocapitalize', 'none');
+      input.setAttribute('autocorrect', 'off');
+      input.setAttribute('inputmode', 'text');
       input.value = r.src;
       input.placeholder = 'y = sin(x)';
       input.addEventListener('input', function () {
