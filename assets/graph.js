@@ -163,13 +163,13 @@
   //   bare "expr(t)" with (,)    -> parametric in t
   // Everything else: try as y of x, fall back to y of t.
 
-  function classify(src) {
+  function classify(src, knownNames) {
     var s = src.trim();
     if (!s) return { kind: 'empty' };
+    knownNames = knownNames || {};
 
     // Parametric  (fx, fy)
     if (s.charAt(0) === '(') {
-      // Find the matching ) at the end
       if (s.charAt(s.length - 1) === ')') {
         var inner = s.slice(1, -1);
         var parts = splitTopLevel(inner, ',');
@@ -186,22 +186,37 @@
     if (eqIdx !== -1) {
       var lhs = s.slice(0, eqIdx).trim();
       var rhs = s.slice(eqIdx + 1).trim();
+
+      // f(var) = expr — named function of one variable
+      var mFn = lhs.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\(\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\)$/);
+      if (mFn) {
+        var axis = mFn[2];
+        return { kind: 'yOfAxis', rhs: rhs, axis: axis };
+      }
+
       if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(lhs)) {
-        // name = expr
-        if (lhs === 'y') return { kind: 'yOfX', rhs: rhs };
-        if (lhs === 'x') return { kind: 'xOfY', rhs: rhs };
-        // If RHS parses to a number (no free vars), it's a slider/constant
-        var fv = freeVars(rhs);
+        if (lhs === 'y') return { kind: 'yOfAxis', rhs: rhs, axis: 'x' };
+        if (lhs === 'x') return { kind: 'xOfAxis', rhs: rhs, axis: 'y' };
+
+        var fv = freeVars(rhs).filter(function (n) { return !knownNames[n]; });
+        // Zero free vars → constant
         if (fv.length === 0) {
           try { var val = compileExpr(rhs)({}); if (isFinite(val)) return { kind: 'slider', name: lhs, val: val }; }
           catch (e) {}
         }
+        // One free var → plot name vs that var (any physics formula like F = -k*x or U = -G*M/r)
+        if (fv.length === 1) {
+          return { kind: 'yOfAxis', rhs: rhs, axis: fv[0], label: lhs };
+        }
+        // Multi-var → definition for later rows
         return { kind: 'def', name: lhs, rhs: rhs };
       }
     }
 
-    // Bare: if uses only x -> y of x, if uses only t -> parametric-y? we only draw y=f(t) rarely; treat t as x.
-    return { kind: 'yOfX', rhs: s };
+    // Bare expression: use its single free variable as axis if any
+    var bfv = freeVars(s).filter(function (n) { return !knownNames[n]; });
+    if (bfv.length === 1) return { kind: 'yOfAxis', rhs: s, axis: bfv[0] };
+    return { kind: 'yOfAxis', rhs: s, axis: 'x' };
   }
 
   function splitTopLevel(s, sep) {
@@ -234,28 +249,32 @@
   // ---------- 4. Parse / recompile ------------------------------------------
 
   function recompileAll() {
-    // Build slider/def scope first, in row order
     state.sliders = {};
     state.defs = {};
+    // First pass: find names of sliders/defs so later rows can see them as known
+    var known = {};
     state.rows.forEach(function (r) {
-      r.info = classify(r.src);
+      var info = classify(r.src, known);
+      if (info.kind === 'slider' || info.kind === 'def') known[info.name] = true;
+    });
+    // Second pass: classify properly with known-names context
+    state.rows.forEach(function (r) {
+      r.info = classify(r.src, known);
       r.err = null;
       r.fn = r.fnX = r.fnY = null;
       r.px = r.py = null;
       if (r.info.kind === 'slider') {
-        // Silent constant: no slider UI, just a definition
-        state.sliders[r.info.name] = { val: r.info.val, min: -10, max: 10 };
+        state.sliders[r.info.name] = { val: r.info.val };
       } else if (r.info.kind === 'def') {
         try { state.defs[r.info.name] = compileExpr(r.info.rhs); }
         catch (e) { r.err = e.message; }
       }
     });
-    // Compile the rest
+    // Compile plotting rows
     state.rows.forEach(function (r) {
       if (r.err || r.info.kind === 'slider' || r.info.kind === 'def' || r.info.kind === 'empty') return;
       try {
-        if (r.info.kind === 'yOfX') r.fn = compileExpr(r.info.rhs);
-        else if (r.info.kind === 'xOfY') r.fn = compileExpr(r.info.rhs);
+        if (r.info.kind === 'yOfAxis' || r.info.kind === 'xOfAxis') r.fn = compileExpr(r.info.rhs);
         else if (r.info.kind === 'parametric') {
           r.fnX = compileExpr(r.info.xSrc);
           r.fnY = compileExpr(r.info.ySrc);
@@ -382,8 +401,8 @@
     state.rows.forEach(function (r) {
       if (!r.visible) return;
       if (r.err) return;
-      if (r.info.kind === 'yOfX') drawYofX(r, w, h, baseScope);
-      else if (r.info.kind === 'xOfY') drawXofY(r, w, h, baseScope);
+      if (r.info.kind === 'yOfAxis') drawYofX(r, w, h, baseScope);
+      else if (r.info.kind === 'xOfAxis') drawXofY(r, w, h, baseScope);
       else if (r.info.kind === 'parametric') drawParam(r, w, h, baseScope);
       else if (r.info.kind === 'point') drawPoint(r, w, h);
     });
@@ -394,21 +413,20 @@
     var xMin = worldX(0, w), xMax = worldX(w, w);
     var dx = (xMax - xMin) / samples;
     var scope = Object.assign({}, baseScope);
+    var axis = r.info.axis || 'x';
     ctx.lineWidth = 1.6; ctx.strokeStyle = r.color;
     ctx.beginPath();
     var lastValid = false, lastY = 0;
     for (var i = 0; i <= samples; i++) {
-      scope.x = xMin + i * dx;
-      scope.t = scope.x; // allow t as x alias for convenience
+      scope[axis] = xMin + i * dx;
       var y;
       try { y = r.fn(scope); }
       catch (e) { lastValid = false; continue; }
       if (!isFinite(y)) { lastValid = false; continue; }
-      // break line on huge jump (asymptote)
       if (lastValid && Math.abs(y - lastY) > (worldY(0, h) - worldY(h, h)) * 2) {
         lastValid = false;
       }
-      var px = X(scope.x, w), py = Y(y, h);
+      var px = X(scope[axis], w), py = Y(y, h);
       if (!lastValid) ctx.moveTo(px, py); else ctx.lineTo(px, py);
       lastValid = true; lastY = y;
     }
@@ -420,16 +438,17 @@
     var yMin = worldY(h, h), yMax = worldY(0, h);
     var dy = (yMax - yMin) / samples;
     var scope = Object.assign({}, baseScope);
+    var axis = r.info.axis || 'y';
     ctx.lineWidth = 1.6; ctx.strokeStyle = r.color;
     ctx.beginPath();
     var lastValid = false, lastX = 0;
     for (var i = 0; i <= samples; i++) {
-      scope.y = yMin + i * dy;
+      scope[axis] = yMin + i * dy;
       var x;
       try { x = r.fn(scope); } catch (e) { lastValid = false; continue; }
       if (!isFinite(x)) { lastValid = false; continue; }
       if (lastValid && Math.abs(x - lastX) > (worldX(w, w) - worldX(0, w)) * 2) lastValid = false;
-      var px = X(x, w), py = Y(scope.y, h);
+      var px = X(x, w), py = Y(scope[axis], h);
       if (!lastValid) ctx.moveTo(px, py); else ctx.lineTo(px, py);
       lastValid = true; lastX = x;
     }
