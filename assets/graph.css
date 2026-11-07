@@ -74,6 +74,11 @@
 .gr-row:hover .gr-del,
 .gr-row:focus-within .gr-del { opacity: 1; }
 .gr-del:hover { color: var(--ink); }
+/* On touch devices there is no hover — the delete button must stay visible. */
+@media (hover: none) {
+  .gr-del { opacity: 0.6; }
+  .gr-row:focus-within .gr-del { opacity: 1; }
+}
 
 .gr-add-min {
   align-self: flex-start;

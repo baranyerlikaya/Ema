@@ -578,6 +578,8 @@
           addRow('');
           renderRows();
           focusLastRow();
+        } else if (ev.key === 'Escape') {
+          closePopover();
         }
       });
       trackInputFocus(input);
@@ -739,24 +741,63 @@
   }
 
   var popEl = null;
+  var POP_COLS = 6;
   function renderKeypad() {
     popEl = document.getElementById('gr-pop');
     if (!popEl) return;
     popEl.innerHTML = '';
-    KEYPAD.forEach(function (k) {
+    KEYPAD.forEach(function (k, idx) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'gr-key';
       if (k.kind) b.setAttribute('data-kind', k.kind);
       b.textContent = k.text;
-      // Prevent the button from stealing focus from the input
+      // Roving tabindex — Tab reaches the popover at one cell, arrows move inside.
+      b.tabIndex = idx === 0 ? 0 : -1;
+      if (k.action === 'backspace') b.setAttribute('aria-label', 'Backspace');
+      else if (k.action === 'enter') b.setAttribute('aria-label', 'Enter, add new formula');
+      else if (k.insert && k.insert !== k.text) b.setAttribute('aria-label', k.insert.replace(/\(/, ''));
+
+      // Prevent the button from stealing focus from the input on pointer press
       b.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
       b.addEventListener('click', function () {
         if (k.action) kbdAction(k.action);
         else kbdInsert(k.insert != null ? k.insert : k.text, k.caret || 0);
       });
+      b.addEventListener('keydown', onKeyKeyDown);
       popEl.appendChild(b);
     });
+  }
+
+  function onKeyKeyDown(ev) {
+    var keys = popEl.querySelectorAll('.gr-key');
+    var idx = Array.prototype.indexOf.call(keys, ev.currentTarget);
+    if (idx < 0) return;
+    var next = idx;
+    switch (ev.key) {
+      case 'ArrowRight': next = Math.min(keys.length - 1, idx + 1); break;
+      case 'ArrowLeft':  next = Math.max(0, idx - 1); break;
+      case 'ArrowDown':  next = Math.min(keys.length - 1, idx + POP_COLS); break;
+      case 'ArrowUp':    next = Math.max(0, idx - POP_COLS); break;
+      case 'Home':       next = 0; break;
+      case 'End':        next = keys.length - 1; break;
+      case 'Escape':
+        ev.preventDefault();
+        closePopover();
+        if (lastFocusedInput) lastFocusedInput.focus();
+        return;
+      case ' ':
+      case 'Enter':
+        ev.preventDefault();
+        ev.currentTarget.click();
+        return;
+      default:
+        return;
+    }
+    ev.preventDefault();
+    keys[idx].tabIndex = -1;
+    keys[next].tabIndex = 0;
+    keys[next].focus();
   }
 
   function positionPopover(input) {
