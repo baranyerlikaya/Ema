@@ -580,6 +580,7 @@
           focusLastRow();
         }
       });
+      trackInputFocus(input);
 
       // Delete
       var del = document.createElement('button');
@@ -635,13 +636,148 @@
 
   function focusLastRow() {
     var inputs = exprHost.querySelectorAll('.gr-input');
-    if (inputs.length) inputs[inputs.length - 1].focus();
+    if (inputs.length) {
+      var last = inputs[inputs.length - 1];
+      last.focus();
+      rememberFocus(last);
+    }
+  }
+
+  // Keep track of the last focused expression input so the keypad can type into it.
+  var lastFocusedInput = null;
+  var lastCaretPos = 0;
+  function rememberFocus(el) {
+    lastFocusedInput = el;
+    try { lastCaretPos = el.selectionStart != null ? el.selectionStart : el.value.length; }
+    catch (e) { lastCaretPos = el.value.length; }
+  }
+  function trackInputFocus(input) {
+    input.addEventListener('focus', function () { rememberFocus(input); });
+    input.addEventListener('click', function () { rememberFocus(input); });
+    input.addEventListener('keyup', function () { rememberFocus(input); });
   }
 
   function addRow(src, opts) {
     var r = makeRow(src, opts);
     recompileAll();
     return r;
+  }
+
+  // ---------- 6b. On-screen keyboard ----------------------------------------
+  // Each entry: { text, kind?, span?, insert?, caret?, action? }
+  // - text:   what the button shows and (unless insert set) what it inserts
+  // - insert: text to insert instead of `text` (e.g. 'sin(' with caret inside)
+  // - caret:  offset from end of insert for the caret (default = end)
+  // - kind:   styling class ('num' | 'fn' | 'act' | 'act-primary')
+  // - span:   column span 2 (default) / 3 / 4
+  // - action: 'del' | 'backspace' | 'enter'
+  var KEYPAD = [
+    // row 1 — digits + close parens + a few functions
+    { text: '7', kind: 'num' }, { text: '8', kind: 'num' }, { text: '9', kind: 'num' },
+    { text: '÷', insert: '/' }, { text: '(' }, { text: ')' },
+    { text: 'sin', insert: 'sin(', caret: 0, kind: 'fn' },
+    { text: 'cos', insert: 'cos(', caret: 0, kind: 'fn' },
+    // row 2
+    { text: '4', kind: 'num' }, { text: '5', kind: 'num' }, { text: '6', kind: 'num' },
+    { text: '×', insert: '*' }, { text: 'xⁿ', insert: '^' }, { text: '√', insert: 'sqrt(', caret: 0 },
+    { text: 'tan', insert: 'tan(', caret: 0, kind: 'fn' },
+    { text: 'exp', insert: 'exp(', caret: 0, kind: 'fn' },
+    // row 3
+    { text: '1', kind: 'num' }, { text: '2', kind: 'num' }, { text: '3', kind: 'num' },
+    { text: '−', insert: '-' }, { text: '+' }, { text: '=' },
+    { text: 'ln', insert: 'ln(', caret: 0, kind: 'fn' },
+    { text: '|x|', insert: 'abs(', caret: 0, kind: 'fn' },
+    // row 4 — zero, decimal, variables, constants, actions
+    { text: '0', kind: 'num' }, { text: '.', kind: 'num' },
+    { text: 'x' }, { text: 'y' }, { text: 't' }, { text: 'π', insert: 'pi' },
+    { text: 'e' }, { text: 'g' },
+    // row 5 — common names + actions. Uses span to fit.
+    { text: 'v', span: 2 }, { text: 'm', span: 2 }, { text: 'k', span: 2 },
+    { text: 'space', insert: ' ', kind: 'act', span: 2 },
+    { text: '⌫', kind: 'act', span: 3, action: 'backspace' },
+    { text: 'Enter ↵', kind: 'act-primary', span: 5, action: 'enter' }
+  ];
+
+  function insertAtCaret(input, text, caretOffset) {
+    var pos = typeof input.selectionStart === 'number' ? input.selectionStart : input.value.length;
+    var end = typeof input.selectionEnd === 'number' ? input.selectionEnd : pos;
+    var before = input.value.slice(0, pos);
+    var after = input.value.slice(end);
+    input.value = before + text + after;
+    var newPos = before.length + text.length - (caretOffset || 0);
+    try { input.setSelectionRange(newPos, newPos); } catch (e) {}
+    lastCaretPos = newPos;
+    // fire input event so row re-parses
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function backspaceAtCaret(input) {
+    var pos = typeof input.selectionStart === 'number' ? input.selectionStart : input.value.length;
+    var end = typeof input.selectionEnd === 'number' ? input.selectionEnd : pos;
+    if (pos === end && pos === 0) return;
+    if (pos === end) { pos = pos - 1; }
+    input.value = input.value.slice(0, pos) + input.value.slice(end);
+    try { input.setSelectionRange(pos, pos); } catch (e) {}
+    lastCaretPos = pos;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function kbdAction(action) {
+    var input = lastFocusedInput || exprHost.querySelector('.gr-input');
+    if (!input) return;
+    input.focus();
+    if (action === 'backspace') backspaceAtCaret(input);
+    else if (action === 'enter') {
+      addRow(''); renderRows(); focusLastRow();
+    }
+  }
+
+  function kbdInsert(text, caret) {
+    var input = lastFocusedInput || exprHost.querySelector('.gr-input');
+    if (!input) return;
+    input.focus();
+    insertAtCaret(input, text, caret || 0);
+  }
+
+  function renderKeypad() {
+    var host = document.getElementById('gr-kbd-grid');
+    if (!host) return;
+    host.innerHTML = '';
+    KEYPAD.forEach(function (k) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'gr-key';
+      if (k.kind) b.setAttribute('data-kind', k.kind);
+      if (k.span) b.setAttribute('data-span', String(k.span));
+      b.textContent = k.text;
+      // Prevent the button from stealing focus from the input
+      b.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+      b.addEventListener('click', function () {
+        if (k.action) kbdAction(k.action);
+        else kbdInsert(k.insert != null ? k.insert : k.text, k.caret || 0);
+      });
+      host.appendChild(b);
+    });
+  }
+
+  function wireKeypadToggle() {
+    var kbd = document.getElementById('gr-kbd');
+    var tog = document.getElementById('gr-kbd-toggle');
+    if (!kbd || !tog) return;
+    // load saved state
+    var saved;
+    try { saved = localStorage.getItem('ema.graph.kbd'); } catch (e) {}
+    var open = saved !== 'closed';
+    kbd.setAttribute('data-open', String(open));
+    tog.textContent = open ? 'Hide' : 'Show';
+    tog.setAttribute('aria-pressed', String(open));
+    tog.addEventListener('click', function () {
+      open = !open;
+      kbd.setAttribute('data-open', String(open));
+      tog.textContent = open ? 'Hide' : 'Show';
+      tog.setAttribute('aria-pressed', String(open));
+      try { localStorage.setItem('ema.graph.kbd', open ? 'open' : 'closed'); } catch (e) {}
+    });
   }
 
   // ---------- 7. Pan / zoom -------------------------------------------------
@@ -733,6 +869,8 @@
       renderRows();
       focusLastRow();
     });
+    renderKeypad();
+    wireKeypadToggle();
     wireInteractions();
     requestAnimationFrame(loop);
   }
