@@ -216,20 +216,16 @@
 
   function latexVar(name) {
     if (LATEX_GREEK[name]) return LATEX_GREEK[name];
-    // Explicit underscore subscript: v_0, v_max, omega_0, F_net.
+    // Explicit underscore subscript only: v_0, v_max, omega_0, F_net.
     var usIdx = name.indexOf('_');
     if (usIdx > 0) {
       var head = name.slice(0, usIdx);
       var sub = name.slice(usIdx + 1);
       return latexVar(head) + '_{' + latexSubscript(sub) + '}';
     }
-    if (name.length === 1) return name;
-    // Letter + digits: v0 → v_0 (digits are always subscripts in physics).
-    var m = name.match(/^([a-zA-Z])([0-9]+)$/);
-    if (m) return m[1] + '_{' + m[2] + '}';
-    // Letter + letters is ambiguous (could be a physics product like mv); keep
-    // it as a plain roman name rather than silently subscripting it.
-    return '\\mathrm{' + name + '}';
+    // Everything else stays as the student typed it — no silent subscripts,
+    // no mathrm. 'v0' renders as v0, 'mv' as mv, 'F2' as F2.
+    return name;
   }
 
   function latexSubscript(s) {
