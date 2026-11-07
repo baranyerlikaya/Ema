@@ -229,7 +229,7 @@
     nextId: 1
   };
 
-  var canvas, ctx, exprHost, addBtn, templateHost, zoomInBtn, zoomOutBtn, resetViewBtn;
+  var canvas, ctx, exprHost, addBtn, zoomInBtn, zoomOutBtn, resetViewBtn;
 
   // ---------- 4. Parse / recompile ------------------------------------------
 
@@ -243,9 +243,8 @@
       r.fn = r.fnX = r.fnY = null;
       r.px = r.py = null;
       if (r.info.kind === 'slider') {
-        r.isSlider = true;
-        if (!state.sliders[r.info.name]) state.sliders[r.info.name] = { val: r.info.val, min: Math.min(-10, r.info.val * 2), max: Math.max(10, r.info.val * 2) };
-        else state.sliders[r.info.name].val = r.info.val;
+        // Silent constant: no slider UI, just a definition
+        state.sliders[r.info.name] = { val: r.info.val, min: -10, max: 10 };
       } else if (r.info.kind === 'def') {
         try { state.defs[r.info.name] = compileExpr(r.info.rhs); }
         catch (e) { r.err = e.message; }
@@ -546,38 +545,6 @@
       el.appendChild(input);
       el.appendChild(del);
 
-      // Slider sub-row
-      if (r.info && r.info.kind === 'slider') {
-        var sl = state.sliders[r.info.name];
-        var slBox = document.createElement('div');
-        slBox.className = 'gr-slider';
-        var minIn = document.createElement('input');
-        minIn.type = 'number'; minIn.step = 'any'; minIn.value = sl.min; minIn.className = 'gr-slider-end';
-        var rng = document.createElement('input');
-        rng.type = 'range'; rng.min = sl.min; rng.max = sl.max;
-        rng.step = (sl.max - sl.min) / 200;
-        rng.value = sl.val;
-        var maxIn = document.createElement('input');
-        maxIn.type = 'number'; maxIn.step = 'any'; maxIn.value = sl.max; maxIn.className = 'gr-slider-end';
-        function syncRange() {
-          rng.min = sl.min; rng.max = sl.max;
-          rng.step = (sl.max - sl.min) / 200;
-        }
-        minIn.addEventListener('input', function () { sl.min = parseFloat(minIn.value) || 0; syncRange(); });
-        maxIn.addEventListener('input', function () { sl.max = parseFloat(maxIn.value) || 1; syncRange(); });
-        rng.addEventListener('input', function () {
-          sl.val = parseFloat(rng.value);
-          // Keep the row's source in sync so the number shows live
-          r.src = r.info.name + ' = ' + sl.val.toFixed(3);
-          input.value = r.src;
-          r.info.val = sl.val;
-        });
-        slBox.appendChild(minIn);
-        slBox.appendChild(rng);
-        slBox.appendChild(maxIn);
-        el.appendChild(slBox);
-      }
-
       // Error hint
       if (r.err) {
         var e = document.createElement('div');
@@ -601,122 +568,7 @@
     return r;
   }
 
-  // ---------- 7. Templates --------------------------------------------------
-
-  var TEMPLATES = [
-    {
-      id: 'kin',
-      label: 'Kinematics x(t)',
-      rows: [
-        'x0 = 0', 'v0 = 5', 'a = 2',
-        'y = x0 + v0*x + 0.5*a*x^2'
-      ],
-      view: { cx: 5, cy: 20, scale: 24 }
-    },
-    {
-      id: 'shm',
-      label: 'SHM x(t)',
-      rows: ['A = 2', 'w = 1.5', 'phi = 0', 'y = A*cos(w*x + phi)'],
-      view: { cx: 5, cy: 0, scale: 36 }
-    },
-    {
-      id: 'energy',
-      label: 'SHM energy E(x)',
-      rows: [
-        'k = 2', 'E = 4',
-        'y = 0.5*k*x^2',
-        'y = E'
-      ],
-      view: { cx: 0, cy: 3, scale: 40 }
-    },
-    {
-      id: 'proj',
-      label: 'Projectile y(x)',
-      rows: [
-        'v0 = 15', 'theta = 0.9', 'g = 9.81',
-        'y = x*tan(theta) - g*x^2/(2*v0^2*cos(theta)^2)'
-      ],
-      view: { cx: 10, cy: 4, scale: 22 }
-    },
-    {
-      id: 'circle',
-      label: 'Circle (cos t, sin t)',
-      rows: ['R = 3', '(R*cos(t), R*sin(t))'],
-      view: { cx: 0, cy: 0, scale: 48 }
-    },
-    {
-      id: 'liss',
-      label: 'Lissajous',
-      rows: ['a = 3', 'b = 2', 'phi = 1.57', '(sin(a*t), sin(b*t + phi))'],
-      view: { cx: 0, cy: 0, scale: 180 }
-    },
-    {
-      id: 'phase',
-      label: 'SHM phase portrait',
-      rows: ['A = 2', 'w = 1.5', '(A*cos(w*t), -A*w*sin(w*t))'],
-      view: { cx: 0, cy: 0, scale: 50 }
-    },
-    {
-      id: 'drag',
-      label: 'Terminal v(t)',
-      rows: [
-        'g = 9.81', 'k = 0.5',
-        'y = (g/k)*(1 - exp(-k*x))'
-      ],
-      view: { cx: 5, cy: 10, scale: 28 }
-    },
-    {
-      id: 'pot',
-      label: 'Potential well',
-      rows: [
-        'a = 1', 'b = 1',
-        'y = a*x^4 - b*x^2'
-      ],
-      view: { cx: 0, cy: 0, scale: 100 }
-    },
-    {
-      id: 'free',
-      label: 'Blank',
-      rows: [''],
-      view: { cx: 0, cy: 0, scale: 48 }
-    }
-  ];
-
-  function loadTemplate(id) {
-    var tpl = TEMPLATES.filter(function (t) { return t.id === id; })[0];
-    if (!tpl) return;
-    state.rows = [];
-    state.nextId = 1;
-    tpl.rows.forEach(function (src, i) {
-      makeRow(src, { color: COLORS[i % COLORS.length] });
-    });
-    recompileAll();
-    if (tpl.view) {
-      state.view.cx = tpl.view.cx;
-      state.view.cy = tpl.view.cy;
-      state.view.pxPerUnit = tpl.view.scale;
-    }
-    renderRows();
-    // mark active
-    Array.prototype.forEach.call(templateHost.querySelectorAll('.gr-template'), function (b) {
-      b.setAttribute('aria-pressed', b.getAttribute('data-id') === id ? 'true' : 'false');
-    });
-  }
-
-  function renderTemplates() {
-    templateHost.innerHTML = '';
-    TEMPLATES.forEach(function (tpl) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'gr-template';
-      b.setAttribute('data-id', tpl.id);
-      b.textContent = tpl.label;
-      b.addEventListener('click', function () { loadTemplate(tpl.id); });
-      templateHost.appendChild(b);
-    });
-  }
-
-  // ---------- 8. Pan / zoom -------------------------------------------------
+  // ---------- 7. Pan / zoom -------------------------------------------------
 
   function wireInteractions() {
     var dragging = false, lastX = 0, lastY = 0;
@@ -791,15 +643,15 @@
     canvas = document.getElementById('gr-canvas');
     exprHost = document.getElementById('gr-exprs');
     addBtn = document.getElementById('gr-add');
-    templateHost = document.getElementById('gr-templates');
     zoomInBtn = document.getElementById('gr-zoom-in');
     zoomOutBtn = document.getElementById('gr-zoom-out');
     resetViewBtn = document.getElementById('gr-reset-view');
     if (!canvas || !exprHost) return;
 
     canvas.style.cursor = 'grab';
-    renderTemplates();
-    loadTemplate('shm');
+    addRow('');
+    renderRows();
+    focusLastRow();
     addBtn.addEventListener('click', function () {
       addRow('');
       renderRows();
