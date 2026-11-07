@@ -55,7 +55,27 @@
     return depth === 0 ? i : -1;
   }
 
+  // Unicode punctuation that iOS / textbooks sneak in instead of plain ASCII.
+  function normalizeUnicode(src) {
+    return src
+      // Various minus and hyphen look-alikes → ASCII '-'
+      .replace(/[‐‑‒–—―−⁃﹣－]/g, '-')
+      // Multiplication-like symbols → '*'
+      .replace(/[×·⋅∙∗＊]/g, '*')
+      // Division symbols → '/'
+      .replace(/[÷∕⁄]/g, '/')
+      // Fancy equals / quotes
+      .replace(/≠/g, '!=')
+      .replace(/[“”″]/g, '"')
+      .replace(/[‘’′]/g, "'")
+      // Non-breaking and other spaces → regular space
+      .replace(/[  -​  　]/g, ' ')
+      // Unicode parentheses
+      .replace(/[（]/g, '(').replace(/[）]/g, ')');
+  }
+
   function normalizeLatex(src) {
+    src = normalizeUnicode(src);
     if (src.indexOf('\\') === -1 && src.indexOf('{') === -1 && src.indexOf('$') === -1) return src;
     var s = src;
     // Strip $ delimiters
