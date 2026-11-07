@@ -202,8 +202,8 @@
     var out = [tokens[0]];
     for (var i = 1; i < tokens.length; i++) {
       var prev = tokens[i - 1], curr = tokens[i];
-      // Function call: id directly before '(' — keep as a call, do NOT split with *
-      if (prev.t === 'id' && curr.t === 'op' && curr.v === '(') {
+      // Function call: id directly before '(' with id being a known function
+      if (prev.t === 'id' && curr.t === 'op' && curr.v === '(' && FUNCS[prev.v]) {
         out.push(curr); continue;
       }
       var isPrevValue = prev.t === 'num' || prev.t === 'id' ||
