@@ -599,8 +599,8 @@ a.tree-link.is-active:hover .tree-num { color: rgba(var(--bg-rgb), 0.55); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: min(480px, calc(100vh - var(--topbar-h)));
-  margin-bottom: 72px;
+  min-height: calc(100vh - var(--topbar-h));
+  margin-bottom: 0;
   padding: 72px 24px;
   overflow: hidden;
   text-align: center;

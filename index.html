@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Newt</title>
   <link rel="stylesheet" href="lib/katex.min.css">
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=26">
   <script defer src="lib/katex.min.js"></script>
   <script defer src="lib/auto-render.min.js"></script>
-  <script defer src="lib/render-math.js?v=24"></script>
-  <script defer src="nav.js?v=24"></script>
-  <script defer src="app.js?v=24"></script>
-  <script defer src="assets/hero-field.js?v=24"></script>
+  <script defer src="lib/render-math.js?v=26"></script>
+  <script defer src="nav.js?v=26"></script>
+  <script defer src="app.js?v=26"></script>
+  <script defer src="assets/city-worldlines.js?v=1"></script>
 </head>
 <body class="layout-home" data-root="./">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -26,30 +26,10 @@
         </blockquote>
         <figcaption class="hero-cite">Archimedes</figcaption>
       </figure>
-      <p class="hero-intro">Physics documentation for students who love good design</p>
+      <p class="hero-intro">A classical mechanics reference for students who love good design — pick a topic from the sidebar.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" id="start-link" href="#sections">Start reading</a>
-        <a class="btn btn-secondary" href="#sections">All sections <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-    </section>
-
-    <div class="preview" aria-hidden="true">
-      <a class="preview-frame" id="preview-link" href="#sections" tabindex="-1">
-        <div class="preview-window"><iframe id="preview" title="Topic page preview" tabindex="-1" loading="lazy"></iframe></div>
-      </a>
-    </div>
-
-    <section class="band" id="sections" aria-labelledby="sections-h">
-      <div class="band-inner">
-        <div class="section-head">
-          <h2 id="sections-h" class="band-title">Mechanics <span class="band-sub" id="topic-count"></span></h2>
-          <div class="tabs" role="tablist" aria-label="Filter topics">
-            <button class="tab" role="tab" type="button" data-filter="all" data-label="All" aria-selected="true">All</button>
-            <button class="tab" role="tab" type="button" data-filter="ready" data-label="Ready" aria-selected="false">Ready</button>
-            <button class="tab" role="tab" type="button" data-filter="soon" data-label="Soon" aria-selected="false">Soon</button>
-          </div>
-        </div>
-        <div class="section-grid" id="section-grid"></div>
+        <a class="btn btn-primary" id="start-link" href="topics/mechanics/limits-derivatives.html">Start reading</a>
+        <a class="btn btn-secondary" href="playground.html">Open Playground <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </section>
   </main>
