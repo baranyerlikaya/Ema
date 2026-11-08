@@ -599,12 +599,69 @@ a.tree-link.is-active:hover .tree-num { color: rgba(var(--bg-rgb), 0.55); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - var(--topbar-h));
+  min-height: min(520px, calc(100vh - var(--topbar-h)));
   margin-bottom: 0;
   padding: 72px 24px;
   overflow: hidden;
   text-align: center;
   isolation: isolate;
+}
+
+/* Spacetime block section — the 4D viewer visualization */
+.spacetime { padding: 80px 24px 120px; }
+.spacetime-inner { max-width: 1200px; margin: 0 auto; }
+.spacetime-head {
+  max-width: 720px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+.spacetime-eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3, #7a7a7a);
+  margin-bottom: 12px;
+}
+.spacetime-title {
+  font-family: var(--font);
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+.spacetime-lede {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-2, #4a4a4a);
+  margin: 0;
+}
+.spacetime-figure {
+  margin: 0;
+  background: var(--white);
+  border: 1px solid rgba(var(--fg-rgb), 0.08);
+  border-radius: 14px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+}
+#spacetime-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1200 / 640;
+}
+.spacetime-cap {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3, #9a9a9a);
+  padding-top: 10px;
+}
+@media (max-width: 720px) {
+  .spacetime-title { font-size: 24px; }
+  .spacetime { padding: 48px 20px 80px; }
 }
 
 .hero-field {

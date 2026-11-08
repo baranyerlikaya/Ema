@@ -11,7 +11,7 @@
   <script defer src="lib/render-math.js?v=26"></script>
   <script defer src="nav.js?v=26"></script>
   <script defer src="app.js?v=26"></script>
-  <script defer src="assets/city-worldlines.js?v=3"></script>
+  <script defer src="assets/spacetime-block.js?v=1"></script>
 </head>
 <body class="layout-home" data-root="./">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -30,6 +30,20 @@
       <div class="hero-actions">
         <a class="btn btn-primary" id="start-link" href="topics/mechanics/limits-derivatives.html">Start reading</a>
         <a class="btn btn-secondary" href="playground.html">Open Playground <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </section>
+
+    <section class="spacetime" aria-labelledby="spacetime-h">
+      <div class="spacetime-inner">
+        <header class="spacetime-head">
+          <div class="spacetime-eyebrow">Space + time</div>
+          <h2 id="spacetime-h" class="spacetime-title">A 4D viewer would see every street at every moment at once</h2>
+          <p class="spacetime-lede">In spacetime, a person is not a point. It's a world-line — their whole path through time drawn as one continuous ribbon. Three people walking the same block look like three ribbons rising through the same volume.</p>
+        </header>
+        <figure class="spacetime-figure">
+          <canvas id="spacetime-canvas" width="1200" height="640" aria-label="A 3D block with three world-lines rising through it; horizontal axes are space, vertical axis is time"></canvas>
+          <figcaption class="spacetime-cap"><span>floor · now</span><span>ceiling · a few seconds ago</span></figcaption>
+        </figure>
       </div>
     </section>
   </main>
