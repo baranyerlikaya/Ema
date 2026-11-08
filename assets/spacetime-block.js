@@ -141,46 +141,30 @@
     for (var m = 0; m < N; m++) drawLine(top[m], top[(m + 1) % N], FAINT, 1);
   }
 
-  function drawDeer(worldX, worldZ, phase, color, lineW) {
-    // Build deer local-space vertices then translate by (worldX, 0, worldZ).
-    // Deer walks along +z direction (nose toward +z).
-    var y0 = 0.9;           // body height off ground
+  // Deer vertices, in local space; returns {body, head, legs} arrays of 8-vert boxes.
+  function deerVerts(phase) {
+    var y0 = 0.85;
     var bodyL = 1.4, bodyW = 0.5, bodyH = 0.55;
-    // Body box
-    var b = [
-      v(-bodyW / 2, y0, -bodyL / 2),
-      v( bodyW / 2, y0, -bodyL / 2),
-      v( bodyW / 2, y0 + bodyH, -bodyL / 2),
-      v(-bodyW / 2, y0 + bodyH, -bodyL / 2),
-      v(-bodyW / 2, y0,  bodyL / 2),
-      v( bodyW / 2, y0,  bodyL / 2),
-      v( bodyW / 2, y0 + bodyH,  bodyL / 2),
-      v(-bodyW / 2, y0 + bodyH,  bodyL / 2)
+    var body = [
+      v(-bodyW / 2, y0, -bodyL / 2), v( bodyW / 2, y0, -bodyL / 2),
+      v( bodyW / 2, y0 + bodyH, -bodyL / 2), v(-bodyW / 2, y0 + bodyH, -bodyL / 2),
+      v(-bodyW / 2, y0,  bodyL / 2), v( bodyW / 2, y0,  bodyL / 2),
+      v( bodyW / 2, y0 + bodyH,  bodyL / 2), v(-bodyW / 2, y0 + bodyH,  bodyL / 2)
     ];
-    // Head box (front, raised and tilted)
-    var h = [
-      v(-0.2, y0 + 0.2, bodyL / 2),
-      v( 0.2, y0 + 0.2, bodyL / 2),
-      v( 0.2, y0 + 0.6, bodyL / 2),
-      v(-0.2, y0 + 0.6, bodyL / 2),
-      v(-0.2, y0 + 0.4, bodyL / 2 + 0.55),
-      v( 0.2, y0 + 0.4, bodyL / 2 + 0.55),
-      v( 0.2, y0 + 0.7, bodyL / 2 + 0.55),
-      v(-0.2, y0 + 0.7, bodyL / 2 + 0.55)
+    var head = [
+      v(-0.2, y0 + 0.2, bodyL / 2), v( 0.2, y0 + 0.2, bodyL / 2),
+      v( 0.2, y0 + 0.6, bodyL / 2), v(-0.2, y0 + 0.6, bodyL / 2),
+      v(-0.2, y0 + 0.4, bodyL / 2 + 0.55), v( 0.2, y0 + 0.4, bodyL / 2 + 0.55),
+      v( 0.2, y0 + 0.7, bodyL / 2 + 0.55), v(-0.2, y0 + 0.7, bodyL / 2 + 0.55)
     ];
-    // Four legs
     function leg(xo, zo, swing) {
-      var hipY = y0, footY = 0, swingRad = swing * 0.5;
-      var footZ = zo + Math.sin(swingRad) * 0.3;
+      var hipY = y0, footY = 0;
+      var footZ = zo + Math.sin(swing * 0.5) * 0.3;
       return [
-        v(xo - 0.07, hipY, zo - 0.07),
-        v(xo + 0.07, hipY, zo - 0.07),
-        v(xo + 0.07, hipY, zo + 0.07),
-        v(xo - 0.07, hipY, zo + 0.07),
-        v(xo - 0.06, footY, footZ - 0.06),
-        v(xo + 0.06, footY, footZ - 0.06),
-        v(xo + 0.06, footY, footZ + 0.06),
-        v(xo - 0.06, footY, footZ + 0.06)
+        v(xo - 0.07, hipY, zo - 0.07), v(xo + 0.07, hipY, zo - 0.07),
+        v(xo + 0.07, hipY, zo + 0.07), v(xo - 0.07, hipY, zo + 0.07),
+        v(xo - 0.06, footY, footZ - 0.06), v(xo + 0.06, footY, footZ - 0.06),
+        v(xo + 0.06, footY, footZ + 0.06), v(xo - 0.06, footY, footZ + 0.06)
       ];
     }
     var legs = [
@@ -189,19 +173,46 @@
       leg(-bodyW / 2 + 0.07,  bodyL / 2 - 0.2, Math.sin(phase + Math.PI)),
       leg( bodyW / 2 - 0.07,  bodyL / 2 - 0.2, Math.sin(phase))
     ];
+    return { body: body, head: head, legs: legs };
+  }
 
-    // Translate all to world position
+  function drawDeerWire(worldX, worldZ, phase, color, lineW) {
+    var d = deerVerts(phase);
     function tx(p) { return v(p.x + worldX, p.y, p.z + worldZ); }
-    b = b.map(tx); h = h.map(tx); legs = legs.map(function (L) { return L.map(tx); });
-
-    // Edges to draw for a box (12 edges)
+    var b = d.body.map(tx), h = d.head.map(tx);
+    var ls = d.legs.map(function (L) { return L.map(tx); });
     var boxEdges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
     function drawBoxLines(verts, col, w) {
       for (var i = 0; i < boxEdges.length; i++) drawLine(verts[boxEdges[i][0]], verts[boxEdges[i][1]], col, w);
     }
     drawBoxLines(b, color, lineW);
     drawBoxLines(h, color, lineW);
-    legs.forEach(function (L) { drawBoxLines(L, color, lineW); });
+    ls.forEach(function (L) { drawBoxLines(L, color, lineW); });
+  }
+
+  // Filled deer for the time-tube trail. We only fill the body + head boxes
+  // (legs are skipped for a cleaner continuous tube) and we draw each quad
+  // with semi-transparent cream so overlapping copies read as solid mesh.
+  var BOX_QUADS = [
+    [0, 1, 2, 3], // -z face
+    [5, 4, 7, 6], // +z face
+    [4, 0, 3, 7], // -x face
+    [1, 5, 6, 2], // +x face
+    [3, 2, 6, 7], // +y face (top)
+    [4, 5, 1, 0]  // -y face (bottom)
+  ];
+  function drawDeerFilled(worldX, worldZ, phase, fill) {
+    var d = deerVerts(phase);
+    function tx(p) { return v(p.x + worldX, p.y, p.z + worldZ); }
+    var b = d.body.map(tx), h = d.head.map(tx);
+    function drawBoxFilled(verts, col) {
+      for (var q = 0; q < BOX_QUADS.length; q++) {
+        var quad = BOX_QUADS[q];
+        drawPoly([verts[quad[0]], verts[quad[1]], verts[quad[2]], verts[quad[3]]], col, null);
+      }
+    }
+    drawBoxFilled(b, fill);
+    drawBoxFilled(h, fill);
   }
 
   function drawFrustum(centerX, centerZ) {
@@ -257,13 +268,15 @@
     var deerX = 0;
     var phase = t * 8;
 
-    // Record a ghost into the trail every 0.12s or so
-    if (!reduced && trail.length === 0) trail.push({ x: deerX, z: deerZ, phase: phase });
-    if (!reduced && trail.length > 0) {
-      var last = trail[trail.length - 1];
-      if (Math.abs(deerZ - last.z) > 0.4) trail.push({ x: deerX, z: deerZ, phase: phase });
+    // Record a ghost into the trail — DENSE spacing (every 0.1 world units)
+    // so adjacent copies overlap heavily and read as one continuous tube.
+    if (!reduced) {
+      var prevZ = trail.length ? trail[trail.length - 1].z : -Infinity;
+      if (deerZ - prevZ > 0.08 || trail.length === 0) {
+        trail.push({ x: deerX, z: deerZ, phase: phase });
+      }
     }
-    if (trail.length > 80) trail.shift();
+    if (trail.length > 180) trail.shift();
 
     // Clear + draw
     ctx.fillStyle = CREAM;
@@ -277,15 +290,23 @@
     });
     sortedTrees.forEach(drawTree);
 
-    // Ghost trail (painter's — oldest first)
+    // --- Time-tube: dense filled past-deer copies form one continuous mesh.
+    // Walk the trail from far-away (back of the deer's journey) toward the
+    // present so later copies draw on top of earlier ones.
     for (var i = 0; i < trail.length; i++) {
       var g = trail[i];
-      var fade = 0.12 + (i / trail.length) * 0.28;
-      drawDeer(g.x, g.z, g.phase, 'rgba(168, 74, 58, ' + fade.toFixed(3) + ')', 1);
+      // Base cream fill with a touch of warm cast; overlapping layers blend.
+      drawDeerFilled(g.x, g.z, g.phase, 'rgba(236, 200, 148, 0.10)');
+    }
+    // Thin ink outline along the tube so the extruded body silhouette reads
+    // even at low density. Sample every few trail steps for the outline.
+    for (var j = 0; j < trail.length; j += 5) {
+      var g2 = trail[j];
+      drawDeerWire(g2.x, g2.z, g2.phase, 'rgba(26, 29, 31, 0.06)', 1);
     }
 
-    // Current deer (ink on ink)
-    drawDeer(deerX, deerZ, phase, INK, 1.3);
+    // Current deer — crisp ink wireframe
+    drawDeerWire(deerX, deerZ, phase, INK, 1.4);
     // Frustum last so it reads above the deer silhouette
     drawFrustum(deerX, deerZ);
 
