@@ -638,11 +638,11 @@ a.tree-link.is-active:hover .tree-num { color: rgba(var(--bg-rgb), 0.55); }
 }
 .spacetime-figure {
   margin: 0;
-  background: #0b0d10;
+  background: #f3efe6;
   border: 1px solid rgba(var(--fg-rgb), 0.08);
   border-radius: 14px;
   padding: 12px 14px 14px;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
 #spacetime-canvas {
@@ -658,7 +658,7 @@ a.tree-link.is-active:hover .tree-num { color: rgba(var(--bg-rgb), 0.55); }
   gap: 16px;
   font-family: var(--mono);
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--ink-3, #7a7a7a);
   padding: 10px 6px 0;
 }
 @media (max-width: 720px) {

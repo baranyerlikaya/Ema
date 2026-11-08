@@ -1,11 +1,11 @@
-/* Newt — 4D viewer. Aerial shot of a forest path. A deer walks along the
- * path from right to left. A 3D wireframe frustum sits around the deer at
- * every moment; every column it passes freezes the deer's geometry, so the
- * past stretches as a solid time-tube along the path behind it.
+/* Newt — 4D viewer, drawn as a proper 3D diagram in Newt's own ink-on-cream
+ * character. A deer walks along a schematic path. A 3D wireframe frustum
+ * follows it. Every past moment leaves a ghostly wireframe copy of the deer
+ * behind, so by the end of the sweep the path is lined with the whole walk
+ * frozen in geometry — a continuous time-tube.
  *
- * This is a stylized 2D rebuild of the effect from Bilawal Sidhu's video
- * "Space + time reconstructed in 4D" — no photoreal footage, drawn entirely
- * from code so it loads instantly and scales to any screen. */
+ * Rendered with a small bespoke 3D engine: camera transform + perspective
+ * projection + wireframe/filled polygon rasterization. No external deps. */
 (function () {
   'use strict';
 
@@ -14,314 +14,292 @@
   var ctx = canvas.getContext('2d');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var W = 0, H = 0, dpr = 1;
-  var trail, trailCtx;
-  var forestLayers = null;
-  var pathMeta = null;
-  var startedAt = 0;
+  // ---------- 3D math ------------------------------------------------------
+  function v(x, y, z) { return { x: x, y: y, z: z }; }
+  function vSub(a, b) { return v(a.x - b.x, a.y - b.y, a.z - b.z); }
+  function vAdd(a, b) { return v(a.x + b.x, a.y + b.y, a.z + b.z); }
+  function vScale(a, s) { return v(a.x * s, a.y * s, a.z * s); }
 
-  // ------- Fit ---------
+  function rotY(p, a) { var c = Math.cos(a), s = Math.sin(a); return v(p.x * c + p.z * s, p.y, -p.x * s + p.z * c); }
+  function rotX(p, a) { var c = Math.cos(a), s = Math.sin(a); return v(p.x, p.y * c - p.z * s, p.y * s + p.z * c); }
+
+  // ---------- Camera + projection ------------------------------------------
+  var camera = {
+    pos:    v(0, 9, 12),
+    look:   v(0, 0, 0),
+    pitch: -0.55,       // tilt down
+    yaw:    0.20,       // slight rotation around vertical
+    focal:  520
+  };
+
+  function project(p) {
+    var t = vSub(p, camera.pos);
+    t = rotY(t, -camera.yaw);
+    t = rotX(t, -camera.pitch);
+    if (t.z >= -0.1) t.z = -0.1; // keep in front of camera
+    var f = camera.focal / -t.z;
+    return { x: W / 2 + t.x * f, y: H / 2 - t.y * f, z: -t.z };
+  }
+
+  // ---------- Draw helpers --------------------------------------------------
+  var INK      = '#1a1d1f';
+  var MUTED    = 'rgba(26, 29, 31, 0.3)';
+  var FAINT    = 'rgba(26, 29, 31, 0.14)';
+  var FADED    = 'rgba(26, 29, 31, 0.08)';
+  var CREAM    = '#f3efe6';
+  var DIRT     = '#dccfb4';
+  var ACCENT   = '#a84a3a';   // ink-red for the frustum
+  var TRAIL    = 'rgba(168, 74, 58, 0.14)';
+
+  function drawLine(a, b, color, width) {
+    var pa = project(a), pb = project(b);
+    if (pa.z <= 0 && pb.z <= 0) return;
+    ctx.strokeStyle = color; ctx.lineWidth = width || 1;
+    ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke();
+  }
+
+  function drawPoly(points, fill, stroke, lineW) {
+    var projected = points.map(project);
+    for (var i = 0; i < projected.length; i++) if (projected[i].z <= 0) return;
+    ctx.beginPath();
+    ctx.moveTo(projected[0].x, projected[0].y);
+    for (var j = 1; j < projected.length; j++) ctx.lineTo(projected[j].x, projected[j].y);
+    ctx.closePath();
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lineW || 1; ctx.stroke(); }
+  }
+
+  // ---------- Scene --------------------------------------------------------
+  var PATH_LENGTH = 16;       // z-axis extent of the dirt path
+  var PATH_WIDTH  = 3.2;
+  var treeData = null;
+  var trail = []; // snapshots of deer vertex clouds
+
+  function seededRng(seed) {
+    var s = seed;
+    return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  }
+
+  function buildTrees() {
+    var r = seededRng(31);
+    var list = [];
+    for (var i = 0; i < 90; i++) {
+      var side = r() < 0.5 ? -1 : 1;
+      var x = side * (PATH_WIDTH / 2 + 0.6 + r() * 7);
+      var z = -PATH_LENGTH / 2 + r() * PATH_LENGTH;
+      var h = 1.1 + r() * 1.4;
+      var w = 0.35 + r() * 0.5;
+      list.push({ x: x, z: z, h: h, w: w });
+    }
+    return list;
+  }
+
+  function drawGroundGrid() {
+    // Soft cream wash (background is the figure's own dark panel; draw a
+    // large quad for the "world floor" tinted lightly).
+    var halfW = 10, zNear = -PATH_LENGTH / 2 - 2, zFar = PATH_LENGTH / 2 + 2;
+    // Floor is dark navy for the moody base; path strip is warm dirt.
+    drawPoly(
+      [v(-halfW, 0, zNear), v(halfW, 0, zNear), v(halfW, 0, zFar), v(-halfW, 0, zFar)],
+      '#15181b', null
+    );
+    // Dirt path strip
+    drawPoly(
+      [v(-PATH_WIDTH / 2, 0.001, zNear), v(PATH_WIDTH / 2, 0.001, zNear),
+       v(PATH_WIDTH / 2, 0.001, zFar),  v(-PATH_WIDTH / 2, 0.001, zFar)],
+      DIRT, null
+    );
+
+    // Ground grid — thin blueprint lines
+    ctx.lineWidth = 1;
+    for (var x = -halfW; x <= halfW; x += 1) {
+      drawLine(v(x, 0.002, zNear), v(x, 0.002, zFar), FADED, 1);
+    }
+    for (var z = Math.ceil(zNear); z <= zFar; z += 1) {
+      drawLine(v(-halfW, 0.002, z), v(halfW, 0.002, z), FADED, 1);
+    }
+    // Path edges stronger
+    drawLine(v(-PATH_WIDTH / 2, 0.005, zNear), v(-PATH_WIDTH / 2, 0.005, zFar), MUTED, 1);
+    drawLine(v( PATH_WIDTH / 2, 0.005, zNear), v( PATH_WIDTH / 2, 0.005, zFar), MUTED, 1);
+  }
+
+  function drawTree(t) {
+    // Draw as a wireframe cylinder: 8 verts bottom + 8 top with sides.
+    var N = 6;
+    var bottom = [], top = [];
+    for (var i = 0; i < N; i++) {
+      var ang = (i / N) * Math.PI * 2;
+      bottom.push(v(t.x + Math.cos(ang) * t.w, 0, t.z + Math.sin(ang) * t.w));
+      top.push(v(t.x + Math.cos(ang) * t.w * 0.6, t.h, t.z + Math.sin(ang) * t.w * 0.6));
+    }
+    // Solid dark fill (polygon with top ring sorted then bottom back)
+    var sidePoints = [];
+    for (var j = 0; j < N; j++) sidePoints.push(bottom[j]);
+    for (var k = N - 1; k >= 0; k--) sidePoints.push(top[k]);
+    drawPoly(sidePoints, '#0d1012', '#1f2428', 1);
+    // Thin top ring
+    for (var m = 0; m < N; m++) drawLine(top[m], top[(m + 1) % N], FAINT, 1);
+  }
+
+  function drawDeer(worldX, worldZ, phase, color, lineW) {
+    // Build deer local-space vertices then translate by (worldX, 0, worldZ).
+    // Deer walks along +z direction (nose toward +z).
+    var y0 = 0.9;           // body height off ground
+    var bodyL = 1.4, bodyW = 0.5, bodyH = 0.55;
+    // Body box
+    var b = [
+      v(-bodyW / 2, y0, -bodyL / 2),
+      v( bodyW / 2, y0, -bodyL / 2),
+      v( bodyW / 2, y0 + bodyH, -bodyL / 2),
+      v(-bodyW / 2, y0 + bodyH, -bodyL / 2),
+      v(-bodyW / 2, y0,  bodyL / 2),
+      v( bodyW / 2, y0,  bodyL / 2),
+      v( bodyW / 2, y0 + bodyH,  bodyL / 2),
+      v(-bodyW / 2, y0 + bodyH,  bodyL / 2)
+    ];
+    // Head box (front, raised and tilted)
+    var h = [
+      v(-0.2, y0 + 0.2, bodyL / 2),
+      v( 0.2, y0 + 0.2, bodyL / 2),
+      v( 0.2, y0 + 0.6, bodyL / 2),
+      v(-0.2, y0 + 0.6, bodyL / 2),
+      v(-0.2, y0 + 0.4, bodyL / 2 + 0.55),
+      v( 0.2, y0 + 0.4, bodyL / 2 + 0.55),
+      v( 0.2, y0 + 0.7, bodyL / 2 + 0.55),
+      v(-0.2, y0 + 0.7, bodyL / 2 + 0.55)
+    ];
+    // Four legs
+    function leg(xo, zo, swing) {
+      var hipY = y0, footY = 0, swingRad = swing * 0.5;
+      var footZ = zo + Math.sin(swingRad) * 0.3;
+      return [
+        v(xo - 0.07, hipY, zo - 0.07),
+        v(xo + 0.07, hipY, zo - 0.07),
+        v(xo + 0.07, hipY, zo + 0.07),
+        v(xo - 0.07, hipY, zo + 0.07),
+        v(xo - 0.06, footY, footZ - 0.06),
+        v(xo + 0.06, footY, footZ - 0.06),
+        v(xo + 0.06, footY, footZ + 0.06),
+        v(xo - 0.06, footY, footZ + 0.06)
+      ];
+    }
+    var legs = [
+      leg(-bodyW / 2 + 0.07, -bodyL / 2 + 0.2, Math.sin(phase)),
+      leg( bodyW / 2 - 0.07, -bodyL / 2 + 0.2, Math.sin(phase + Math.PI)),
+      leg(-bodyW / 2 + 0.07,  bodyL / 2 - 0.2, Math.sin(phase + Math.PI)),
+      leg( bodyW / 2 - 0.07,  bodyL / 2 - 0.2, Math.sin(phase))
+    ];
+
+    // Translate all to world position
+    function tx(p) { return v(p.x + worldX, p.y, p.z + worldZ); }
+    b = b.map(tx); h = h.map(tx); legs = legs.map(function (L) { return L.map(tx); });
+
+    // Edges to draw for a box (12 edges)
+    var boxEdges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+    function drawBoxLines(verts, col, w) {
+      for (var i = 0; i < boxEdges.length; i++) drawLine(verts[boxEdges[i][0]], verts[boxEdges[i][1]], col, w);
+    }
+    drawBoxLines(b, color, lineW);
+    drawBoxLines(h, color, lineW);
+    legs.forEach(function (L) { drawBoxLines(L, color, lineW); });
+  }
+
+  function drawFrustum(centerX, centerZ) {
+    // A wireframe parallelepiped around the deer, tapering upward slightly.
+    var w = 1.4, d = 2.2, h1 = 1.9;
+    var nearY = 0.0;
+    var farShrink = 0.72;
+    var topOffX = -0.1, topOffZ = -0.3;
+    var near = [
+      v(centerX - w / 2, nearY, centerZ - d / 2),
+      v(centerX + w / 2, nearY, centerZ - d / 2),
+      v(centerX + w / 2, nearY, centerZ + d / 2),
+      v(centerX - w / 2, nearY, centerZ + d / 2)
+    ];
+    var far = [
+      v(centerX + topOffX - (w * farShrink) / 2, nearY + h1, centerZ + topOffZ - (d * farShrink) / 2),
+      v(centerX + topOffX + (w * farShrink) / 2, nearY + h1, centerZ + topOffZ - (d * farShrink) / 2),
+      v(centerX + topOffX + (w * farShrink) / 2, nearY + h1, centerZ + topOffZ + (d * farShrink) / 2),
+      v(centerX + topOffX - (w * farShrink) / 2, nearY + h1, centerZ + topOffZ + (d * farShrink) / 2)
+    ];
+    var color = ACCENT, lw = 1.4;
+    for (var i = 0; i < 4; i++) {
+      drawLine(near[i], near[(i + 1) % 4], color, lw);
+      drawLine(far[i], far[(i + 1) % 4], 'rgba(168, 74, 58, 0.6)', lw);
+      drawLine(near[i], far[i], 'rgba(168, 74, 58, 0.8)', lw);
+    }
+  }
+
+  // ---------- Main loop ----------------------------------------------------
+  var W = 0, H = 0, dpr = 1, t0 = 0;
+
   function fit() {
     dpr = window.devicePixelRatio || 1;
     var rect = canvas.getBoundingClientRect();
     W = Math.round(rect.width); H = Math.round(rect.height);
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    trail = document.createElement('canvas');
-    trail.width = Math.round(W * dpr); trail.height = Math.round(H * dpr);
-    trailCtx = trail.getContext('2d');
-    trailCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (!treeData) treeData = buildTrees();
   }
 
-  function seededRandom(seed) {
-    var s = seed;
-    return function () {
-      s = (s * 9301 + 49297) % 233280;
-      return s / 233280;
-    };
-  }
+  function tick(now) {
+    fit();
+    if (!t0) t0 = now;
+    var t = (now - t0) / 1000;
+    var cycleSec = 10;
+    var cycleT = reduced ? cycleSec * 0.55 : (t % cycleSec);
 
-  // ------- Build the forest + path (drawn once per resize) ----------
-  function buildScene() {
-    var rng = seededRandom(23);
-    pathMeta = {
-      y: H * 0.52,
-      halfHeight: H * 0.16,
-      edgeNoise: []
-    };
-    // Soft noisy variation along the two edges of the dirt path
-    for (var x = 0; x <= W + 20; x += 6) {
-      pathMeta.edgeNoise.push({
-        x: x,
-        topDy:    (rng() - 0.5) * 8 - Math.sin(x * 0.04) * 3,
-        botDy:    (rng() - 0.5) * 8 + Math.sin(x * 0.03 + 1) * 3
-      });
-    }
-    // Trees for the dark forest on both sides of the path
-    var trees = [];
-    for (var i = 0; i < 180; i++) {
-      var side = rng() < 0.5 ? 'top' : 'bot';
-      var yBand = side === 'top'
-        ? rng() * (pathMeta.y - pathMeta.halfHeight - 10)
-        : pathMeta.y + pathMeta.halfHeight + 10 + rng() * (H - pathMeta.y - pathMeta.halfHeight - 10);
-      trees.push({
-        x: rng() * W,
-        y: yBand,
-        r: 10 + rng() * 26,
-        tone: Math.floor(rng() * 3) // 0..2 choose shade
-      });
-    }
-    // Bits of foliage spilling onto the path edges
-    var fringe = [];
-    for (var j = 0; j < 60; j++) {
-      fringe.push({
-        x: rng() * W,
-        edge: rng() < 0.5 ? 'top' : 'bot',
-        r: 6 + rng() * 10
-      });
-    }
-    // Pebbles on the dirt path
-    var pebbles = [];
-    for (var k = 0; k < 90; k++) {
-      pebbles.push({
-        x: rng() * W,
-        y: pathMeta.y + (rng() - 0.5) * (pathMeta.halfHeight * 1.6),
-        r: 0.6 + rng() * 1.4,
-        a: 0.25 + rng() * 0.4
-      });
-    }
-    forestLayers = { trees: trees, fringe: fringe, pebbles: pebbles };
-  }
+    // Deer walks from -half to +half along z. When it loops, trail clears.
+    if (cycleT < 0.05 && trail.length > 0) trail.length = 0;
+    var start = -PATH_LENGTH / 2 + 1;
+    var end = PATH_LENGTH / 2 - 1;
+    var deerZ = start + (end - start) * (cycleT / cycleSec);
+    var deerX = 0;
+    var phase = t * 8;
 
-  // ------- Drawing the still scene --------
-  function pathEdgeY(x, which) {
-    // Lookup nearest edge-noise sample
-    var noise = pathMeta.edgeNoise;
-    var idx = Math.max(0, Math.min(noise.length - 1, Math.round(x / 6)));
-    var dy = which === 'top' ? noise[idx].topDy : noise[idx].botDy;
-    return which === 'top'
-      ? pathMeta.y - pathMeta.halfHeight + dy
-      : pathMeta.y + pathMeta.halfHeight + dy;
-  }
+    // Record a ghost into the trail every 0.12s or so
+    if (!reduced && trail.length === 0) trail.push({ x: deerX, z: deerZ, phase: phase });
+    if (!reduced && trail.length > 0) {
+      var last = trail[trail.length - 1];
+      if (Math.abs(deerZ - last.z) > 0.4) trail.push({ x: deerX, z: deerZ, phase: phase });
+    }
+    if (trail.length > 80) trail.shift();
 
-  function drawForest() {
-    // Background forest tone
-    ctx.fillStyle = '#0d1510';
+    // Clear + draw
+    ctx.fillStyle = CREAM;
     ctx.fillRect(0, 0, W, H);
 
-    // Tree canopies (dark greens)
-    var toneColors = ['#121f17', '#162b1e', '#0d1812'];
-    for (var i = 0; i < forestLayers.trees.length; i++) {
-      var t = forestLayers.trees[i];
-      ctx.fillStyle = toneColors[t.tone];
-      ctx.beginPath();
-      ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
-      ctx.fill();
+    drawGroundGrid();
+
+    // Trees sorted far-to-near for proper painter's order
+    var sortedTrees = treeData.slice().sort(function (a, b) {
+      return (project(v(b.x, 0, b.z)).z) - (project(v(a.x, 0, a.z)).z);
+    });
+    sortedTrees.forEach(drawTree);
+
+    // Ghost trail (painter's — oldest first)
+    for (var i = 0; i < trail.length; i++) {
+      var g = trail[i];
+      var fade = 0.12 + (i / trail.length) * 0.28;
+      drawDeer(g.x, g.z, g.phase, 'rgba(168, 74, 58, ' + fade.toFixed(3) + ')', 1);
     }
 
-    // Dirt path — warm beige band with noisy edges
-    ctx.beginPath();
-    for (var x = 0; x <= W; x += 6) ctx.lineTo(x, pathEdgeY(x, 'top'));
-    for (var xr = W; xr >= 0; xr -= 6) ctx.lineTo(xr, pathEdgeY(xr, 'bot'));
-    ctx.closePath();
-    var pathGrad = ctx.createLinearGradient(0, pathMeta.y - pathMeta.halfHeight, 0, pathMeta.y + pathMeta.halfHeight);
-    pathGrad.addColorStop(0, '#5c4932');
-    pathGrad.addColorStop(0.45, '#8a6f4e');
-    pathGrad.addColorStop(1, '#5a4530');
-    ctx.fillStyle = pathGrad;
-    ctx.fill();
+    // Current deer (ink on ink)
+    drawDeer(deerX, deerZ, phase, INK, 1.3);
+    // Frustum last so it reads above the deer silhouette
+    drawFrustum(deerX, deerZ);
 
-    // Foliage fringing the dirt path
-    for (var f = 0; f < forestLayers.fringe.length; f++) {
-      var fo = forestLayers.fringe[f];
-      var fy = fo.edge === 'top' ? pathEdgeY(fo.x, 'top') : pathEdgeY(fo.x, 'bot');
-      ctx.fillStyle = '#0f1a13';
-      ctx.beginPath();
-      ctx.arc(fo.x, fy, fo.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Pebbles / texture on the dirt
-    for (var p = 0; p < forestLayers.pebbles.length; p++) {
-      var pb = forestLayers.pebbles[p];
-      ctx.fillStyle = 'rgba(40, 28, 16, ' + pb.a + ')';
-      ctx.beginPath();
-      ctx.arc(pb.x, pb.y, pb.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Gentle vignette
-    var vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.7);
-    vg.addColorStop(0, 'rgba(0,0,0,0)');
-    vg.addColorStop(1, 'rgba(0,0,0,0.55)');
-    ctx.fillStyle = vg;
-    ctx.fillRect(0, 0, W, H);
-
-    // 'space + time' label
-    ctx.fillStyle = 'rgba(230,230,230,0.9)';
-    ctx.font = '600 14px "Geist Mono", ui-monospace, monospace';
+    // Labels
+    ctx.fillStyle = INK;
+    ctx.font = '600 13px "Geist Mono", ui-monospace, monospace';
     ctx.textAlign = 'left';
     ctx.fillText('space + time', 18, 28);
-  }
-
-  // ------- Deer (top-down silhouette) --------
-  // The deer is drawn from above: body long-axis aligned with walking
-  // direction, small head on the leading end, four short legs.
-  function drawDeer(target, x, y, phase, scale, color) {
-    var s = scale || 1;
-    target.save();
-    target.translate(x, y);
-    target.fillStyle = color || '#d9cbae';
-
-    // Body (horizontal ellipse), head to the LEFT (the deer walks right-to-left)
-    target.beginPath();
-    target.ellipse(0, 0, 24 * s, 9 * s, 0, 0, Math.PI * 2);
-    target.fill();
-
-    // Head
-    target.beginPath();
-    target.ellipse(-24 * s, -2 * s, 7 * s, 5 * s, -0.1, 0, Math.PI * 2);
-    target.fill();
-
-    // Ears (two small triangles up/left)
-    target.beginPath();
-    target.moveTo(-26 * s, -5 * s); target.lineTo(-30 * s, -11 * s);
-    target.lineTo(-24 * s, -7 * s); target.closePath(); target.fill();
-
-    // Tail (right side, small)
-    target.beginPath();
-    target.ellipse(23 * s, 1 * s, 3 * s, 2 * s, 0, 0, Math.PI * 2);
-    target.fill();
-
-    // Legs — 4 small dark marks that cycle up/down with phase
-    target.fillStyle = color ? color : '#b89f7e';
-    var legOffsets = [-16, -8, 8, 16];
-    for (var i = 0; i < 4; i++) {
-      var ph = phase + i * Math.PI / 2;
-      var dy = Math.sin(ph) * 2 * s;
-      target.beginPath();
-      target.ellipse(legOffsets[i] * s, 7 * s + dy, 2 * s, 3 * s, 0, 0, Math.PI * 2);
-      target.fill();
-    }
-    target.restore();
-  }
-
-  // ------- Wireframe 3D frustum around the deer --------
-  function drawFrustum(x, y) {
-    // 8 corners of a rectangular box drawn in a crude aerial 3D projection.
-    // Near face (bigger, below) and far face (smaller, slightly offset up-right)
-    var nearW = 110, nearH = 70;
-    var farW = 78, farH = 50;
-    var farOffX = -6, farOffY = -34;
-    var cx = x, cy = y;
-
-    var N = [
-      { x: cx - nearW / 2, y: cy - nearH / 2 },
-      { x: cx + nearW / 2, y: cy - nearH / 2 },
-      { x: cx + nearW / 2, y: cy + nearH / 2 },
-      { x: cx - nearW / 2, y: cy + nearH / 2 }
-    ];
-    var F = [
-      { x: cx + farOffX - farW / 2, y: cy + farOffY - farH / 2 },
-      { x: cx + farOffX + farW / 2, y: cy + farOffY - farH / 2 },
-      { x: cx + farOffX + farW / 2, y: cy + farOffY + farH / 2 },
-      { x: cx + farOffX - farW / 2, y: cy + farOffY + farH / 2 }
-    ];
-
-    ctx.strokeStyle = 'rgba(220, 225, 235, 0.88)';
-    ctx.lineWidth = 1.2;
-    ctx.setLineDash([]);
-    // Near face
-    ctx.beginPath();
-    ctx.moveTo(N[0].x, N[0].y);
-    for (var i = 1; i < 4; i++) ctx.lineTo(N[i].x, N[i].y);
-    ctx.closePath(); ctx.stroke();
-    // Far face (fainter)
-    ctx.strokeStyle = 'rgba(220, 225, 235, 0.42)';
-    ctx.beginPath();
-    ctx.moveTo(F[0].x, F[0].y);
-    for (var j = 1; j < 4; j++) ctx.lineTo(F[j].x, F[j].y);
-    ctx.closePath(); ctx.stroke();
-    // Connectors near↔far
-    ctx.strokeStyle = 'rgba(220, 225, 235, 0.55)';
-    for (var k = 0; k < 4; k++) {
-      ctx.beginPath();
-      ctx.moveTo(N[k].x, N[k].y); ctx.lineTo(F[k].x, F[k].y);
-      ctx.stroke();
-    }
-    // Small corner notches for a VFX feel
-    ctx.strokeStyle = 'rgba(220, 225, 235, 0.95)';
-    ctx.lineWidth = 2;
-    var notch = 8;
-    for (var m = 0; m < 4; m++) {
-      var pt = N[m];
-      var prev = N[(m + 3) % 4];
-      var next = N[(m + 1) % 4];
-      // vectors toward the two neighbors, length `notch`
-      drawNotch(pt, prev, notch);
-      drawNotch(pt, next, notch);
-    }
-    ctx.lineWidth = 1;
-  }
-
-  function drawNotch(from, toward, len) {
-    var dx = toward.x - from.x, dy = toward.y - from.y;
-    var L = Math.sqrt(dx * dx + dy * dy);
-    if (L === 0) return;
-    var ux = dx / L, uy = dy / L;
-    ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(from.x + ux * len, from.y + uy * len);
-    ctx.stroke();
-  }
-
-  // ------- Main loop --------
-  function tick(now) {
-    if (!forestLayers) buildScene();
-    if (!startedAt) startedAt = now;
-    var t = (now - startedAt) / 1000;
-    var yPath = pathMeta.y + Math.sin(t * 0.6) * 2; // tiny drift so the deer isn't on rails
-
-    // Deer starts off-screen right and walks left, past leaves behind it.
-    var cycleLen = W + 200;
-    var travel = reduced ? cycleLen * 0.65 : (t * 70);
-    var cycleT = travel % (cycleLen + 200);
-    if (travel > 0 && cycleT < 1) {
-      // reset trail on loop wrap
-      trailCtx.clearRect(0, 0, W, H);
-    }
-    var deerX = W + 60 - cycleT;
-    var phase = t * 7;
-
-    // Draw current deer silhouette into the persistent trail — this is the
-    // temporal extrusion. Each frame piles up along the path.
-    drawDeer(trailCtx, deerX, yPath, phase, 1, '#b4a480');
-
-    // Compose main canvas
-    ctx.clearRect(0, 0, W, H);
-    drawForest();
-    // Soft warm bloom under the trail (reads as the "lit by the plane" look)
-    ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    ctx.drawImage(trail, 0, 0, W, H);
-    ctx.restore();
-
-    // Current deer brighter on top
-    drawDeer(ctx, deerX, yPath, phase, 1.05, '#ece0c3');
-    // Wireframe frustum
-    drawFrustum(deerX, yPath);
 
     requestAnimationFrame(tick);
   }
 
-  var resizeTimer = 0;
   window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      forestLayers = null;
-      pathMeta = null;
-      fit();
-    }, 120);
+    treeData = null;
   });
 
   fit();
