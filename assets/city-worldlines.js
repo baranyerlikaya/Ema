@@ -116,17 +116,17 @@
   }
 
   function drawStreets() {
-    ctx.strokeStyle = 'rgba(0,0,0,0.04)';
+    ctx.strokeStyle = 'rgba(0,0,0,0.09)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     for (var x = 0; x <= W + BLOCK; x += BLOCK) { ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); }
     for (var y = 0; y <= H + BLOCK; y += BLOCK) { ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); }
     ctx.stroke();
 
-    ctx.fillStyle = 'rgba(0,0,0,0.055)';
+    ctx.fillStyle = 'rgba(0,0,0,0.14)';
     for (var ix = 0; ix <= W + BLOCK; ix += BLOCK) {
       for (var iy = 0; iy <= H + BLOCK; iy += BLOCK) {
-        ctx.beginPath(); ctx.arc(ix, iy, 1, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(ix, iy, 1.5, 0, Math.PI * 2); ctx.fill();
       }
     }
   }
