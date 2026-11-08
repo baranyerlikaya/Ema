@@ -1,6 +1,8 @@
-/* Newt hero background — top-down Manhattan grid with tiny walkers.
- * Each walker leaves a fading past, so the picture reads as a 4D viewer
- * watching people's world lines pass through the grid of streets. */
+/* Newt hero background — a 4th-dimension viewer looking down at
+ * Manhattan. Each person has a home and a workplace, walks there along
+ * the street grid, and their entire trip is drawn at once as a worldline.
+ * Finished trips linger, so after a few seconds the viewer sees the
+ * whole day's commute overlaid as a web of ink. */
 (function () {
   'use strict';
 
@@ -17,18 +19,17 @@
   hero.insertBefore(canvas, hero.firstChild);
   var ctx = canvas.getContext('2d');
 
-  // Logical grid in world units. A "block" is BLOCK pixels long.
-  var BLOCK = 120;           // street spacing
-  var WALKER_SPEED = 20;     // px per second
-  var MAX_WALKERS = 46;
-  var TRAIL_SECONDS = 9;     // how long the past stays visible
-  var TRAIL_POINTS = 90;
-  var INK = '#111111';
+  // Grid of streets. A block is BLOCK px on screen.
+  var BLOCK = 110;
+  var WALK_SPEED = 42;     // px / s
+  var ACTIVE_WALKERS = 70; // trips in progress at any time
+  var LINGER_MAX = 90;     // how many finished trips stay visible
+  var FINISHED_FADE = 6.0; // seconds for a finished trip to fade away
 
   // ------- state ---------
-  var walkers = [];
-  var W = 0, H = 0, dpr = 1;
-  var last = 0;
+  var active = [];
+  var finished = [];   // completed trips still fading
+  var W = 0, H = 0, dpr = 1, last = 0;
 
   function fitCanvas() {
     dpr = window.devicePixelRatio || 1;
@@ -40,97 +41,89 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function nearestIntersection(p) {
+  function gridSize() {
+    return { cols: Math.ceil(W / BLOCK) + 1, rows: Math.ceil(H / BLOCK) + 1 };
+  }
+
+  function randomIntersection() {
+    var g = gridSize();
+    return { col: Math.floor(Math.random() * g.cols), row: Math.floor(Math.random() * g.rows) };
+  }
+
+  // Build a path along the grid from home → work. Manhattan routing:
+  // step one block at a time toward the goal, with a small chance of
+  // taking the perpendicular step first (so paths aren't all perfect Ls).
+  function routePath(from, to) {
+    var pts = [{ x: from.col * BLOCK, y: from.row * BLOCK }];
+    var c = from.col, r = from.row;
+    while (c !== to.col || r !== to.row) {
+      var dc = to.col - c, dr = to.row - r;
+      var canH = dc !== 0, canV = dr !== 0;
+      var goH;
+      if (canH && canV) goH = Math.random() < 0.5;
+      else goH = canH;
+      if (goH) c += dc > 0 ? 1 : -1;
+      else     r += dr > 0 ? 1 : -1;
+      pts.push({ x: c * BLOCK, y: r * BLOCK });
+    }
+    return pts;
+  }
+
+  function makeWalker() {
+    var home, work, tries = 0;
+    do {
+      home = randomIntersection();
+      work = randomIntersection();
+      tries++;
+    } while ((home.col === work.col && home.row === work.row) && tries < 6);
+
+    var path = routePath(home, work);
     return {
-      x: Math.round(p.x / BLOCK) * BLOCK,
-      y: Math.round(p.y / BLOCK) * BLOCK
+      path: path,
+      // Progress along the path, in path-pixels
+      traveled: 0,
+      // Total path length (precomputed)
+      total: pathLength(path),
+      // A slight personality in speed
+      speed: WALK_SPEED * (0.85 + Math.random() * 0.4),
+      // Birth time for stagger
+      born: last / 1000
     };
   }
 
-  function makeWalker(bootstrap) {
-    // Spawn at a random intersection, walking in one of the four street
-    // directions. On bootstrap, place them already inside the grid; otherwise
-    // let them enter from a random edge so new walkers appear organically.
-    var cols = Math.ceil(W / BLOCK) + 1;
-    var rows = Math.ceil(H / BLOCK) + 1;
-    var col, row, dir;
-    if (bootstrap) {
-      col = Math.floor(Math.random() * cols);
-      row = Math.floor(Math.random() * rows);
-      dir = Math.floor(Math.random() * 4);
-    } else {
-      // enter from an edge
-      var side = Math.floor(Math.random() * 4);
-      if (side === 0)      { col = 0;        row = Math.floor(Math.random() * rows); dir = 0; }
-      else if (side === 1) { col = cols - 1; row = Math.floor(Math.random() * rows); dir = 2; }
-      else if (side === 2) { row = 0;        col = Math.floor(Math.random() * cols); dir = 1; }
-      else                 { row = rows - 1; col = Math.floor(Math.random() * cols); dir = 3; }
+  function pathLength(path) {
+    var s = 0;
+    for (var i = 1; i < path.length; i++) {
+      s += Math.abs(path[i].x - path[i - 1].x) + Math.abs(path[i].y - path[i - 1].y);
     }
-    return {
-      x: col * BLOCK,
-      y: row * BLOCK,
-      dir: dir, // 0: +x, 1: +y, 2: -x, 3: -y
-      trail: [],
-      age: 0,
-      // slight variation in speed and personality
-      speed: WALKER_SPEED * (0.85 + Math.random() * 0.35),
-      turnChance: 0.28 + Math.random() * 0.22
-    };
+    return s;
   }
 
-  function dirDelta(dir) {
-    switch (dir) {
-      case 0: return [1, 0];
-      case 1: return [0, 1];
-      case 2: return [-1, 0];
-      case 3: return [0, -1];
-    }
-    return [0, 0];
-  }
-
-  function stepWalker(w, dt) {
-    var d = dirDelta(w.dir);
-    var nx = w.x + d[0] * w.speed * dt;
-    var ny = w.y + d[1] * w.speed * dt;
-
-    // Have we passed an intersection on this axis?
-    var movingHoriz = d[0] !== 0;
-    var crossed = movingHoriz
-      ? Math.floor(w.x / BLOCK) !== Math.floor(nx / BLOCK)
-      : Math.floor(w.y / BLOCK) !== Math.floor(ny / BLOCK);
-    if (crossed) {
-      // snap to the intersection first
-      var inter = nearestIntersection({ x: nx, y: ny });
-      w.x = inter.x; w.y = inter.y;
-      if (Math.random() < w.turnChance) {
-        // turn left or right (not reverse)
-        var turnLeft = Math.random() < 0.5;
-        w.dir = (w.dir + (turnLeft ? 3 : 1)) % 4;
+  // Walk a distance d along the path; return { x, y, segIndex, consumed }.
+  function pointOn(path, d) {
+    for (var i = 1; i < path.length; i++) {
+      var dx = path[i].x - path[i - 1].x;
+      var dy = path[i].y - path[i - 1].y;
+      var seg = Math.abs(dx) + Math.abs(dy);
+      if (d <= seg) {
+        var t = d / seg;
+        return { x: path[i - 1].x + dx * t, y: path[i - 1].y + dy * t, seg: i };
       }
-    } else {
-      w.x = nx; w.y = ny;
+      d -= seg;
     }
-
-    w.age += dt;
-    w.trail.push({ x: w.x, y: w.y, t: w.age });
-    if (w.trail.length > TRAIL_POINTS) w.trail.splice(0, w.trail.length - TRAIL_POINTS);
-
-    // Despawn if far off-screen
-    var margin = BLOCK * 1.5;
-    if (w.x < -margin || w.x > W + margin || w.y < -margin || w.y > H + margin) return false;
-    return true;
+    var last = path[path.length - 1];
+    return { x: last.x, y: last.y, seg: path.length - 1 };
   }
 
   function drawStreets() {
-    ctx.strokeStyle = 'rgba(0,0,0,0.045)';
+    ctx.strokeStyle = 'rgba(0,0,0,0.04)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     for (var x = 0; x <= W + BLOCK; x += BLOCK) { ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); }
     for (var y = 0; y <= H + BLOCK; y += BLOCK) { ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); }
     ctx.stroke();
 
-    // Subtle dots at intersections
-    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillStyle = 'rgba(0,0,0,0.055)';
     for (var ix = 0; ix <= W + BLOCK; ix += BLOCK) {
       for (var iy = 0; iy <= H + BLOCK; iy += BLOCK) {
         ctx.beginPath(); ctx.arc(ix, iy, 1, 0, Math.PI * 2); ctx.fill();
@@ -138,31 +131,62 @@
     }
   }
 
-  function drawWalkers() {
-    // Trails first, so the walker head draws on top.
-    for (var i = 0; i < walkers.length; i++) {
-      var w = walkers[i];
-      if (w.trail.length < 2) continue;
-      ctx.lineWidth = 1.5;
-      for (var j = 1; j < w.trail.length; j++) {
-        var a = w.trail[j - 1], b = w.trail[j];
-        var age = w.age - b.t;
-        var alpha = Math.max(0, 0.32 * (1 - age / TRAIL_SECONDS));
-        if (alpha <= 0.01) continue;
-        ctx.strokeStyle = 'rgba(17,17,17,' + alpha.toFixed(3) + ')';
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
+  // Draw a worldline as the path up to a given distance along it, with the
+  // part behind the walker darker (already lived) and the remaining path
+  // very faint (future they'll take).
+  function drawTrip(w, headAlpha, tailAlpha, futureAlpha) {
+    var walked = Math.min(w.traveled, w.total);
+    // Past (lived) line
+    ctx.strokeStyle = 'rgba(17,17,17,' + tailAlpha.toFixed(3) + ')';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(w.path[0].x, w.path[0].y);
+    var d = 0;
+    for (var i = 1; i < w.path.length; i++) {
+      var dx = w.path[i].x - w.path[i - 1].x;
+      var dy = w.path[i].y - w.path[i - 1].y;
+      var seg = Math.abs(dx) + Math.abs(dy);
+      if (d + seg >= walked) {
+        var t = (walked - d) / seg;
+        ctx.lineTo(w.path[i - 1].x + dx * t, w.path[i - 1].y + dy * t);
+        break;
       }
+      ctx.lineTo(w.path[i].x, w.path[i].y);
+      d += seg;
     }
-    // Walker heads — small ink dots
-    for (var k = 0; k < walkers.length; k++) {
-      var p = walkers[k];
-      ctx.fillStyle = INK;
+    ctx.stroke();
+
+    // Future (not yet walked) line
+    if (futureAlpha > 0.001 && walked < w.total) {
+      ctx.strokeStyle = 'rgba(17,17,17,' + futureAlpha.toFixed(3) + ')';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 3]);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 2.2, 0, Math.PI * 2);
-      ctx.fill();
+      // Start where we broke off
+      var p = pointOn(w.path, walked);
+      ctx.moveTo(p.x, p.y);
+      for (var j = p.seg; j < w.path.length; j++) {
+        ctx.lineTo(w.path[j].x, w.path[j].y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Home dot
+    ctx.fillStyle = 'rgba(17,17,17,' + (tailAlpha * 0.9).toFixed(3) + ')';
+    ctx.beginPath(); ctx.arc(w.path[0].x, w.path[0].y, 2, 0, Math.PI * 2); ctx.fill();
+
+    // Walker head (only if not yet arrived)
+    if (walked < w.total) {
+      var h = pointOn(w.path, walked);
+      ctx.fillStyle = 'rgba(17,17,17,' + headAlpha.toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(h.x, h.y, 2.8, 0, Math.PI * 2); ctx.fill();
+    } else {
+      // Arrived at work — small ring at destination
+      var dest = w.path[w.path.length - 1];
+      ctx.strokeStyle = 'rgba(17,17,17,' + (tailAlpha * 0.9).toFixed(3) + ')';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(dest.x, dest.y, 3.2, 0, Math.PI * 2); ctx.stroke();
     }
   }
 
@@ -175,35 +199,70 @@
     ctx.clearRect(0, 0, W, H);
     drawStreets();
 
-    // Update walkers
-    var next = [];
-    for (var i = 0; i < walkers.length; i++) {
-      if (stepWalker(walkers[i], dt)) next.push(walkers[i]);
+    // Advance active walkers
+    var stillActive = [];
+    for (var i = 0; i < active.length; i++) {
+      var w = active[i];
+      w.traveled += w.speed * dt;
+      if (w.traveled >= w.total) {
+        // Finished — move to lingering stack
+        w.finishedAt = (ts / 1000);
+        finished.push(w);
+        if (finished.length > LINGER_MAX) finished.shift();
+      } else {
+        stillActive.push(w);
+      }
     }
-    walkers = next;
-    // Top up population
-    while (walkers.length < MAX_WALKERS) walkers.push(makeWalker(false));
+    active = stillActive;
+    // Spawn new trips
+    while (active.length < ACTIVE_WALKERS) active.push(makeWalker());
 
-    drawWalkers();
+    // Draw finished trips (fading)
+    for (var k = 0; k < finished.length; k++) {
+      var f = finished[k];
+      var age = (ts / 1000) - f.finishedAt;
+      var a = Math.max(0, 1 - age / FINISHED_FADE);
+      if (a <= 0.01) continue;
+      drawTrip(f, 0, 0.22 * a, 0);
+    }
+    // Draw active trips (bright head, moderate past, faint future)
+    for (var j = 0; j < active.length; j++) {
+      drawTrip(active[j], 0.78, 0.28, 0.08);
+    }
     requestAnimationFrame(tick);
   }
 
   function bootstrap() {
     fitCanvas();
-    walkers = [];
-    for (var i = 0; i < MAX_WALKERS; i++) walkers.push(makeWalker(true));
-    // Give each a short random head start of trail
-    for (var j = 0; j < 20; j++) {
-      walkers.forEach(function (w) { stepWalker(w, 0.3); });
+    active = [];
+    finished = [];
+    // Seed with trips already in progress at various points
+    for (var i = 0; i < ACTIVE_WALKERS; i++) {
+      var w = makeWalker();
+      w.traveled = Math.random() * w.total * 0.9;
+      active.push(w);
     }
     requestAnimationFrame(tick);
   }
 
-  // Resize handling
   var resizeTimer = 0;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () { fitCanvas(); }, 120);
+    resizeTimer = setTimeout(function () {
+      fitCanvas();
+      // Clear finished trips because the coord system changed
+      finished = [];
+      // Keep active trips but regenerate those whose endpoints are off-screen
+      var g = gridSize();
+      var kept = [];
+      for (var i = 0; i < active.length; i++) {
+        var w = active[i];
+        var last = w.path[w.path.length - 1];
+        if (last.x < 0 || last.x > W || last.y < 0 || last.y > H) continue;
+        kept.push(w);
+      }
+      active = kept;
+    }, 120);
   });
 
   bootstrap();
